@@ -639,7 +639,7 @@ body.dark-mode .user-pill-icon {
     transform: translateX(100%);
     opacity: 0;
     visibility: hidden;
-    min-height: 600px;
+    min-height: 420px;
 }
 
 .pref-avatar-panel .avatar-panel-content {
