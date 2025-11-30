@@ -501,7 +501,7 @@ body.dark-mode .user-pill-icon {
 /* --- 头像选择器升级样式 --- */
 .avatar-tabs {
     display: flex;
-    border-bottom: 1px solid #eee;
+    /* border-bottom: 1px solid #eee;  <-- 删除这一行 (灰色底线) */
     margin-bottom: 10px;
 }
 
@@ -520,12 +520,15 @@ body.dark-mode .user-pill-icon {
 .avatar-tab-item:hover {
     color: #333;
     background: #f9f9f9;
+    border-radius: 8px; /* 可选：加个圆角让 hover 更好看 */
 }
 
 .avatar-tab-item.active {
     color: #007AFF;
 }
 
+/* 删除或注释掉 active::after 伪元素，去掉蓝色下划线 */
+/*
 .avatar-tab-item.active::after {
     content: '';
     position: absolute;
@@ -535,6 +538,7 @@ body.dark-mode .user-pill-icon {
     height: 2px;
     background: #007AFF;
 }
+*/
 
 /* 优化后的头像网格：自动填充列，无滚动条限制 */
 .avatar-grid-scroll {
@@ -627,6 +631,7 @@ body.dark-mode .user-pill-icon {
 }
 
 /* 右侧面板宽度增加到 520px，并设置最小高度防止跳动 */
+/* --- 2. 调整头像面板高度 --- */
 .pref-avatar-panel {
     width: 520px;
     background: #f7f7f7;
@@ -640,8 +645,11 @@ body.dark-mode .user-pill-icon {
     opacity: 0;
     visibility: hidden;
 
-    height: 480px; /* ✨ 关键修改：锁定固定高度，超出部分内部会自动出现滚动条 */
+    height: 400px; /* ✨ 修改：从 480px 减小到 400px */
 }
+
+/* 之前针对底部按钮的样式现在不再需要了，可以保留不动或者删除 */
+/* .pref-avatar-panel .modal-actions { ... } */
 
 .pref-avatar-panel .avatar-panel-content {
     flex-grow: 1;
