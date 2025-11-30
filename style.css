@@ -646,7 +646,7 @@ body.dark-mode .user-pill-icon {
     opacity: 0;
     visibility: hidden;
 
-    height: 520px; /* ✨ 高度缩小，适应内容 */
+    height: 420px; /* ✨ 高度缩小，适应内容 */
 }
 /* 之前针对底部按钮的样式现在不再需要了，可以保留不动或者删除 */
 /* .pref-avatar-panel .modal-actions { ... } */
