@@ -527,7 +527,11 @@ export function openPrefModal() {
 
     document.getElementById('user-dropdown').classList.remove('active');
     document.getElementById('pref-modal').classList.remove('hidden');
-    // Hide avatar panel initially
+
+    // --- 核心修复：打开时强制重置窗口状态 ---
+    // 1. 移除父容器的展开类，恢复初始宽度
+    document.querySelector('.pref-modal-content').classList.remove('avatar-panel-visible');
+    // 2. 移除右侧面板的可见类，恢复隐藏状态
     document.getElementById('pref-avatar-panel').classList.remove('visible');
 }
 
