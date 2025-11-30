@@ -501,7 +501,7 @@ body.dark-mode .user-pill-icon {
 /* --- 头像选择器升级样式 --- */
 .avatar-tabs {
     display: flex;
-    /* border-bottom: 1px solid #eee;  <-- 删除这一行 (灰色底线) */
+    border-bottom: 1px solid #eee; /* ✅ 保留这条横线 */
     margin-bottom: 10px;
 }
 
@@ -645,9 +645,8 @@ body.dark-mode .user-pill-icon {
     opacity: 0;
     visibility: hidden;
 
-    height: 400px; /* ✨ 修改：从 480px 减小到 400px */
+    height: 400px; /* ✨ 高度缩小，适应内容 */
 }
-
 /* 之前针对底部按钮的样式现在不再需要了，可以保留不动或者删除 */
 /* .pref-avatar-panel .modal-actions { ... } */
 

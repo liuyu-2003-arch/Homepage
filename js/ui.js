@@ -890,3 +890,12 @@ function initSortable() {
         state.sortableInstances.push(instance);
     });
 }
+
+export function handleAvatarUrl(url) {
+    state.prefAvatarUrl = url;
+    const img = document.getElementById('pref-current-img');
+    if (img) img.src = url;
+
+    // 取消选中左侧的 Emoji
+    document.querySelectorAll('.emoji-item').forEach(item => item.classList.remove('selected'));
+}

@@ -6,7 +6,8 @@ import {
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     openPrefModal, closePrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
-    autoFillInfo, updatePreview, selectStyle, selectPage
+    autoFillInfo, updatePreview, selectStyle, selectPage,
+    handleAvatarUrl // <--- 新增引入
 } from './ui.js';
 import { t, showToast, startPillAnimation } from './utils.js';
 import { state } from './state.js';
@@ -128,6 +129,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.switchAvatarTab = switchAvatarTab;
     window.handleAvatarFile = handleAvatarFile;
     window.selectNewAvatar = selectNewAvatar;
+    window.handleAvatarUrl = handleAvatarUrl; // <--- 新增挂载：图片链接处理
+
     window.closeAvatarPanel = () => {
         const modalContent = document.querySelector('.pref-modal-content');
         const panel = document.getElementById('pref-avatar-panel');
