@@ -7,7 +7,7 @@ import {
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     openPrefModal, closePrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
     autoFillInfo, updatePreview, selectStyle, selectPage,
-    handleAvatarUrl // <--- 新增引入
+    handleAvatarUrl // <--- [新增] 引入处理头像链接的函数
 } from './ui.js';
 import { t, showToast, startPillAnimation } from './utils.js';
 import { state } from './state.js';
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 🔥 核心修复：挂载所有交互函数到 window
     // ============================================================
 
-    // --- 弹窗逻辑 (重点修复) ---
+    // --- 弹窗逻辑 ---
     window.autoFillInfo = autoFillInfo;
     window.updatePreview = updatePreview;
     window.selectStyle = selectStyle;
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.handleMenuEdit = () => {
         document.getElementById('user-dropdown').classList.remove('active');
 
-        // 新增：移动端拦截逻辑
+        // 移动端拦截逻辑
         if (window.innerWidth < 768) {
             showToast(t("msg_mobile_edit"), "normal");
             return;
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.switchAvatarTab = switchAvatarTab;
     window.handleAvatarFile = handleAvatarFile;
     window.selectNewAvatar = selectNewAvatar;
-    window.handleAvatarUrl = handleAvatarUrl; // <--- 新增挂载：图片链接处理
+    window.handleAvatarUrl = handleAvatarUrl; // <--- [新增] 挂载到 window 供 HTML 调用
 
     window.closeAvatarPanel = () => {
         const modalContent = document.querySelector('.pref-modal-content');
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.addEventListener('resize', () => { render(); });
 
-    // --- 核心修复：更新点击监听器 ---
+    // --- 点击监听器 (处理菜单自动关闭) ---
     document.addEventListener('click', (e) => {
         const menu = document.getElementById('user-dropdown');
         const pill = document.getElementById('user-pill');
@@ -154,13 +154,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             // 检查点击目标是否在菜单或按钮外部
             if (!menu.contains(e.target) && (!pill || !pill.contains(e.target))) {
                 menu.classList.remove('active');
-                // 菜单关闭后，重新开始动画计时
                 startPillAnimation();
             }
         }
     });
 
-    // --- 新增：偏好设置弹窗交互 ---
+    // --- 偏好设置弹窗交互 (左侧点击展开右侧) ---
     const prefAvatarContainer = document.getElementById('pref-avatar-container');
     if (prefAvatarContainer) {
         prefAvatarContainer.addEventListener('click', () => {
