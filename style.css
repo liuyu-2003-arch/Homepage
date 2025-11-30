@@ -639,7 +639,8 @@ body.dark-mode .user-pill-icon {
     transform: translateX(100%);
     opacity: 0;
     visibility: hidden;
-    min-height: 480px;
+
+    height: 480px; /* ✨ 关键修改：锁定固定高度，超出部分内部会自动出现滚动条 */
 }
 
 .pref-avatar-panel .avatar-panel-content {
@@ -722,7 +723,7 @@ body.dark-mode .user-pill-icon {
         min-height: 0;
     }
     .pref-avatar-panel.visible {
-        height: auto;
+        height: 65vh; /* ✨ 关键修改：设定一个固定的屏幕高度比例（例如 65%） */
         padding: 20px;
         transform: translateY(0);
     }
