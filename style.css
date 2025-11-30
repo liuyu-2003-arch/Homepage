@@ -615,6 +615,17 @@ body.dark-mode .user-pill-icon {
     flex-direction: column;
 }
 
+/* 绝对定位左侧面板的按钮组，确保其沉底 */
+.pref-main-panel .modal-actions {
+    position: absolute;
+    bottom: 20px;
+    left: 25px;
+    right: 25px;
+    margin-top: 0 !important;
+    display: flex;
+    gap: 10px;
+}
+
 /* 右侧面板宽度增加到 520px，并设置最小高度防止跳动 */
 .pref-avatar-panel {
     width: 520px;
@@ -666,11 +677,6 @@ body.dark-mode .user-pill-icon {
     visibility: visible;
 }
 
-/* 修正：让左侧按钮区域推到最底部 */
-.pref-main-panel .modal-actions {
-    margin-top: auto;
-}
-
 .centered-form-group {
     display: flex;
     justify-content: center;
@@ -695,6 +701,13 @@ body.dark-mode .user-pill-icon {
         width: 100%;
         padding-bottom: 20px;
     }
+
+    /* 移动端取消绝对定位，改回流式布局 */
+    .pref-main-panel .modal-actions {
+        position: static;
+        margin-top: 20px !important;
+    }
+
     .pref-avatar-panel {
         width: 100%;
         height: 0;
