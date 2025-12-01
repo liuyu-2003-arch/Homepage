@@ -899,3 +899,24 @@ export function handleAvatarUrl(url) {
     // 取消选中左侧的 Emoji
     document.querySelectorAll('.emoji-item').forEach(item => item.classList.remove('selected'));
 }
+
+// --- 修改密码弹窗控制 ---
+export function openChangePasswordModal() {
+    // 关闭下拉菜单
+    document.getElementById('user-dropdown').classList.remove('active');
+
+    // 检查是否登录
+    if (!state.currentUser) {
+        showToast(t("msg_login_success") ? "Please login first" : "请先登录", "error");
+        return;
+    }
+
+    // 清空输入框
+    document.getElementById('new-password').value = '';
+    document.getElementById('change-password-modal').classList.remove('hidden');
+}
+
+export function closeChangePasswordModal() {
+    document.getElementById('change-password-modal').classList.add('hidden');
+    startPillAnimation(); // 恢复右上角胶囊动画
+}

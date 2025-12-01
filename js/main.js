@@ -1,5 +1,5 @@
 import { initSupabase, loadData, saveData, exportConfig, importConfig, handleImport } from './api.js';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences } from './auth.js';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences, changePassword } from './auth.js';
 import { i18n } from './i18n.js';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
@@ -7,7 +7,8 @@ import {
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     openPrefModal, closePrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
     autoFillInfo, updatePreview, selectStyle, selectPage,
-    handleAvatarUrl // <--- [新增] 引入处理头像链接的函数
+    handleAvatarUrl,
+    openChangePasswordModal, closeChangePasswordModal // <--- [新增] 引入处理头像链接的函数和密码弹窗函数
 } from './ui.js';
 import { t, showToast, startPillAnimation } from './utils.js';
 import { state } from './state.js';
@@ -136,6 +137,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const panel = document.getElementById('pref-avatar-panel');
         modalContent.classList.remove('avatar-panel-visible');
         panel.classList.remove('visible');
+    };
+
+    // --- 新增：修改密码 ---
+    window.openChangePasswordModal = openChangePasswordModal;
+    window.closeChangePasswordModal = closeChangePasswordModal;
+    window.handleChangePassword = () => {
+        const newPass = document.getElementById('new-password').value;
+        changePassword(newPass);
     };
 
     // --- 语言 ---

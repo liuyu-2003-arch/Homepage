@@ -198,3 +198,27 @@ export async function savePreferences() {
         }
     }
 }
+
+export async function changePassword(newPassword) {
+    const sb = getSupabase();
+    if (!sb || !state.currentUser) return;
+
+    if (!newPassword || newPassword.length < 6) {
+        showToast(t("ph_password"), "error"); // 复用“密码至少6位”的提示
+        return;
+    }
+
+    try {
+        const { data, error } = await sb.auth.updateUser({
+            password: newPassword
+        });
+
+        if (error) throw error;
+
+        showToast(t("msg_update_success"), "success"); // 显示“更新成功”
+        document.getElementById('change-password-modal').classList.add('hidden');
+        startPillAnimation();
+    } catch (e) {
+        showToast(e.message, "error");
+    }
+}

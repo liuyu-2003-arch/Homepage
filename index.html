@@ -50,6 +50,10 @@
             <span class="menu-icon">⚙️</span> <span data-i18n="menu_pref">Account Preferences</span>
         </div>
 
+        <div class="menu-item" onclick="openChangePasswordModal()">
+            <span class="menu-icon">🔒</span> <span data-i18n="menu_change_password">Change Password</span>
+        </div>
+
         <div class="menu-divider"></div>
 
         <div class="menu-item" onclick="handleMenuEdit()">
@@ -287,6 +291,22 @@
         </div>
     </div>
 
+    <div id="change-password-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 350px;">
+            <button class="close-modal-btn" onclick="closeChangePasswordModal()">×</button>
+            <h3 data-i18n="modal_change_password_title">Change Password</h3>
+            <div class="form-group">
+                <div class="input-row">
+                    <label for="new-password" class="input-label" style="width: 80px;" data-i18n="label_new_password">New Pass</label>
+                    <input type="password" id="new-password" placeholder="Min 6 chars">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button onclick="closeChangePasswordModal()" data-i18n="btn_cancel">Cancel</button>
+                <button class="primary" onclick="handleChangePassword()" data-i18n="btn_confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
 
     <input type="file" id="import-file-input" style="display: none;" accept=".json">
 
