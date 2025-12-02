@@ -395,6 +395,7 @@ body.dark-mode .user-pill-icon {
     max-width: 800px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 18px;
     animation: popUp 0.3s ease;
+    position: relative;
 }
 @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .modal-content h3 { margin: 0; font-size: 18px; color: #333; text-align: center; margin-top: 10px; }
@@ -689,6 +690,12 @@ body.dark-mode .user-pill-icon {
 .centered-form-group {
     display: flex;
     justify-content: center;
+}
+
+.forgot-password-link {
+    color: #999;
+    font-size: 12px;
+    text-decoration: none;
 }
 
 @media (max-width: 768px) {
