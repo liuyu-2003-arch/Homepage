@@ -601,6 +601,18 @@ body.dark-mode .user-pill-icon {
     gap: 0;
     overflow: hidden;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* --- 👇 新增以下 3 行以修复透明问题 👇 --- */
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* --- 👇 新增：暗黑模式适配 👇 --- */
+body.dark-mode .pref-modal-content {
+    background: #2c2c2e;
+    color: white;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
 /* 展开宽度增加到 900px */
@@ -706,6 +718,18 @@ body.dark-mode .user-pill-icon {
         height: auto;
         max-height: 85vh;
         transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+        /* --- 👇 修复核心：添加背景、圆角和阴影 👇 --- */
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        overflow: hidden; /* 防止内容溢出圆角 */
+    }
+
+    /* --- 👇 新增：移动端暗黑模式适配 👇 --- */
+    body.dark-mode .pref-modal-content {
+        background: #2c2c2e;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
     .pref-modal-content.avatar-panel-visible {
@@ -724,6 +748,11 @@ body.dark-mode .user-pill-icon {
         margin-top: 20px !important;
     }
 
+    /* --- 👇 新增：防止标签文字（如label_display_name）截断 👇 --- */
+    .pref-main-panel .input-label {
+        min-width: 85px !important;
+    }
+
     .pref-avatar-panel {
         width: 100%;
         height: 0;
@@ -736,7 +765,15 @@ body.dark-mode .user-pill-icon {
         visibility: visible; /* Keep it visible for the height transition */
         transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         min-height: 0;
+        background: #f7f7f7; /* 确保面板有背景色 */
     }
+
+    /* --- 👇 新增：暗黑模式下的头像面板背景 👇 --- */
+    body.dark-mode .pref-avatar-panel {
+        background: #1c1c1e;
+        border-top: 1px solid #333;
+    }
+
     .pref-avatar-panel.visible {
         height: 65vh; /* ✨ 关键修改：设定一个固定的屏幕高度比例（例如 65%） */
         padding: 20px;
