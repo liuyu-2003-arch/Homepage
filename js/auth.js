@@ -8,7 +8,7 @@ export async function initAuth() {
     const { data: { session } } = await sb.auth.getSession();
     updateUserStatus(session?.user);
 
-    // 修改 1：监听 Auth 状态变化时，增加智能判断
+    // 【修改点 1】监听 Auth 状态变化时，增加智能判断
     sb.auth.onAuthStateChange((event, session) => {
         const currentUser = state.currentUser;
         const newUser = session?.user;
@@ -25,7 +25,7 @@ export async function initAuth() {
     });
 }
 
-// 修改 2：增加 animate 参数，默认值为 true (保持原有行为)
+// 【修改点 2】增加 animate 参数，默认值为 true (保持原有行为)
 export function updateUserStatus(user, animate = true) {
     state.currentUser = user;
 
@@ -49,7 +49,7 @@ export function updateUserStatus(user, animate = true) {
 
     if (!userPill) return;
 
-    // 修改 3：仅当 animate 为 true 时才重置动画
+    // 【修改点 3】仅当 animate 为 true 时才重置动画
     if (animate) {
         startPillAnimation();
     }
