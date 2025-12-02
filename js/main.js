@@ -6,7 +6,7 @@ import {
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     openPrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
-    autoFillInfo, updatePreview, selectStyle, selectPage
+    autoFillInfo, updatePreview, selectStyle, selectPage, updatePrefNamePreview
 } from './ui.js';
 import { t, showToast, startPillAnimation } from './utils.js'; // 引入 startPillAnimation
 import { state } from './state.js';
@@ -127,6 +127,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.switchAvatarTab = switchAvatarTab;
     window.handleAvatarFile = handleAvatarFile;
     window.selectNewAvatar = selectNewAvatar;
+
+    // 【新增】挂载预览更新函数
+    window.updatePrefNamePreview = updatePrefNamePreview;
 
     // --- 语言 ---
     window.changeLanguage = async (lang) => {
