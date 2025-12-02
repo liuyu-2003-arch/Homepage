@@ -1,5 +1,5 @@
 import { initSupabase, loadData, saveData, exportConfig, importConfig, handleImport } from './api.js';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences, changePassword } from './auth.js';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences, changePassword, forgotPassword } from './auth.js';
 import { i18n } from './i18n.js';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
@@ -153,6 +153,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         changePassword(newPass, oldPass);
+    };
+
+    // --- 新增：忘记密码 ---
+    window.handleForgotPassword = () => {
+        const authModal = document.getElementById('auth-modal');
+        const changePasswordModal = document.getElementById('change-password-modal');
+        let email;
+
+        if (authModal && !authModal.classList.contains('hidden')) {
+            email = document.getElementById('auth-email').value;
+            if (!email) {
+                showToast(t("msg_email_pass_req"), "error");
+                return;
+            }
+        } else if (changePasswordModal && !changePasswordModal.classList.contains('hidden')) {
+            email = state.currentUser?.email;
+            if (!email) {
+                showToast(t('msg_sdk_error'), 'error');
+                return;
+            }
+        } else {
+            return;
+        }
+        forgotPassword(email);
     };
 
     // --- 语言 ---

@@ -78,5 +78,6 @@
     "msg_sync_success_toast": "云端数据同步成功",
     "msg_mobile_edit": "为了更好的体验，请在电脑端编辑书签",
     "msg_old_password_wrong": "旧密码错误，请重试",
-    "msg_password_mismatch": "两次输入的密码不一致"
+    "msg_password_mismatch": "两次输入的密码不一致",
+    "msg_reset_password_email_sent": "密码重置邮件已发送，请检查收件箱。"
 }

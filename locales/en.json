@@ -78,5 +78,6 @@
     "msg_img_too_large": "Image too large. Please use built-in icons.",
     "msg_sync_success_toast": "Cloud Sync Successful",
     "msg_mobile_edit": "Please edit bookmarks on Desktop",
-    "msg_old_password_wrong": "Old password incorrect"
+    "msg_old_password_wrong": "Old password incorrect",
+    "msg_reset_password_email_sent": "Password reset email sent. Please check your inbox."
 }

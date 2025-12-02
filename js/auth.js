@@ -246,3 +246,18 @@ export async function changePassword(newPassword, oldPassword) {
         showToast(e.message, "error");
     }
 }
+
+export async function forgotPassword(email) {
+    const sb = getSupabase();
+    if (!sb) return showToast(t("msg_sdk_error"), "error");
+
+    try {
+        const { error } = await sb.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + window.location.pathname,
+        });
+        if (error) throw error;
+        showToast(t("msg_reset_password_email_sent"), "success");
+    } catch (e) {
+        showToast(e.message, "error");
+    }
+}
