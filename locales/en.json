@@ -53,6 +53,7 @@
     "auth_guest": "Guest",
     "tab_emoji": "Icons",
     "tab_upload": "Upload",
+    "link_forgot_password": "Forgot Password?",
     "msg_dev": "Feature in development...",
     "msg_login_success": "Login successful",
     "msg_logout": "Logged out",
