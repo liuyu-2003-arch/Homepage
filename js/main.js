@@ -6,9 +6,10 @@ import {
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     openPrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
-    autoFillInfo, updatePreview, selectStyle, selectPage, updatePrefNamePreview
+    autoFillInfo, updatePreview, selectStyle, selectPage, updatePrefNamePreview,
+    handleAvatarUrlInput // <--- 新增导入
 } from './ui.js';
-import { t, showToast, startPillAnimation } from './utils.js'; // 引入 startPillAnimation
+import { t, showToast, startPillAnimation } from './utils.js';
 import { state } from './state.js';
 
 async function loadTemplates() {
@@ -149,7 +150,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- 偏好设置 ---
     window.openPrefModal = openPrefModal;
     window.switchAvatarTab = switchAvatarTab;
-    window.handleAvatarFile = handleAvatarFile;
+
+    // 修改：改用 URL 处理函数
+    window.handleAvatarUrlInput = handleAvatarUrlInput;
+
     window.selectNewAvatar = selectNewAvatar;
 
     // 【新增】挂载预览更新函数

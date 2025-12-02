@@ -531,6 +531,22 @@ export function switchAvatarTab(tabName) {
     document.getElementById(`avatar-panel-${tabName}`).classList.remove('hidden');
 }
 
+// --- 新增：处理头像 URL 输入 ---
+export function handleAvatarUrlInput(url) {
+    // 1. 更新全局状态
+    state.prefAvatarUrl = url;
+
+    // 2. 更新模版中的大预览图
+    const currentImg = document.getElementById('pref-current-img');
+    if (currentImg) {
+        currentImg.src = url || "https://api.dicebear.com/7.x/notionists/svg?seed=Guest"; // 如果为空显示默认
+    }
+
+    // 3. 取消所有 emoji 的选中状态（因为用户选择了自定义 URL）
+    document.querySelectorAll('.emoji-item').forEach(item => item.classList.remove('selected'));
+}
+
+// (原有的 handleAvatarFile 保留但不使用，以兼容旧逻辑或做备份)
 export function handleAvatarFile(input) {
     if (input.files && input.files[0]) {
         const file = input.files[0];
