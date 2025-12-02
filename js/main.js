@@ -83,10 +83,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- 菜单与弹窗 ---
     window.toggleAuthModal = () => {
-         if (state.currentUser) {
+        const authModal = document.getElementById('auth-modal');
+        if (state.currentUser) {
             document.getElementById('user-dropdown').classList.toggle('active');
         } else {
-            document.getElementById('auth-modal').classList.remove('hidden');
+            authModal.classList.toggle('hidden');
         }
     };
     window.handleMenuEdit = () => {
