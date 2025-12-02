@@ -911,16 +911,19 @@ export function openChangePasswordModal() {
         return;
     }
 
-    // 清空输入框
+    // 清空所有输入框
     document.getElementById('new-password').value = '';
     document.getElementById('current-password').value = '';
+    document.getElementById('confirm-password').value = '';
 
-    // 判断是否显示“当前密码”框（如果是第三方登录，provider 通常是 google/github 等，不是 email）
-    // Supabase 默认的 email 登录 provider 也是 'email'
-    const isEmailUser = state.currentUser.app_metadata && state.currentUser.app_metadata.provider === 'email';
+    // 判断是否显示“当前密码”框
+    // 检查用户的所有登录方式 (providers)
+    // 如果包含 'email'，说明用户已经有密码（无论是注册时还是后来设置的），则必须验证旧密码
+    const userProviders = state.currentUser.app_metadata.providers || [];
+    const hasPassword = userProviders.includes('email');
     const currentPassRow = document.getElementById('current-password-row');
 
-    if (isEmailUser) {
+    if (hasPassword) {
         currentPassRow.classList.remove('hidden');
     } else {
         currentPassRow.classList.add('hidden');

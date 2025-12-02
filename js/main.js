@@ -144,7 +144,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.closeChangePasswordModal = closeChangePasswordModal;
     window.handleChangePassword = () => {
         const newPass = document.getElementById('new-password').value;
+        const confirmPass = document.getElementById('confirm-password').value;
         const oldPass = document.getElementById('current-password').value;
+
+        if (newPass !== confirmPass) {
+            showToast(t("msg_password_mismatch") || "Passwords do not match", "error");
+            return;
+        }
+
         changePassword(newPass, oldPass);
     };
 

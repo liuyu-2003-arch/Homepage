@@ -208,12 +208,14 @@ export async function changePassword(newPassword, oldPassword) {
         return;
     }
 
-    const isEmailUser = state.currentUser.app_metadata && state.currentUser.app_metadata.provider === 'email';
+    // 检查用户是否设置过密码（providers 数组中是否包含 'email'）
+    const userProviders = state.currentUser.app_metadata.providers || [];
+    const hasPassword = userProviders.includes('email');
 
-    // 如果是邮箱用户，强制验证旧密码
-    if (isEmailUser) {
+    // 如果设置过密码，强制验证旧密码
+    if (hasPassword) {
         if (!oldPassword) {
-            showToast(t("msg_input_req"), "error"); // 提示输入旧密码
+            showToast(t("msg_input_req"), "error"); // 提示输入信息
             return;
         }
 
