@@ -496,11 +496,22 @@ export function openPrefModal() {
         return;
     }
     const meta = state.currentUser.user_metadata || {};
+
+    // 获取当前名字
+    const currentName = meta.full_name || meta.display_name || state.currentUser.email.split('@')[0];
+
     document.getElementById('pref-name').value = meta.full_name || meta.display_name || '';
     document.getElementById('pref-phone').value = meta.phone_number || meta.phone || '';
 
     const currentAvatar = meta.avatar_url || "https://api.dicebear.com/7.x/notionists/svg?seed=Guest";
     document.getElementById('pref-current-img').src = currentAvatar;
+
+    // 【新增】初始化预览药丸的文字
+    const previewNameEl = document.getElementById('pref-preview-name');
+    if (previewNameEl) {
+        previewNameEl.innerText = currentName;
+    }
+
     state.prefAvatarUrl = currentAvatar;
 
     renderAvatarGrid(currentAvatar);
@@ -858,4 +869,13 @@ function initSortable() {
         });
         state.sortableInstances.push(instance);
     });
+}
+
+// 【新增】辅助函数：实时更新预览药丸的文字
+export function updatePrefNamePreview(value) {
+    const previewEl = document.getElementById('pref-preview-name');
+    if (previewEl) {
+        // 如果输入为空，显示默认占位符或邮箱前缀（这里简化为 Display Name）
+        previewEl.innerText = value || "Display Name";
+    }
 }
