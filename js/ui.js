@@ -902,32 +902,22 @@ export function handleAvatarUrl(url) {
 
 // --- 修改密码弹窗控制 ---
 export function openChangePasswordModal() {
-    // 关闭下拉菜单
     document.getElementById('user-dropdown').classList.remove('active');
 
-    // 检查是否登录
     if (!state.currentUser) {
         showToast(t("msg_login_success") ? "Please login first" : "请先登录", "error");
         return;
     }
 
-    // 清空所有输入框
     document.getElementById('new-password').value = '';
     document.getElementById('current-password').value = '';
     document.getElementById('confirm-password').value = '';
 
-    // 判断是否显示“当前密码”框
-    // 检查用户的所有登录方式 (providers)
-    // 如果包含 'email'，说明用户已经有密码（无论是注册时还是后来设置的），则必须验证旧密码
     const userProviders = state.currentUser.app_metadata.providers || [];
     const hasPassword = userProviders.includes('email');
     const currentPassRow = document.getElementById('current-password-row');
 
-    if (hasPassword) {
-        currentPassRow.classList.remove('hidden');
-    } else {
-        currentPassRow.classList.add('hidden');
-    }
+    currentPassRow.classList.toggle('hidden', !hasPassword);
 
     document.getElementById('change-password-modal').classList.remove('hidden');
 }
