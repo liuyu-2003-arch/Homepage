@@ -156,7 +156,8 @@ export async function savePreferences() {
     const sb = getSupabase();
     if (!sb || !state.currentUser) return;
 
-    if (state.prefAvatarUrl && state.prefAvatarUrl.length > 20000) {
+    // --- 修复核心：将限制从 20000 改为 3000000 (约 2MB 图片转 base64 后的长度) ---
+    if (state.prefAvatarUrl && state.prefAvatarUrl.length > 3000000) {
         showToast(t("msg_img_too_large"), "error");
         return;
     }
