@@ -11,9 +11,33 @@ import {
 import { t, showToast, startPillAnimation } from './utils.js'; // 引入 startPillAnimation
 import { state } from './state.js';
 
+async function loadTemplates() {
+    const templates = [
+        { id: 'user-dropdown-placeholder', url: 'templates/user_dropdown.html' },
+        { id: 'modal-placeholder', url: 'templates/bookmark_modal.html' },
+        { id: 'page-edit-modal-placeholder', url: 'templates/page_edit_modal.html' },
+        { id: 'pref-modal-placeholder', url: 'templates/pref_modal.html' },
+        { id: 'auth-modal-placeholder', url: 'templates/auth_modal.html' }
+    ];
+
+    for (const template of templates) {
+        try {
+            const response = await fetch(template.url);
+            const html = await response.text();
+            const placeholder = document.getElementById(template.id);
+            if (placeholder) {
+                placeholder.outerHTML = html;
+            }
+        } catch (error) {
+            console.error(`Failed to load template: ${template.url}`, error);
+        }
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. 初始化基础配置
+    await loadTemplates();
     document.body.style.visibility = 'hidden';
     await i18n.loadTranslations(i18n.currentLang);
     initTheme();

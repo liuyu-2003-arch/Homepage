@@ -1,0 +1,314 @@
+/* User Trigger Area & Glassmorphic Pill Button */
+.user-trigger-area {
+    position: fixed; top: 0; right: 0;
+    width: auto; height: auto;
+    z-index: 100;
+    padding: 20px 20px 120px 120px;
+    box-sizing: border-box;
+}
+
+.user-pill {
+    display: flex;
+    align-items: center;
+    /* Glass Effect */
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 30px;
+    padding: 4px 14px 4px 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    gap: 8px;
+}
+
+.user-pill:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.user-pill-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.user-pill-icon svg {
+    display: block;
+}
+
+.user-pill-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none; /* Initially hidden */
+}
+
+.user-pill-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    white-space: nowrap;
+    padding-right: 2px;
+}
+
+/* Dark Mode Glass Pill */
+body.dark-mode .user-pill {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+body.dark-mode .user-pill:hover {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+body.dark-mode .user-pill-text {
+    color: #eee;
+}
+body.dark-mode .user-pill-icon {
+    background: rgba(255,255,255,0.2);
+}
+
+.user-menu {
+    position: fixed;
+    top: 70px; right: 20px; width: 260px;
+    background: white; border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    z-index: 2000; padding: 8px 0;
+    opacity: 0; transform: translateY(-10px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    font-size: 14px; color: #37352f; border: 1px solid rgba(0,0,0,0.05);
+}
+.user-menu.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+.menu-header { display: flex; align-items: center; padding: 8px 16px 12px; gap: 12px; }
+.user-avatar-small {
+    width: 36px; height: 36px; border-radius: 50%; overflow: hidden;
+    background: #f0f0f0; border: 1px solid rgba(0,0,0,0.1); flex-shrink: 0;
+}
+.user-avatar-small img { width: 100%; height: 100%; object-fit: cover; }
+.user-info-text { overflow: hidden; }
+.u-name { font-weight: 600; color: #333; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.u-email { color: #888; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.menu-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 4px 0; }
+.menu-item {
+    display: flex; align-items: center; padding: 8px 16px; cursor: pointer;
+    transition: background 0.1s; gap: 10px; user-select: none;
+}
+.menu-item:hover { background: rgba(0,0,0,0.04); }
+.menu-icon { font-size: 16px; width: 20px; text-align: center; color: #787774; }
+.menu-label { font-size: 11px; color: #999; font-weight: 600; padding: 8px 16px 4px; text-transform: uppercase; }
+
+.social-login-section { margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.social-icons { display: flex; gap: 25px; justify-content: center; }
+.social-btn {
+    width: 48px; height: 48px; border-radius: 50%; border: 1px solid #e0e0e0; background: white;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.social-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #d0d0d0; }
+.social-btn svg { width: 24px; height: 24px; }
+.auth-divider { width: 100%; display: flex; align-items: center; justify-content: center; margin: 10px 0 20px 0; color: #999; font-size: 12px; }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: #eee; margin: 0 10px; }
+
+.avatar-grid {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.avatar-option {
+    width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+    border: 2px solid transparent; transition: transform 0.2s;
+    background: #f0f0f0; overflow: hidden;
+}
+.avatar-option img { width: 100%; height: 100%; }
+.avatar-option:hover { transform: scale(1.1); }
+.avatar-option.selected { border-color: #007AFF; box-shadow: 0 0 0 2px rgba(0,122,255,0.3); }
+
+/* --- 右上角胶囊动画扩展 (优化版) --- */
+
+/* 1. 基础过渡属性增强 */
+.user-pill {
+    /* 移除 all，精确指定属性以提升性能 */
+    /* 使用无回弹的标准平滑曲线 (0.4, 0, 0.2, 1) */
+    transition:
+        gap 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        padding 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        border-radius 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.4s ease;
+
+    /* 开启硬件加速提示，进一步减少卡顿 */
+    will-change: gap, padding, transform, opacity;
+    overflow: hidden; /* 确保收缩时内容不溢出 */
+}
+
+.user-pill-text {
+    /* 文字收缩动画：透明度变快 (0.2s)，让文字先消失，再收缩宽度，视觉更丝滑 */
+    transition:
+        max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.2s ease,
+        margin 0.3s ease;
+
+    max-width: 200px; /* 初始最大宽度 */
+    opacity: 1;
+    white-space: nowrap; /* 强制不换行，防止收缩时文字跳行 */
+}
+
+/* 2. 第一阶段：收缩成圆形 Logo (10秒后) */
+.user-pill.shrunk {
+    gap: 0 !important;       /* 移除图标和文字的间距 */
+    padding: 4px !important; /* 调整内边距为均匀，使其变为正圆 */
+    border-radius: 50% !important; /* 强制变圆 */
+    background: rgba(255, 255, 255, 0.25); /* 稍微变透明一点 */
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-pill.shrunk .user-pill-text {
+    max-width: 0;  /* 宽度归零 */
+    opacity: 0;    /* 透明 */
+    margin: 0;     /* 移除边距 */
+}
+
+/* 3. 第二阶段：隐藏 (再过2秒后) */
+.user-pill.hidden-anim {
+    opacity: 0;
+    transform: translateX(120%); /* 向右滑出屏幕 (稍微多一点，确保完全移出) */
+    pointer-events: none;        /* 隐藏后不可点击 */
+}
+
+/* 4. 交互优化：鼠标悬停时临时恢复显示 */
+/* 只要鼠标移入右上角区域，强制恢复所有样式 */
+.user-trigger-area:hover .user-pill {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    pointer-events: auto !important;
+}
+
+/* 悬停时展开胶囊 (覆盖 shrunk 状态) */
+.user-trigger-area:hover .user-pill.shrunk {
+    border-radius: 30px !important;
+    padding: 4px 14px 4px 4px !important;
+    gap: 8px !important;
+    background: rgba(255, 255, 255, 0.4) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.user-trigger-area:hover .user-pill.shrunk .user-pill-text {
+    max-width: 200px;
+    opacity: 1;
+    transition-delay: 0.1s; /* 展开时稍微延迟文字显示，效果更好 */
+}
+.menu-item.has-submenu {
+    position: relative;
+}
+
+.menu-item.has-submenu::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -20px; /* Start from the left edge of the gap */
+    width: 20px; /* Cover the gap */
+    height: 100%;
+    background: transparent; /* Make it invisible */
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    left: -160px; /* Position to the left of the parent menu */
+    top: 0;
+    width: 150px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    padding: 8px 0;
+    z-index: 10;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.menu-item.has-submenu:hover > .submenu {
+    display: block;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.submenu-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 0.1s;
+    gap: 10px;
+}
+
+.submenu-item:hover {
+    background: rgba(0,0,0,0.04);
+}
+
+/* 偏好设置弹窗的预览容器 */
+.pref-preview-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding-top: 10px;
+}
+
+/* 模仿右上角的药丸样式，但针对白色背景做了适配 */
+.pref-pill {
+    display: flex;
+    align-items: center;
+    background: #f5f5f7; /* 浅灰色背景 */
+    border: 1px solid #e0e0e0;
+    border-radius: 40px; /* 大圆角 */
+    padding: 5px 20px 5px 5px; /* 右侧留多点空间给文字 */
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 80%; /* 防止名字太长撑爆弹窗 */
+}
+
+.pref-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+/* 药丸内的头像圆圈 */
+.pref-pill-icon {
+    width: 48px;  /* 比右上角稍微大一点，作为主要展示 */
+    height: 48px;
+    border-radius: 50%;
+    background: white;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.pref-pill-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 药丸内的文字 */
+.pref-pill-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

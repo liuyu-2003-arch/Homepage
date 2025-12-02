@@ -1,9 +1,19 @@
-const CACHE_NAME = 'homepage-v1.1'; // 建议升级一下版本号
+const CACHE_NAME = 'homepage-v1.3'; // 建议升级一下版本号
 const STATIC_ASSETS = [
     '/',
     '/index.html',
-    '/style.css',
-    '/script.js',
+    '/css/base.css',
+    '/css/bookmark.css',
+    '/css/modal.css',
+    '/css/controls.css',
+    '/css/user.css',
+    '/css/responsive.css',
+    '/js/main.js',
+    '/templates/user_dropdown.html',
+    '/templates/bookmark_modal.html',
+    '/templates/page_edit_modal.html',
+    '/templates/pref_modal.html',
+    '/templates/auth_modal.html',
     'https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js'
 ];
 

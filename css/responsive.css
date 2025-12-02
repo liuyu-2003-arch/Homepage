@@ -1,0 +1,82 @@
+/* --- 移动端适配 (包含登录框修复) --- */
+@media (max-width: 768px) {
+    /* 1. 整体上移 */
+    .container { padding-top: 10px; }
+
+    /* 2. 标题绝对定位，与右上角 Logo 对齐 */
+    .bookmark-page { position: relative; padding-top: 0; }
+
+    .page-title {
+        position: absolute; top: 15px; left: 32px;
+        font-size: 22px; margin: 0; z-index: 10;
+        text-align: left; padding: 0; width: auto;
+    }
+
+    /* 3. 内容区域：4列布局，大图标，大间距 */
+    .bookmark-page-content {
+        margin-top: 70px;
+        justify-content: center;
+        align-content: flex-start;
+        padding-bottom: 80px;
+        max-width: 100%;
+        padding-left: 10px; padding-right: 10px;
+
+        /* --- 核心参数调整 --- */
+        --mobile-card-size: 70px; /* 图标加大 */
+        --mobile-gap: 20px;       /* 间距加大 */
+        /* ------------------ */
+
+        display: grid;
+        grid-template-columns: repeat(4, var(--mobile-card-size)); /* 4列 */
+        gap: var(--mobile-gap);
+        width: auto;
+    }
+
+    /* 4. 图标样式适配 */
+    .bookmark-item { width: var(--mobile-card-size); }
+    .icon-box {
+        width: var(--mobile-card-size);
+        height: var(--mobile-card-size);
+        border-radius: 18px; /* 圆角微调 */
+    }
+    .text-icon { font-size: 30px; } /* 文字图标加大 */
+    .bookmark-title {
+        font-size: 13px; margin-top: 6px; width: 120%;
+    }
+
+    /* 5. 确保“编辑书签”按钮显示 (逻辑在 JS 里拦截) */
+    .user-menu .menu-item[onclick*="handleMenuEdit"] { display: flex !important; }
+
+    /* 6. 底部控件：隐藏编辑条，显示主题条 */
+    #edit-controls.edit-controls { display: none !important; }
+
+    #theme-controls.edit-controls {
+        display: flex; /* 允许 JS 控制 hidden 类 */
+        width: 90%; padding: 15px;
+        flex-wrap: wrap; justify-content: center;
+        bottom: 30px; z-index: 1001;
+    }
+    #theme-controls.edit-controls.hidden { display: none !important; }
+    #theme-controls .control-divider { display: none; }
+
+    /* 其他适配 */
+    .user-trigger-area { padding: 15px; }
+    .user-pill { padding: 4px 12px 4px 4px; }
+    .pagination-dots { bottom: 5px; } /* 底部圆点位置 */
+
+    .modal-content {
+        min-width: unset !important; width: 92%; max-width: 350px; padding: 25px 20px;
+    }
+    .input-row {
+        display: flex !important; flex-direction: row !important;
+        justify-content: flex-start !important; align-items: center !important; gap: 15px !important;
+    }
+    .input-label {
+        width: auto !important; min-width: 40px; flex-shrink: 0;
+        text-align: left !important; padding-right: 0;
+    }
+    .modal-content input {
+        flex: 1 !important; width: auto !important; height: 52px !important;
+        font-size: 16px !important; padding: 0 15px;
+    }
+}
