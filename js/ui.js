@@ -496,38 +496,19 @@ export function openPrefModal() {
         return;
     }
     const meta = state.currentUser.user_metadata || {};
-
-    const nameInput = document.getElementById('pref-name');
-    nameInput.value = meta.full_name || meta.display_name || '';
+    document.getElementById('pref-name').value = meta.full_name || meta.display_name || '';
     document.getElementById('pref-phone').value = meta.phone_number || meta.phone || '';
 
     const currentAvatar = meta.avatar_url || "https://api.dicebear.com/7.x/notionists/svg?seed=Guest";
     document.getElementById('pref-current-img').src = currentAvatar;
     state.prefAvatarUrl = currentAvatar;
 
-    const previewName = document.getElementById('pref-preview-name');
-    if (previewName) {
-        previewName.textContent = nameInput.value || "Guest";
-        nameInput.addEventListener('input', (e) => {
-            previewName.textContent = e.target.value || "Guest";
-        });
-    }
-
     renderAvatarGrid(currentAvatar);
     switchAvatarTab('emoji');
 
     document.getElementById('user-dropdown').classList.remove('active');
     document.getElementById('pref-modal').classList.remove('hidden');
-
-    document.querySelector('.pref-modal-content').classList.remove('avatar-panel-visible');
-    document.getElementById('pref-avatar-panel').classList.remove('visible');
 }
-
-export function closePrefModal() {
-    document.getElementById('pref-modal').classList.add('hidden');
-    startPillAnimation();
-}
-
 
 export function switchAvatarTab(tabName) {
     document.querySelectorAll('.avatar-tab-item').forEach(el => {
@@ -877,40 +858,4 @@ function initSortable() {
         });
         state.sortableInstances.push(instance);
     });
-}
-
-export function handleAvatarUrl(url) {
-    state.prefAvatarUrl = url;
-    const img = document.getElementById('pref-current-img');
-    if (img) img.src = url;
-
-    // 取消选中左侧的 Emoji
-    document.querySelectorAll('.emoji-item').forEach(item => item.classList.remove('selected'));
-}
-
-// --- 修改密码弹窗控制 ---
-export function openChangePasswordModal() {
-    document.getElementById('user-dropdown').classList.remove('active');
-
-    if (!state.currentUser) {
-        showToast(t("msg_login_success") ? "Please login first" : "请先登录", "error");
-        return;
-    }
-
-    document.getElementById('new-password').value = '';
-    document.getElementById('current-password').value = '';
-    document.getElementById('confirm-password').value = '';
-
-    const userProviders = state.currentUser.app_metadata.providers || [];
-    const hasPassword = userProviders.includes('email');
-    const currentPassRow = document.getElementById('current-password-row');
-
-    currentPassRow.classList.toggle('hidden', !hasPassword);
-
-    document.getElementById('change-password-modal').classList.remove('hidden');
-}
-
-export function closeChangePasswordModal() {
-    document.getElementById('change-password-modal').classList.add('hidden');
-    startPillAnimation(); // 恢复右上角胶囊动画
 }

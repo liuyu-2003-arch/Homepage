@@ -74,7 +74,7 @@ export const i18n = {
         const placeholderElements = {
             'input-url': 'ph_url', 'input-title': 'ph_title', 'input-icon': 'ph_icon',
             'auth-email': 'ph_email', 'auth-password': 'ph_password',
-            'pref-name': 'label_nickname', 'pref-phone': 'label_phone_no'
+            'pref-name': 'label_display_name', 'pref-phone': 'label_phone'
         };
         for (const [id, key] of Object.entries(placeholderElements)) {
             const el = document.getElementById(id);

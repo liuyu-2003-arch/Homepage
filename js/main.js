@@ -1,16 +1,14 @@
 import { initSupabase, loadData, saveData, exportConfig, importConfig, handleImport } from './api.js';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences, changePassword, forgotPassword } from './auth.js';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences } from './auth.js';
 import { i18n } from './i18n.js';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
-    openPrefModal, closePrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
-    autoFillInfo, updatePreview, selectStyle, selectPage,
-    handleAvatarUrl,
-    openChangePasswordModal, closeChangePasswordModal // <--- [新增] 引入处理头像链接的函数和密码弹窗函数
+    openPrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
+    autoFillInfo, updatePreview, selectStyle, selectPage
 } from './ui.js';
-import { t, showToast, startPillAnimation } from './utils.js';
+import { t, showToast, startPillAnimation } from './utils.js'; // 引入 startPillAnimation
 import { state } from './state.js';
 
 
@@ -58,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 🔥 核心修复：挂载所有交互函数到 window
     // ============================================================
 
-    // --- 弹窗逻辑 ---
+    // --- 弹窗逻辑 (重点修复) ---
     window.autoFillInfo = autoFillInfo;
     window.updatePreview = updatePreview;
     window.selectStyle = selectStyle;
@@ -83,17 +81,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- 菜单与弹窗 ---
     window.toggleAuthModal = () => {
-        const authModal = document.getElementById('auth-modal');
-        if (state.currentUser) {
+         if (state.currentUser) {
             document.getElementById('user-dropdown').classList.toggle('active');
         } else {
-            authModal.classList.toggle('hidden');
+            document.getElementById('auth-modal').classList.remove('hidden');
         }
     };
     window.handleMenuEdit = () => {
         document.getElementById('user-dropdown').classList.remove('active');
 
-        // 移动端拦截逻辑
+        // 新增：移动端拦截逻辑
         if (window.innerWidth < 768) {
             showToast(t("msg_mobile_edit"), "normal");
             return;
@@ -127,58 +124,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- 偏好设置 ---
     window.openPrefModal = openPrefModal;
-    window.closePrefModal = closePrefModal;
     window.switchAvatarTab = switchAvatarTab;
     window.handleAvatarFile = handleAvatarFile;
     window.selectNewAvatar = selectNewAvatar;
-    window.handleAvatarUrl = handleAvatarUrl; // <--- [新增] 挂载到 window 供 HTML 调用
-
-    window.closeAvatarPanel = () => {
-        const modalContent = document.querySelector('.pref-modal-content');
-        const panel = document.getElementById('pref-avatar-panel');
-        modalContent.classList.remove('avatar-panel-visible');
-        panel.classList.remove('visible');
-    };
-
-    // --- 新增：修改密码 ---
-    window.openChangePasswordModal = openChangePasswordModal;
-    window.closeChangePasswordModal = closeChangePasswordModal;
-    window.handleChangePassword = () => {
-        const newPass = document.getElementById('new-password').value;
-        const confirmPass = document.getElementById('confirm-password').value;
-        const oldPass = document.getElementById('current-password').value;
-
-        if (newPass !== confirmPass) {
-            showToast(t("msg_password_mismatch") || "Passwords do not match", "error");
-            return;
-        }
-
-        changePassword(newPass, oldPass);
-    };
-
-    // --- 新增：忘记密码 ---
-    window.handleForgotPassword = () => {
-        const authModal = document.getElementById('auth-modal');
-        const changePasswordModal = document.getElementById('change-password-modal');
-        let email;
-
-        if (authModal && !authModal.classList.contains('hidden')) {
-            email = document.getElementById('auth-email').value;
-            if (!email) {
-                showToast(t("msg_email_pass_req"), "error");
-                return;
-            }
-        } else if (changePasswordModal && !changePasswordModal.classList.contains('hidden')) {
-            email = state.currentUser?.email;
-            if (!email) {
-                showToast(t('msg_sdk_error'), 'error');
-                return;
-            }
-        } else {
-            return;
-        }
-        forgotPassword(email);
-    };
 
     // --- 语言 ---
     window.changeLanguage = async (lang) => {
@@ -187,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.addEventListener('resize', () => { render(); });
 
-    // --- 点击监听器 (处理菜单自动关闭) ---
+    // --- 核心修复：更新点击监听器 ---
     document.addEventListener('click', (e) => {
         const menu = document.getElementById('user-dropdown');
         const pill = document.getElementById('user-pill');
@@ -196,22 +144,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             // 检查点击目标是否在菜单或按钮外部
             if (!menu.contains(e.target) && (!pill || !pill.contains(e.target))) {
                 menu.classList.remove('active');
+                // 菜单关闭后，重新开始动画计时
                 startPillAnimation();
             }
         }
     });
-
-    // --- 偏好设置弹窗交互 (左侧点击展开右侧) ---
-    const prefAvatarContainer = document.getElementById('pref-avatar-container');
-    if (prefAvatarContainer) {
-        prefAvatarContainer.addEventListener('click', () => {
-            const modalContent = document.querySelector('.pref-modal-content');
-            const panel = document.getElementById('pref-avatar-panel');
-            
-            const isVisible = panel.classList.contains('visible');
-            
-            modalContent.classList.toggle('avatar-panel-visible', !isVisible);
-            panel.classList.toggle('visible', !isVisible);
-        });
-    }
 });

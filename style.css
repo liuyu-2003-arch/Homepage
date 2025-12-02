@@ -395,7 +395,6 @@ body.dark-mode .user-pill-icon {
     max-width: 800px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 18px;
     animation: popUp 0.3s ease;
-    position: relative;
 }
 @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .modal-content h3 { margin: 0; font-size: 18px; color: #333; text-align: center; margin-top: 10px; }
@@ -502,7 +501,7 @@ body.dark-mode .user-pill-icon {
 /* --- 头像选择器升级样式 --- */
 .avatar-tabs {
     display: flex;
-    border-bottom: 1px solid #eee; /* ✅ 确保此行存在 */
+    border-bottom: 1px solid #eee;
     margin-bottom: 10px;
 }
 
@@ -521,15 +520,12 @@ body.dark-mode .user-pill-icon {
 .avatar-tab-item:hover {
     color: #333;
     background: #f9f9f9;
-    border-radius: 8px; /* 可选：加个圆角让 hover 更好看 */
 }
 
 .avatar-tab-item.active {
     color: #007AFF;
 }
 
-/* 删除或注释掉 active::after 伪元素，去掉蓝色下划线 */
-/*
 .avatar-tab-item.active::after {
     content: '';
     position: absolute;
@@ -539,16 +535,14 @@ body.dark-mode .user-pill-icon {
     height: 2px;
     background: #007AFF;
 }
-*/
 
-/* 优化后的头像网格：自动填充列，无滚动条限制 */
 .avatar-grid-scroll {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
-    gap: 12px;
-    max-height: none;
-    overflow-y: visible;
-    padding: 15px;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 5px;
 }
 
 .emoji-item {
@@ -591,196 +585,6 @@ body.dark-mode .user-pill-icon {
     background: #f5f5f5;
     border-color: #ccc;
 }
-
-.pref-modal-content {
-    display: flex;
-    flex-direction: row;
-    width: 380px; /* Initial width */
-    max-width: 90vw;
-    padding: 0;
-    gap: 0;
-    overflow: hidden;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-    /* --- 👇 新增以下 3 行以修复透明问题 👇 --- */
-    background: white;
-    border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-}
-
-/* --- 👇 新增：暗黑模式适配 👇 --- */
-body.dark-mode .pref-modal-content {
-    background: #2c2c2e;
-    color: white;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-}
-
-/* 展开宽度增加到 900px */
-.pref-modal-content.avatar-panel-visible {
-    width: 900px;
-}
-
-/* 修正：使用 Flex 布局并让按钮自动推到底部 */
-.pref-main-panel {
-    width: 380px;
-    /* 修改内边距，底部设置为 20px，与右侧对齐 */
-    padding: 25px 25px 20px 25px;
-    box-sizing: border-box;
-    flex-shrink: 0;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-
-/* 绝对定位左侧面板的按钮组，确保其沉底 */
-.pref-main-panel .modal-actions {
-    position: absolute;
-    bottom: 20px;
-    left: 25px;
-    right: 25px;
-    margin-top: 0 !important;
-    display: flex;
-    gap: 10px;
-    justify-content: center; /* ✨ 新增：按钮居中 */
-}
-
-/* 右侧面板宽度增加到 520px，并设置最小高度防止跳动 */
-/* --- 2. 调整头像面板高度 --- */
-.pref-avatar-panel {
-    width: 520px;
-    background: #f7f7f7;
-    border-left: 1px solid #e0e0e0;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-    transform: translateX(100%);
-    opacity: 0;
-    visibility: hidden;
-
-    height: 420px; /* ✨ 高度缩小，适应内容 */
-}
-/* 之前针对底部按钮的样式现在不再需要了，可以保留不动或者删除 */
-/* .pref-avatar-panel .modal-actions { ... } */
-
-.pref-avatar-panel .avatar-panel-content {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-#avatar-panel-upload {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 底部按钮居中且宽度减少为 30%，禁止拉伸 */
-.pref-avatar-panel .modal-actions {
-    padding: 20px;
-    border-top: 1px solid #e0e0e0;
-    display: flex;
-    justify-content: center;
-}
-
-.pref-avatar-panel .modal-actions button {
-    flex: none; /* 禁止自动拉伸 */
-    width: 30%; /* 设置宽度为 30% */
-}
-
-.pref-avatar-panel.visible {
-    transform: translateX(0);
-    opacity: 1;
-    visibility: visible;
-}
-
-.centered-form-group {
-    display: flex;
-    justify-content: center;
-}
-
-.forgot-password-link {
-    color: #999;
-    font-size: 12px;
-    text-decoration: none;
-}
-
-@media (max-width: 768px) {
-    .pref-modal-content {
-        flex-direction: column;
-        width: 92%;
-        max-width: 380px;
-        height: auto;
-        max-height: 85vh;
-        transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-        /* --- 👇 修复核心：添加背景、圆角和阴影 👇 --- */
-        background: white;
-        border-radius: 24px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        overflow: hidden; /* 防止内容溢出圆角 */
-    }
-
-    /* --- 👇 新增：移动端暗黑模式适配 👇 --- */
-    body.dark-mode .pref-modal-content {
-        background: #2c2c2e;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
-
-    .pref-modal-content.avatar-panel-visible {
-        /* On mobile, we expand height instead of width */
-        width: 92%;
-    }
-
-    .pref-main-panel {
-        width: 100%;
-        padding-bottom: 20px;
-    }
-
-    /* 移动端取消绝对定位，改回流式布局 */
-    .pref-main-panel .modal-actions {
-        position: static;
-        margin-top: 20px !important;
-    }
-
-    /* --- 👇 新增：防止标签文字（如label_display_name）截断 👇 --- */
-    .pref-main-panel .input-label {
-        min-width: 85px !important;
-    }
-
-    .pref-avatar-panel {
-        width: 100%;
-        height: 0;
-        padding: 0 20px;
-        transform: translateY(20px);
-        border-left: none;
-        border-top: 1px solid #e0e0e0;
-        overflow: hidden;
-        opacity: 1; /* Keep it opaque for the height transition */
-        visibility: visible; /* Keep it visible for the height transition */
-        transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        min-height: 0;
-        background: #f7f7f7; /* 确保面板有背景色 */
-    }
-
-    /* --- 👇 新增：暗黑模式下的头像面板背景 👇 --- */
-    body.dark-mode .pref-avatar-panel {
-        background: #1c1c1e;
-        border-top: 1px solid #333;
-    }
-
-    .pref-avatar-panel.visible {
-        height: 65vh; /* ✨ 关键修改：设定一个固定的屏幕高度比例（例如 65%） */
-        padding: 20px;
-        transform: translateY(0);
-    }
-}
-
 
 /* --- 移动端适配 (包含登录框修复) --- */
 @media (max-width: 768px) {
