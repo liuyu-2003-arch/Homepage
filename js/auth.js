@@ -7,10 +7,26 @@ export async function initAuth() {
     if (!sb) return;
     const { data: { session } } = await sb.auth.getSession();
     updateUserStatus(session?.user);
-    sb.auth.onAuthStateChange((_event, session) => { updateUserStatus(session?.user); });
+
+    // 修改 1：监听 Auth 状态变化时，增加智能判断
+    sb.auth.onAuthStateChange((event, session) => {
+        const currentUser = state.currentUser;
+        const newUser = session?.user;
+
+        let shouldAnimate = true;
+
+        // 如果是“已登录”或“刷新Token”事件，且用户ID一致，说明是 Tab 切换或后台刷新
+        // 此时将 shouldAnimate 设为 false，防止图标重新弹出
+        if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && currentUser && newUser && currentUser.id === newUser.id) {
+            shouldAnimate = false;
+        }
+
+        updateUserStatus(newUser, shouldAnimate);
+    });
 }
 
-export function updateUserStatus(user) {
+// 修改 2：增加 animate 参数，默认值为 true (保持原有行为)
+export function updateUserStatus(user, animate = true) {
     state.currentUser = user;
 
     const userPill = document.getElementById('user-pill');
@@ -33,8 +49,10 @@ export function updateUserStatus(user) {
 
     if (!userPill) return;
 
-    // 每次状态更新，重置并启动动画逻辑
-    startPillAnimation();
+    // 修改 3：仅当 animate 为 true 时才重置动画
+    if (animate) {
+        startPillAnimation();
+    }
 
     if (user) {
         userPill.classList.add('logged-in');
@@ -156,7 +174,6 @@ export async function savePreferences() {
     const sb = getSupabase();
     if (!sb || !state.currentUser) return;
 
-    // --- 修复核心：将限制从 20000 改为 3000000 (约 2MB 图片转 base64 后的长度) ---
     if (state.prefAvatarUrl && state.prefAvatarUrl.length > 3000000) {
         showToast(t("msg_img_too_large"), "error");
         return;
@@ -184,6 +201,7 @@ export async function savePreferences() {
         if (error) throw error;
 
         const { data: refreshData } = await sb.auth.refreshSession();
+        // 主动更新时，保持动画（使用默认 true）
         updateUserStatus(refreshData.user || data.user);
 
         showToast(t("msg_save_success"), "success");
@@ -199,4 +217,3 @@ export async function savePreferences() {
         }
     }
 }
-
