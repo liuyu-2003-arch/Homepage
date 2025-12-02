@@ -30,6 +30,7 @@
     "label_email": "Email",
     "label_password": "Password",
     "label_new_password": "New Password",
+    "label_confirm_password": "Confirm Password",
     "label_current_password": "Current Pass",
     "label_nickname": "Nickname",
     "label_phone_no": "Phone No.",
