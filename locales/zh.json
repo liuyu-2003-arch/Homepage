@@ -29,6 +29,7 @@
     "label_email": "邮箱",
     "label_password": "密码",
     "label_new_password": "新密码",
+    "label_current_password": "当前密码",
     "label_display_name": "显示名称",
     "label_phone": "手机号",
     "ph_url": "例如 bilibili.com",
@@ -73,5 +74,6 @@
     "msg_upload_hint": "最大 2MB (自动压缩)",
     "msg_img_too_large": "图片数据过大无法保存，请使用内置图标",
     "msg_sync_success_toast": "云端数据同步成功",
-    "msg_mobile_edit": "为了更好的体验，请在电脑端编辑书签"
+    "msg_mobile_edit": "为了更好的体验，请在电脑端编辑书签",
+    "msg_old_password_wrong": "旧密码错误，请重试"
 }

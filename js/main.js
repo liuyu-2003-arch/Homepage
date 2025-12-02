@@ -144,7 +144,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.closeChangePasswordModal = closeChangePasswordModal;
     window.handleChangePassword = () => {
         const newPass = document.getElementById('new-password').value;
-        changePassword(newPass);
+        const oldPass = document.getElementById('current-password').value;
+        changePassword(newPass, oldPass);
     };
 
     // --- 语言 ---

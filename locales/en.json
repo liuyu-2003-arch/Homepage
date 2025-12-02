@@ -30,6 +30,7 @@
     "label_email": "Email",
     "label_password": "Password",
     "label_new_password": "New Password",
+    "label_current_password": "Current Pass",
     "label_nickname": "Nickname",
     "label_phone_no": "Phone No.",
     "ph_url": "e.g. bilibili.com",
@@ -74,5 +75,6 @@
     "msg_upload_hint": "Max size: 2MB (Auto-compressed)",
     "msg_img_too_large": "Image too large. Please use built-in icons.",
     "msg_sync_success_toast": "Cloud Sync Successful",
-    "msg_mobile_edit": "Please edit bookmarks on Desktop"
+    "msg_mobile_edit": "Please edit bookmarks on Desktop",
+    "msg_old_password_wrong": "Old password incorrect"
 }

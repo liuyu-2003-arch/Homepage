@@ -913,6 +913,19 @@ export function openChangePasswordModal() {
 
     // 清空输入框
     document.getElementById('new-password').value = '';
+    document.getElementById('current-password').value = '';
+
+    // 判断是否显示“当前密码”框（如果是第三方登录，provider 通常是 google/github 等，不是 email）
+    // Supabase 默认的 email 登录 provider 也是 'email'
+    const isEmailUser = state.currentUser.app_metadata && state.currentUser.app_metadata.provider === 'email';
+    const currentPassRow = document.getElementById('current-password-row');
+
+    if (isEmailUser) {
+        currentPassRow.classList.remove('hidden');
+    } else {
+        currentPassRow.classList.add('hidden');
+    }
+
     document.getElementById('change-password-modal').classList.remove('hidden');
 }
 

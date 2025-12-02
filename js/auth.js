@@ -199,15 +199,37 @@ export async function savePreferences() {
     }
 }
 
-export async function changePassword(newPassword) {
+export async function changePassword(newPassword, oldPassword) {
     const sb = getSupabase();
     if (!sb || !state.currentUser) return;
 
     if (!newPassword || newPassword.length < 6) {
-        showToast(t("ph_password"), "error"); // 复用“密码至少6位”的提示
+        showToast(t("ph_password"), "error");
         return;
     }
 
+    const isEmailUser = state.currentUser.app_metadata && state.currentUser.app_metadata.provider === 'email';
+
+    // 如果是邮箱用户，强制验证旧密码
+    if (isEmailUser) {
+        if (!oldPassword) {
+            showToast(t("msg_input_req"), "error"); // 提示输入旧密码
+            return;
+        }
+
+        // 尝试用旧密码“登录”来验证
+        const { data, error: signInError } = await sb.auth.signInWithPassword({
+            email: state.currentUser.email,
+            password: oldPassword
+        });
+
+        if (signInError) {
+            showToast(t("msg_old_password_wrong") || "Old password incorrect", "error");
+            return;
+        }
+    }
+
+    // 验证通过（或不需要验证），执行更新
     try {
         const { data, error } = await sb.auth.updateUser({
             password: newPassword
@@ -215,7 +237,7 @@ export async function changePassword(newPassword) {
 
         if (error) throw error;
 
-        showToast(t("msg_update_success"), "success"); // 显示“更新成功”
+        showToast(t("msg_update_success"), "success");
         document.getElementById('change-password-modal').classList.add('hidden');
         startPillAnimation();
     } catch (e) {
