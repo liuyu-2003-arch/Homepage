@@ -505,22 +505,13 @@ export function openPrefModal() {
     document.getElementById('pref-current-img').src = currentAvatar;
     state.prefAvatarUrl = currentAvatar;
 
-    // --- 新增逻辑：初始化预览昵称并添加监听 ---
     const previewName = document.getElementById('pref-preview-name');
     if (previewName) {
-        // 初始化显示
         previewName.textContent = nameInput.value || "Guest";
-
-        // 移除旧的监听器（防止重复绑定），这是一种简单的处理方式
-        const newNameInput = nameInput.cloneNode(true);
-        nameInput.parentNode.replaceChild(newNameInput, nameInput);
-
-        // 绑定输入监听，实时更新预览
-        newNameInput.addEventListener('input', (e) => {
+        nameInput.addEventListener('input', (e) => {
             previewName.textContent = e.target.value || "Guest";
         });
     }
-    // ---------------------------------------
 
     renderAvatarGrid(currentAvatar);
     switchAvatarTab('emoji');
@@ -528,10 +519,7 @@ export function openPrefModal() {
     document.getElementById('user-dropdown').classList.remove('active');
     document.getElementById('pref-modal').classList.remove('hidden');
 
-    // --- 核心修复：打开时强制重置窗口状态 ---
-    // 1. 移除父容器的展开类，恢复初始宽度
     document.querySelector('.pref-modal-content').classList.remove('avatar-panel-visible');
-    // 2. 移除右侧面板的可见类，恢复隐藏状态
     document.getElementById('pref-avatar-panel').classList.remove('visible');
 }
 
