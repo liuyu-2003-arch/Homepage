@@ -36,11 +36,28 @@
                 <label for="pref-name" class="input-label" style="width: 90px;" data-i18n="label_display_name">Display Name</label>
                 <input type="text" id="pref-name" placeholder="Display Name" oninput="updatePrefNamePreview(this.value)">
             </div>
+
             <div class="input-row">
-                <label for="pref-phone" class="input-label" style="width: 90px;" data-i18n="label_phone">Phone</label>
-                <input type="tel" id="pref-phone" placeholder="Your Phone Number">
+                <label class="input-label" style="width: 90px;" data-i18n="label_phone">Phone</label>
+                <div style="display: flex; flex: 1; gap: 8px;">
+                    <select id="pref-phone-code" style="width: 100px; border-radius: 10px; border: 1px solid #e0e0e0; background: #f9f9f9; padding: 0 5px; font-size: 14px; outline: none; cursor: pointer;">
+                        <option value="+86">🇨🇳 +86</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+852">🇭🇰 +852</option>
+                        <option value="+886">🇹🇼 +886</option>
+                        <option value="+81">🇯🇵 +81</option>
+                        <option value="+82">🇰🇷 +82</option>
+                        <option value="+44">🇬🇧 +44</option>
+                        <option value="+33">🇫🇷 +33</option>
+                        <option value="+49">🇩🇪 +49</option>
+                        <option value="+7">🇷🇺 +7</option>
+                        <option value="+61">🇦🇺 +61</option>
+                        <option value="+1">🇨🇦 +1</option>
+                    </select>
+                    <input type="tel" id="pref-phone-number" placeholder="Number" style="flex: 1; min-width: 0;">
+                </div>
             </div>
-        </div>
+            </div>
 
         <div class="modal-actions">
             <button onclick="document.getElementById('pref-modal').classList.add('hidden')" data-i18n="btn_cancel">Cancel</button>

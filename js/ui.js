@@ -501,7 +501,35 @@ export function openPrefModal() {
     const currentName = meta.full_name || meta.display_name || state.currentUser.email.split('@')[0];
 
     document.getElementById('pref-name').value = meta.full_name || meta.display_name || '';
-    document.getElementById('pref-phone').value = meta.phone_number || meta.phone || '';
+
+    // --- 修改开始：解析电话号码并回显 ---
+    const fullPhone = meta.phone_number || meta.phone || '';
+    const codeSelect = document.getElementById('pref-phone-code');
+    const numberInput = document.getElementById('pref-phone-number');
+
+    if (fullPhone) {
+        let foundCode = '';
+        const options = Array.from(codeSelect.options).map(o => o.value).sort((a, b) => b.length - a.length);
+
+        for (const code of options) {
+            if (fullPhone.startsWith(code)) {
+                foundCode = code;
+                break;
+            }
+        }
+
+        if (foundCode) {
+            codeSelect.value = foundCode;
+            numberInput.value = fullPhone.slice(foundCode.length);
+        } else {
+            codeSelect.value = "+86"; // 默认
+            numberInput.value = fullPhone;
+        }
+    } else {
+        codeSelect.value = "+86";
+        numberInput.value = '';
+    }
+    // --- 修改结束 ---
 
     const currentAvatar = meta.avatar_url || "https://api.dicebear.com/7.x/notionists/svg?seed=Guest";
     document.getElementById('pref-current-img').src = currentAvatar;
