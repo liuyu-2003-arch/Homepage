@@ -579,11 +579,10 @@ function renderAvatarGrid(currentUrl) {
         container.appendChild(div);
     }
 
+    // --- 修改：移除了 fun-emoji 和 adventurer，保留了 notionists 和 micah ---
     const collections = [
-        { style: 'notionists', count: 12 },
-        { style: 'adventurer', count: 12 },
-        { style: 'fun-emoji', count: 12 },
-        { style: 'micah', count: 6 }
+        { style: 'notionists', count: 18 }, // 增加了黑白线条风格的数量
+        { style: 'micah', count: 12 }       // 保留了手绘风格
     ];
 
     collections.forEach(c => {
