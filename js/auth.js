@@ -1,6 +1,6 @@
 import { getSupabase, loadData } from './api.js';
 import { state } from './state.js';
-import { showToast, t, startPillAnimation } from './utils.js';
+import { showToast, t, startPillAnimation } from './utils.js'; // 引入 startPillAnimation
 
 export async function initAuth() {
     const sb = getSupabase();
@@ -8,12 +8,15 @@ export async function initAuth() {
     const { data: { session } } = await sb.auth.getSession();
     updateUserStatus(session?.user);
 
+    // 【修改点 1】监听 Auth 状态变化时，增加智能判断
     sb.auth.onAuthStateChange((event, session) => {
         const currentUser = state.currentUser;
         const newUser = session?.user;
 
         let shouldAnimate = true;
 
+        // 如果是“已登录”或“刷新Token”事件，且用户ID一致，说明是 Tab 切换或后台刷新
+        // 此时将 shouldAnimate 设为 false，防止图标重新弹出
         if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && currentUser && newUser && currentUser.id === newUser.id) {
             shouldAnimate = false;
         }
@@ -22,6 +25,7 @@ export async function initAuth() {
     });
 }
 
+// 【修改点 2】增加 animate 参数，默认值为 true (保持原有行为)
 export function updateUserStatus(user, animate = true) {
     state.currentUser = user;
 
@@ -35,6 +39,7 @@ export function updateUserStatus(user, animate = true) {
     const menuUserEmail = document.getElementById('menu-user-email');
     const menuUserAvatar = document.getElementById('menu-user-avatar');
 
+    // Auth Modal Elements
     const formGroup = document.querySelector('#auth-modal .form-group');
     const socialSection = document.querySelector('.social-login-section');
     const divider = document.querySelector('.auth-divider');
@@ -44,6 +49,7 @@ export function updateUserStatus(user, animate = true) {
 
     if (!userPill) return;
 
+    // 【修改点 3】仅当 animate 为 true 时才重置动画
     if (animate) {
         startPillAnimation();
     }
@@ -178,13 +184,20 @@ export async function savePreferences() {
     // --- 修改开始：获取区号和号码并合并 ---
     const phoneCode = document.getElementById('pref-phone-code').value;
     const phoneNumber = document.getElementById('pref-phone-number').value;
+
+    // 简单校验：必须是数字，且长度合理
+    if (phoneNumber && !/^\d{5,15}$/.test(phoneNumber)) {
+         showToast("无效的电话号码 / Invalid Phone Number", "error");
+         return;
+    }
+
     const fullPhone = phoneNumber ? (phoneCode + phoneNumber) : '';
     // --- 修改结束 ---
 
     const updates = {
         data: {
             full_name: name,
-            phone_number: fullPhone, // 这里使用合并后的号码
+            phone_number: fullPhone,
             avatar_url: state.prefAvatarUrl
         }
     };
@@ -200,9 +213,11 @@ export async function savePreferences() {
         if (error) throw error;
 
         const { data: refreshData } = await sb.auth.refreshSession();
+        // 主动更新时，保持动画（使用默认 true）
         updateUserStatus(refreshData.user || data.user);
 
         showToast(t("msg_save_success"), "success");
+        // 关闭时也会触发动画重置
         document.getElementById('pref-modal').classList.add('hidden');
         startPillAnimation();
     } catch (e) {

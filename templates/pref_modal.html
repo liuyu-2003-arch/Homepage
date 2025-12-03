@@ -54,7 +54,11 @@
                         <option value="+61">🇦🇺 +61</option>
                         <option value="+1">🇨🇦 +1</option>
                     </select>
-                    <input type="tel" id="pref-phone-number" placeholder="Number" style="flex: 1; min-width: 0;">
+                    <input type="tel"
+                           id="pref-phone-number"
+                           placeholder="Number"
+                           style="flex: 1; min-width: 0;"
+                           oninput="this.value = this.value.replace(/\D/g, '')">
                 </div>
             </div>
             </div>

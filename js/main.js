@@ -7,7 +7,7 @@ import {
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     openPrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
     autoFillInfo, updatePreview, selectStyle, selectPage, updatePrefNamePreview,
-    handleAvatarUrlInput // <--- 新增导入
+    handleAvatarUrlInput
 } from './ui.js';
 import { t, showToast, startPillAnimation } from './utils.js';
 import { state } from './state.js';
@@ -68,6 +68,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const subject = encodeURIComponent("Homepage Feedback");
         const body = encodeURIComponent("Hi Developer,\n\nI have some feedback:");
         window.location.href = `mailto:jemchmi@gmail.com?subject=${subject}&body=${body}`;
+    };
+
+    // 【新增】绑定捐赠按钮
+    window.handleDonate = () => {
+        // 请将下面的链接替换为你自己的捐赠页面 URL
+        const donateUrl = 'https://www.buymeacoffee.com/';
+        window.open(donateUrl, '_blank');
     };
 
     // --- 新增：鼠标悬停触发动画重置 ---

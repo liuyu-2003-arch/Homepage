@@ -509,6 +509,7 @@ export function openPrefModal() {
 
     if (fullPhone) {
         let foundCode = '';
+        // 按照长度倒序，优先匹配长区号
         const options = Array.from(codeSelect.options).map(o => o.value).sort((a, b) => b.length - a.length);
 
         for (const code of options) {
@@ -522,11 +523,12 @@ export function openPrefModal() {
             codeSelect.value = foundCode;
             numberInput.value = fullPhone.slice(foundCode.length);
         } else {
-            codeSelect.value = "+86"; // 默认
+            // 如果没匹配到常见区号，默认选+86，号码填完整的
+            codeSelect.value = "+86";
             numberInput.value = fullPhone;
         }
     } else {
-        codeSelect.value = "+86";
+        codeSelect.value = "+86"; // 默认区号
         numberInput.value = '';
     }
     // --- 修改结束 ---
