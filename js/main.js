@@ -70,10 +70,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = `mailto:jemchmi@gmail.com?subject=${subject}&body=${body}`;
     };
 
-    // 【新增】绑定捐赠按钮
+    // 【新增】绑定捐赠按钮 (已更新链接)
     window.handleDonate = () => {
-        // 请将下面的链接替换为你自己的捐赠页面 URL
-        const donateUrl = 'https://www.buymeacoffee.com/';
+        const donateUrl = 'https://buymeacoffee.com/324893';
         window.open(donateUrl, '_blank');
     };
 
