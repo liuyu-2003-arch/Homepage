@@ -18,7 +18,8 @@ async function loadTemplates() {
         { id: 'modal-placeholder', url: 'templates/bookmark_modal.html' },
         { id: 'page-edit-modal-placeholder', url: 'templates/page_edit_modal.html' },
         { id: 'pref-modal-placeholder', url: 'templates/pref_modal.html' },
-        { id: 'auth-modal-placeholder', url: 'templates/auth_modal.html' }
+        { id: 'auth-modal-placeholder', url: 'templates/auth_modal.html' },
+        { id: 'help-modal-placeholder', url: 'templates/help_modal.html' }
     ];
 
     for (const template of templates) {
@@ -155,6 +156,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.closeModal = closeModal;
     window.toggleEditMode = toggleEditMode;
 
+    window.openHelpModal = () => {
+        document.getElementById('help-modal').classList.remove('hidden');
+    };
+    window.closeHelpModal = () => {
+        document.getElementById('help-modal').classList.add('hidden');
+    };
+
     // --- 书签操作 ---
     window.saveBookmark = saveBookmark;
     window.deleteBookmark = deleteBookmark;
@@ -190,10 +198,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- 语言 ---
     window.changeLanguage = async (lang) => {
         await i18n.loadTranslations(lang);
-    };
-
-    window.setAsHomepage = () => {
-        showToast("Please manually set this page as your browser's homepage.", "normal");
     };
 
     window.addEventListener('resize', () => { render(); });
