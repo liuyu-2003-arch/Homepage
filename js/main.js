@@ -192,6 +192,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         await i18n.loadTranslations(lang);
     };
 
+    window.setAsHomepage = () => {
+        showToast("Please manually set this page as your browser's homepage.", "normal");
+    };
+
     window.addEventListener('resize', () => { render(); });
 
     // --- 核心修复：更新点击监听器 ---
