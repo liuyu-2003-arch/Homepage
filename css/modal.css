@@ -13,6 +13,11 @@
 @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .modal-content h3 { margin: 0; font-size: 18px; color: #333; text-align: center; margin-top: 10px; }
 
+#auth-modal h3 {
+    font-size: 22px;
+    margin-bottom: 25px;
+}
+
 .close-modal-btn {
     position: absolute; top: 15px; right: 15px;
     background: transparent; border: none; font-size: 28px; line-height: 1;
