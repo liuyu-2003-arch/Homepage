@@ -116,7 +116,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('user-dropdown').classList.toggle('active');
         } else {
             document.getElementById('auth-modal').classList.remove('hidden');
+            switchToLoginView(); // Default to login view
         }
+    };
+    window.closeAuthModal = () => {
+        document.getElementById('auth-modal').classList.add('hidden');
+    }
+    window.switchToSignUpView = () => {
+        document.getElementById('auth-title').textContent = 'Sign Up';
+        document.getElementById('signup-specifics').classList.remove('hidden');
+        document.getElementById('login-actions').classList.add('hidden');
+        document.getElementById('register-actions').classList.remove('hidden');
+        document.getElementById('social-login-container').classList.add('hidden');
+        document.getElementById('login-footer').classList.add('hidden');
+        document.getElementById('register-footer').classList.remove('hidden');
+    };
+    window.switchToLoginView = () => {
+        document.getElementById('auth-title').textContent = 'Login';
+        document.getElementById('signup-specifics').classList.add('hidden');
+        document.getElementById('login-actions').classList.remove('hidden');
+        document.getElementById('register-actions').classList.add('hidden');
+        document.getElementById('social-login-container').classList.remove('hidden');
+        document.getElementById('login-footer').classList.remove('hidden');
+        document.getElementById('register-footer').classList.add('hidden');
     };
     window.handleMenuEdit = () => {
         document.getElementById('user-dropdown').classList.remove('active');
