@@ -38,6 +38,7 @@
     "modal_edit_title": "Editar/Añadir marcador",
     "modal_page_title": "Editar páginas",
     "modal_auth_title": "Iniciar sesión / Registrarse",
+    "modal_auth_subtitle": "Inicia sesión para editar y sincronizar marcadores",
     "modal_auth_hint": "Elige un avatar (para registrarse)",
     "modal_pref_title": "Preferencias de la cuenta",
     "preview_title": "Vista previa",

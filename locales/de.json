@@ -38,6 +38,7 @@
     "modal_edit_title": "Lesezeichen bearbeiten/hinzufügen",
     "modal_page_title": "Seiten bearbeiten",
     "modal_auth_title": "Anmelden / Registrieren",
+    "modal_auth_subtitle": "Anmelden, um Lesezeichen zu bearbeiten und zu synchronisieren",
     "modal_auth_hint": "Wähle einen Avatar (für die Registrierung)",
     "modal_pref_title": "Kontoeinstellungen",
     "preview_title": "Vorschau",

@@ -38,6 +38,7 @@
     "modal_edit_title": "북마크 편집/추가",
     "modal_page_title": "페이지 편집",
     "modal_auth_title": "로그인 / 등록",
+    "modal_auth_subtitle": "로그인하여 북마크를 편집하고 동기화하세요",
     "modal_auth_hint": "아바타 선택 (등록용)",
     "modal_pref_title": "계정 환경설정",
     "preview_title": "미리보기",

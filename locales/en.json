@@ -39,6 +39,7 @@
     "modal_edit_title": "Edit/Add Bookmark",
     "modal_page_title": "Edit Pages",
     "modal_auth_title": "Login",
+    "modal_auth_subtitle": "Login to edit and sync bookmarks",
     "modal_auth_hint": "Choose an avatar (for registration)",
     "modal_pref_title": "Account Preferences",
     "preview_title": "Preview",

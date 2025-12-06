@@ -38,6 +38,7 @@
     "modal_edit_title": "Modifier/Ajouter un favori",
     "modal_page_title": "Modifier les pages",
     "modal_auth_title": "Connexion / Inscription",
+    "modal_auth_subtitle": "Connectez-vous pour modifier et synchroniser les favoris",
     "modal_auth_hint": "Choisissez un avatar (pour l'inscription)",
     "modal_pref_title": "Préférences du compte",
     "preview_title": "Aperçu",

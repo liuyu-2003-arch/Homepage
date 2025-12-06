@@ -39,6 +39,7 @@
     "modal_edit_title": "编辑/添加书签",
     "modal_page_title": "编辑页面",
     "modal_auth_title": "登录 / 注册",
+    "modal_auth_subtitle": "登录后编辑书签和云同步书签",
     "modal_auth_hint": "选择一个头像 (用于注册)",
     "modal_pref_title": "账户设置",
     "preview_title": "标题预览",

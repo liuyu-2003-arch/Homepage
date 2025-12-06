@@ -38,6 +38,7 @@
     "modal_edit_title": "ブックマークを編集/追加",
     "modal_page_title": "ページを編集",
     "modal_auth_title": "ログイン / 登録",
+    "modal_auth_subtitle": "ログインしてブックマークを編集・同期",
     "modal_auth_hint": "アバターを選択 (登録用)",
     "modal_pref_title": "アカウント設定",
     "preview_title": "プレビュー",

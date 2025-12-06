@@ -38,6 +38,7 @@
     "modal_edit_title": "تحرير/إضافة إشارة مرجعية",
     "modal_page_title": "تحرير الصفحات",
     "modal_auth_title": "تسجيل الدخول / تسجيل",
+    "modal_auth_subtitle": "تسجيل الدخول لتحرير ومزامنة الإشارات المرجعية",
     "modal_auth_hint": "اختر صورة رمزية (للتسجيل)",
     "modal_pref_title": "تفضيلات الحساب",
     "preview_title": "معاينة",

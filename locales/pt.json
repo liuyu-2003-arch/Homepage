@@ -38,6 +38,7 @@
     "modal_edit_title": "Editar/Adicionar Favorito",
     "modal_page_title": "Editar Páginas",
     "modal_auth_title": "Login / Registrar",
+    "modal_auth_subtitle": "Faça login para editar e sincronizar favoritos",
     "modal_auth_hint": "Escolha um avatar (para registro)",
     "modal_pref_title": "Preferências da Conta",
     "preview_title": "Pré-visualização",

@@ -38,6 +38,7 @@
     "modal_edit_title": "Modifica/Aggiungi segnalibro",
     "modal_page_title": "Modifica pagine",
     "modal_auth_title": "Accedi / Registrati",
+    "modal_auth_subtitle": "Accedi per modificare e sincronizzare i segnalibri",
     "modal_auth_hint": "Scegli un avatar (per la registrazione)",
     "modal_pref_title": "Preferenze account",
     "preview_title": "Anteprima",
