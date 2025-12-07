@@ -1,3 +1,5 @@
+/* css/bookmark.css */
+
 .bookmark-swiper {
     width: 100%; overflow: hidden; flex-grow: 1;
     touch-action: pan-y;
@@ -42,9 +44,37 @@
     display: flex; align-items: center; justify-content: center;
     position: relative;
 }
-.icon-box img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-.bookmark-item.style-fit .icon-box img { width: 85%; height: 85%; object-fit: contain; }
-.bookmark-item.style-white .icon-box img { width: 60%; height: 60%; object-fit: contain; }
+
+/* --- 核心修改开始：解决 Logo 比例变形 --- */
+
+/* 1. 默认铺满模式 (Full) */
+.icon-box img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; /* 铺满裁剪 */
+    padding: 0;
+    pointer-events: none; 
+}
+
+/* 2. 适中模式 (Fit) - 修改为 padding 控制，保持正方形 */
+.bookmark-item.style-fit .icon-box img { 
+    width: 100% !important; 
+    height: 100% !important; 
+    object-fit: contain !important; /* 保持比例 */
+    padding: 15% !important; /* 内边距控制显示大小 */
+    box-sizing: border-box !important; /* 确保 padding 算在尺寸内 */
+}
+
+/* 3. 留白模式 (White) - 修改为 padding 控制，保持正方形 */
+.bookmark-item.style-white .icon-box img { 
+    width: 100% !important; 
+    height: 100% !important; 
+    object-fit: contain !important; /* 保持比例 */
+    padding: 25% !important; /* 更大的内边距 */
+    box-sizing: border-box !important; 
+}
+
+/* --- 核心修改结束 --- */
 
 .text-icon {
     width: 100%; height: 100%; background: #e0e0e0; color: #555;

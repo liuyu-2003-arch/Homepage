@@ -90,32 +90,34 @@
     .user-pill { padding: 4px 12px 4px 4px; }
     .pagination-dots { bottom: 5px; }
 
-    /* 7. 登录窗口/弹窗适配 (修复：垂直居中 & 高度自适应) */
+    /* 7. 登录窗口/弹窗适配 (修复：垂直居中 & 高度自适应 & 内容溢出) */
 
     /* 确保父容器 flex 居中生效 */
     .modal {
         align-items: center !important;
-        padding-bottom: 10%; /* 稍微向上提一点点，视觉上更平衡 */
+        padding-bottom: 5%; /* 稍微向上提 */
     }
 
     .modal-content {
         min-width: unset !important;
         width: 90%;
         max-width: 350px;
-        padding: 25px 20px;
+
+        /* 修改：减小内边距，腾出空间 */
+        padding: 20px 15px !important;
+        gap: 12px !important; /* 减小间距 */
 
         /* 核心修复：高度自适应，去掉强制定位 */
         height: auto !important;
-        position: relative !important; /* 交给 flexbox 居中 */
+        position: relative !important;
         top: auto !important;
         transform: none !important;
         margin: 0 auto !important;
 
         justify-content: flex-start !important;
-        gap: 15px;
 
         /* 防止内容过多溢出 */
-        max-height: 85vh;
+        max-height: 90vh;
         overflow-y: auto;
 
         border-radius: 20px !important;
@@ -123,14 +125,60 @@
 
     .input-row {
         display: flex !important; flex-direction: row !important;
-        justify-content: flex-start !important; align-items: center !important; gap: 15px !important;
+        justify-content: flex-start !important; align-items: center !important; gap: 10px !important;
     }
     .input-label {
         width: auto !important; min-width: 40px; flex-shrink: 0;
         text-align: left !important; padding-right: 0;
     }
+
+    /* 修改：减小输入框高度 */
     .modal-content input {
-        flex: 1 !important; width: auto !important; height: 52px !important;
-        font-size: 16px !important; padding: 0 15px;
+        flex: 1 !important; width: auto !important;
+        height: 40px !important; /* 从 52px 减小到 40px */
+        font-size: 14px !important; padding: 0 10px;
+        margin-bottom: 0 !important;
+    }
+
+    /* === 新增：修复弹窗溢出 & Logo 缩小 === */
+
+    /* 1. 减小预览区域上下间距 */
+    .preview-section {
+        padding-bottom: 10px !important;
+        border-bottom: 1px solid #eee;
+        border-right: none !important; /* 手机端去掉右边框 */
+        padding-right: 0 !important;
+    }
+
+    /* 2. 核心：把预览 Logo 改小 */
+    #preview-card {
+        width: 60px !important; /* 原来可能很大，强制改小 */
+    }
+    #preview-card .icon-box {
+        width: 60px !important;
+        height: 60px !important;
+        border-radius: 14px !important;
+    }
+    #preview-card .text-icon {
+        font-size: 24px !important;
+    }
+    #preview-card .bookmark-title {
+        font-size: 12px !important;
+    }
+
+    /* 3. 减小候选图标尺寸 */
+    .candidate-item {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 8px !important;
+    }
+    .candidate-grid {
+        gap: 6px !important;
+    }
+
+    .modal-top-split {
+        flex-direction: column !important; /* 强制垂直排列 */
+        gap: 10px !important;
+        padding: 10px !important;
     }
 }
