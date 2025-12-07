@@ -99,6 +99,10 @@ function createVisualPages() {
 
 // --- 模态框与书签逻辑 ---
 export function openModal(pageIndex = -1, bookmarkIndex = -1) {
+    // 【修改点 1】打开书签编辑窗口时，隐藏底部编辑按钮栏
+    const controls = document.getElementById('edit-controls');
+    if (controls) controls.classList.add('hidden');
+
     state.currentEditInfo = { pageIndex, bookmarkIndex };
     document.getElementById('modal').classList.remove('hidden');
     const titleInput = document.getElementById('input-title');
@@ -136,6 +140,13 @@ export function openModal(pageIndex = -1, bookmarkIndex = -1) {
 
 export function closeModal() {
     document.getElementById('modal').classList.add('hidden');
+
+    // 【修改点 2】关闭书签窗口时，如果在编辑模式，恢复底部按钮栏
+    if (state.isEditing) {
+        const controls = document.getElementById('edit-controls');
+        if (controls) controls.classList.remove('hidden');
+    }
+
     // 关闭时恢复动画
     startPillAnimation();
 }
@@ -362,12 +373,23 @@ export function renderPageOptions(selectedPageIndex) {
 
 // --- 页面管理逻辑 ---
 export function openPageEditModal() {
+    // 【修改点 3】打开页面编辑窗口时，隐藏底部编辑按钮栏
+    const controls = document.getElementById('edit-controls');
+    if (controls) controls.classList.add('hidden');
+
     document.getElementById('page-edit-modal').classList.remove('hidden');
     renderPageList();
 }
 
 export function closePageEditModal() {
     document.getElementById('page-edit-modal').classList.add('hidden');
+
+    // 【修改点 4】关闭页面编辑窗口时，恢复底部编辑按钮栏
+    if (state.isEditing) {
+        const controls = document.getElementById('edit-controls');
+        if (controls) controls.classList.remove('hidden');
+    }
+
     render();
     // 关闭时恢复动画
     startPillAnimation();
