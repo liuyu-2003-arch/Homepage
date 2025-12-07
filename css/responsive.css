@@ -1,4 +1,6 @@
-/* --- 移动端适配 (包含登录框修复) --- */
+/* css/responsive.css */
+
+/* --- 移动端适配 --- */
 @media (max-width: 768px) {
     /* 1. 整体上移 */
     .container { padding-top: 10px; }
@@ -44,12 +46,14 @@
         font-size: 13px; margin-top: 6px; width: 120%;
     }
 
-    /* 5. 确保“编辑书签”按钮显示 (逻辑在 JS 里拦截) */
+    /* 5. 确保“编辑书签”按钮在菜单中显示 */
     .user-menu .menu-item[onclick*="handleMenuEdit"] { display: flex !important; }
 
-    /* 6. 底部控件：显示编辑条，适配手机屏幕 */
+    /* 6. 底部控件适配 (修复：默认隐藏，点击后显示) */
+
+    /* 移除之前的 !important，让 .hidden 类生效 */
     #edit-controls.edit-controls {
-        display: flex !important; /* 强制显示 */
+        display: flex;            /* 使用 flex 布局，但权重要允许 .hidden 覆盖 */
         width: 92%;               /* 宽度适配 */
         padding: 12px;
         flex-wrap: wrap;          /* 允许按钮换行 */
@@ -59,15 +63,21 @@
         z-index: 1001;
     }
 
-    /* 针对手机端调整按钮样式，防止太挤 */
+    /* 确保隐藏类优先级更高 */
+    #edit-controls.edit-controls.hidden {
+        display: none !important;
+    }
+
+    /* 针对手机端调整按钮样式 */
     #edit-controls button {
         padding: 8px 12px;
         font-size: 13px;
-        flex: 1 1 auto; /* 允许按钮缩放 */
+        flex: 1 1 auto; /* 允许按钮根据宽度自动缩放 */
     }
 
+    /* 主题控件单独处理 */
     #theme-controls.edit-controls {
-        display: flex; /* 允许 JS 控制 hidden 类 */
+        display: flex;
         width: 90%; padding: 15px;
         flex-wrap: wrap; justify-content: center;
         bottom: 30px; z-index: 1001;
@@ -78,32 +88,37 @@
     /* 其他适配 */
     .user-trigger-area { padding: 15px; }
     .user-pill { padding: 4px 12px 4px 4px; }
-    .pagination-dots { bottom: 5px; } /* 底部圆点位置 */
+    .pagination-dots { bottom: 5px; }
 
-    /* 7. 登录窗口/弹窗适配 (修复溢出问题) */
+    /* 7. 登录窗口/弹窗适配 (修复：垂直居中 & 高度自适应) */
+
+    /* 确保父容器 flex 居中生效 */
+    .modal {
+        align-items: center !important;
+        padding-bottom: 10%; /* 稍微向上提一点点，视觉上更平衡 */
+    }
+
     .modal-content {
         min-width: unset !important;
-        width: 92%;
+        width: 90%;
         max-width: 350px;
-        padding: 20px;
+        padding: 25px 20px;
 
-        /* 核心修改：高度自适应，内容自然堆叠 */
+        /* 核心修复：高度自适应，去掉强制定位 */
         height: auto !important;
+        position: relative !important; /* 交给 flexbox 居中 */
+        top: auto !important;
+        transform: none !important;
+        margin: 0 auto !important;
+
         justify-content: flex-start !important;
         gap: 15px;
 
         /* 防止内容过多溢出 */
-        max-height: 90vh;
+        max-height: 85vh;
         overflow-y: auto;
 
-        /* 保持圆角 */
         border-radius: 20px !important;
-
-        /* 居中定位 */
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        margin: 0;
     }
 
     .input-row {
