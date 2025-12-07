@@ -72,5 +72,15 @@
     "msg_upload_hint": "最大 2MB (自動壓縮)",
     "msg_img_too_large": "圖片資料過大無法儲存，請使用內建圖示",
     "msg_sync_success_toast": "雲端資料同步成功",
-    "msg_mobile_edit": "為了更好的體驗，請在電腦端編輯書籤"
+    "msg_mobile_edit": "為了更好的體驗，請在電腦端編輯書籤",
+    "help_title": "如何使用本主頁",
+    "help_editing_title": "編輯書籤：",
+    "help_editing_content": "要新增、編輯或刪除書籤，請點擊使用者選單中的“編輯書籤”按鈕。這將進入編輯模式，允許您管理書籤。",
+    "help_themes_title": "自訂主題：",
+    "help_themes_content": "您可以通過點擊使用者選單中的“編輯主題”來更改主頁的外觀。從不同的顏色和圖案中進行選擇，以個性化您的體驗。",
+    "help_syncing_title": "跨裝置同步：",
+    "help_syncing_content": "通過建立帳戶，您的書籤和設定將在您的所有裝置上自動同步。只需登入即可從任何地方存取您的個性化主頁。",
+    "help_homepage_title": "設定為首頁：",
+    "help_homepage_content": "要將此頁面設定為瀏覽器的首頁，請在瀏覽器的設定中手動執行此操作。出於安全原因，網站無法自動執行此操作。",
+    "help_got_it": "知道了！"
 }

@@ -59,7 +59,7 @@
     "msg_reg_success": "Регистрация прошла успешно, проверьте свою эл. почту",
     "msg_update_success": "Обновление прошло успешно",
     "msg_select_avatar": "Пожалуйста, выберите аватар",
-    "msg_title_url_req": "Заголовок и URL обязательны",
+    "msg_title_url_req": "Заголовок и URL обязательny",
     "msg_page_not_empty": "Страница не пуста",
     "msg_import_success": "Импорт прошел успешно",
     "msg_import_fail": "Ошибка импорта, неверный формат",
@@ -72,5 +72,15 @@
     "msg_upload_hint": "Макс. размер: 2 МБ (автосжатие)",
     "msg_img_too_large": "Изображение слишком большое. Пожалуйста, используйте встроенные иконки.",
     "msg_sync_success_toast": "Синхронизация с облаком прошла успешно",
-    "msg_mobile_edit": "Пожалуйста, редактируйте закладки на компьютере"
+    "msg_mobile_edit": "Пожалуйста, редактируйте закладки на компьютере",
+    "help_title": "How to Use This Homepage",
+    "help_editing_title": "Editing Bookmarks:",
+    "help_editing_content": "To add, edit, or remove bookmarks, click the \"Edit Bookmark\" button in the user menu. This will enter edit mode, allowing you to manage your bookmarks.",
+    "help_themes_title": "Customizing Themes:",
+    "help_themes_content": "You can change the look and feel of your homepage by clicking \"Edit Theme\" in the user menu. Choose from different colors and patterns to personalize your experience.",
+    "help_syncing_title": "Syncing Across Devices:",
+    "help_syncing_content": "By creating an account, your bookmarks and settings will be automatically synced across all your devices. Simply log in to access your personalized homepage from anywhere.",
+    "help_homepage_title": "Setting as Homepage:",
+    "help_homepage_content": "To set this page as your browser's homepage, please do so manually in your browser's settings. For security reasons, websites cannot do this automatically.",
+    "help_got_it": "Got it!"
 }
