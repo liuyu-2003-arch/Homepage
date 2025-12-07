@@ -78,7 +78,7 @@ body.dark-mode .user-pill-icon {
 
 .user-menu {
     position: fixed;
-    top: 70px; right: 20px; width: 260px;
+    top: 70px; right: 20px; width: 200px; /* 修改：缩小宽度以适应手机 */
     background: white; border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.15);
     z-index: 2000; padding: 8px 0;
@@ -226,7 +226,7 @@ body.dark-mode .user-pill-icon {
 .submenu {
     display: none;
     position: absolute;
-    left: -160px; /* Position to the left of the parent menu */
+    left: -155px; /* 修改：调整偏移量，适配更窄的主菜单 */
     top: 0;
     width: 150px;
     background: white;
