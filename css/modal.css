@@ -1,180 +1,213 @@
 /* css/modal.css */
 
+/* --- 核心变量定义 --- */
 :root {
+    /* 通用/旧版变量 (蓝色主题) */
+    --modal-bg: #ffffff;
+    --input-bg: #f5f5f7;
+    --primary-blue: #007aff;
+    --primary-blue-hover: #0056b3;
+    --text-main: #1d1d1f;
+    --text-sub: #86868b;
+
+    /* Auth/新版变量 (红色主题) */
     --cm-accent: #fa2d48;
     --cm-accent-hover: #d61e35;
-    /* Tailwind Gray Palette */
-    --cm-bg-input: #f9fafb;  /* gray-50 */
-    --cm-border-light: #f3f4f6; /* gray-100 */
-    --cm-border: #e5e7eb;    /* gray-200 */
-    --cm-border-hover: #d1d5db; /* gray-300 */
-    --cm-text-sub: #6b7280;  /* gray-500 */
-    --cm-placeholder: #9ca3af; /* gray-400 */
-    --cm-text-main: #111827; /* gray-900 */
+    --cm-bg-input: #f9fafb;
+    --cm-border: #e5e7eb;
+    --cm-text-main: #111827;
 }
 
-/* 模态框背景 */
+/* =========================================
+   1. 基础模态框容器 (所有窗口共用)
+   ========================================= */
 .modal {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px); /* 略微降低模糊度以匹配 CloudMusic */
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex; justify-content: center; align-items: center;
     z-index: 9999;
     opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
 }
 .modal:not(.hidden) { opacity: 1; pointer-events: auto; }
 
-/* 卡片主体 */
+/* 通用淡入动画 */
 .modal-content {
-    background: #ffffff;
-    width: 100%; max-width: 384px; /* max-w-sm */
-    border-radius: 16px; /* rounded-2xl */
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
-    overflow: hidden;
-
-    /* 关键：字体渲染优化，让字体看起来更细致 */
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    transform: scale(0.95);
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     animation: zoomIn 0.2s forwards;
+    background: var(--modal-bg);
+    border-radius: 16px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+    overflow: hidden;
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.2s;
 }
 @keyframes zoomIn { to { transform: scale(1); } }
 
+
+/* =========================================
+   2. 通用样式 (用于偏好设置、书签编辑等)
+      恢复原来的蓝色苹果风格
+   ========================================= */
+
+/* 默认内边距 */
+.modal:not(#auth-modal) .modal-content {
+    padding: 30px;
+    width: 360px; /* 默认宽度 */
+    max-width: 90%;
+}
+
+/* 旧版关闭按钮 (右上角小叉) */
+.close-modal-btn {
+    position: absolute; top: 15px; right: 15px;
+    background: none; border: none;
+    font-size: 24px; color: #999;
+    cursor: pointer; padding: 5px;
+    line-height: 1; z-index: 10;
+}
+.close-modal-btn:hover { color: #333; }
+
+/* 旧版标题 */
+.modal-content h3 {
+    margin: 0 0 20px 0;
+    text-align: center;
+    font-size: 20px;
+    color: var(--text-main);
+}
+
+/* 旧版横向输入框 (Input Row) - 关键恢复点 */
+.input-row {
+    background: var(--input-bg);
+    border-radius: 12px;
+    padding: 8px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+.input-row:focus-within {
+    background: #fff;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+}
+
+/* 标签样式 */
+.input-label {
+    font-size: 13px; font-weight: 600; color: var(--text-sub);
+    min-width: 60px; margin-right: 10px;
+    white-space: nowrap;
+}
+
+/* 输入控件 */
+.input-row input, .input-row select {
+    border: none; background: transparent; outline: none;
+    width: 100%; font-size: 15px; color: var(--text-main);
+    padding: 4px 0;
+}
+
+/* 旧版按钮区域 */
+.modal-actions {
+    display: flex; gap: 12px; margin-top: 24px;
+}
+.modal-actions button {
+    flex: 1; padding: 12px; border: none; border-radius: 12px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    background: #f5f5f7; color: var(--text-main);
+    transition: 0.2s;
+}
+.modal-actions button.primary {
+    background: var(--primary-blue); color: white;
+}
+.modal-actions button.primary:hover {
+    background: var(--primary-blue-hover);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+/* 预览卡片 (书签编辑用) */
+.preview-section { margin-bottom: 20px; display: flex; justify-content: center; }
+.candidate-grid { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; }
+
+
+/* =========================================
+   3. 登录窗口专用样式 (Auth Specific)
+      #auth-modal 作用域下的新设计
+   ========================================= */
+
+#auth-modal .modal-content {
+    width: 100%; max-width: 384px;
+    padding: 0; /* 清除默认 padding，使用内部结构 */
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
 /* 头部 */
 .modal-header {
-    background-color: #f9fafb; /* gray-50 */
-    padding: 16px 24px; /* py-4 px-6 */
-    border-bottom: 1px solid var(--cm-border-light);
+    background-color: #f9fafb;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--cm-border);
     display: flex; justify-content: space-between; align-items: center;
-    height: 60px; /* 强制固定高度，防止字体行高差异 */
-    box-sizing: border-box;
+    height: 60px; box-sizing: border-box;
 }
-.modal-header h3 {
-    margin: 0; font-size: 18px; /* text-lg */
-    font-weight: 600; color: var(--cm-text-main);
-    line-height: 1.2;
-}
-.close-btn {
-    background: none; border: none; cursor: pointer; color: var(--cm-placeholder);
-    padding: 4px; border-radius: 50%; display: flex;
-    transition: color 0.2s;
-}
-.close-btn:hover { color: #4b5563; }
+.modal-header h3 { margin: 0; font-size: 18px; font-weight: 600; text-align: left; }
 
-/* 内容区域 padding: 32px (p-8) */
-.modal-body {
-    padding: 32px;
-    display: flex; flex-direction: column;
-    gap: 24px; /* space-y-6 */
-}
+/* 登录内容区 */
+.modal-body { padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+.auth-form { display: flex; flex-direction: column; gap: 16px; }
 
-/* 表单块 gap: 16px (space-y-4) */
-.auth-form {
-    display: flex; flex-direction: column;
-    gap: 16px;
-}
-
-/* 输入框样式 */
+/* 新版竖向输入框 (Input Wrapper) */
 .input-wrapper label {
-    display: block;
-    font-size: 12px; /* text-xs */
-    font-weight: 700; color: var(--cm-text-sub);
-    text-transform: uppercase;
-    letter-spacing: -0.025em; /* tracking-tight: 更紧凑 */
-    margin-bottom: 6px; /* mb-1.5 */
-    line-height: 1;
+    display: block; font-size: 12px; font-weight: 700; color: #6b7280;
+    text-transform: uppercase; letter-spacing: -0.025em; margin-bottom: 6px;
 }
 .input-wrapper input {
     width: 100%; box-sizing: border-box;
     background-color: var(--cm-bg-input);
     border: 1px solid var(--cm-border);
-    border-radius: 8px; /* rounded-lg */
-    padding: 10px 16px; /* py-2.5 px-4 */
-    font-size: 14px; /* text-sm */
-    color: var(--cm-text-main);
-    line-height: 1.25rem; /* 20px */
+    border-radius: 8px;
+    padding: 10px 16px; font-size: 14px;
     transition: all 0.2s; outline: none;
 }
 .input-wrapper input:focus {
-    background-color: #fff; border-color: transparent;
-    box-shadow: 0 0 0 2px var(--cm-accent);
+    background-color: #fff; box-shadow: 0 0 0 2px var(--cm-accent); border-color: transparent;
 }
-.input-wrapper input::placeholder { color: var(--cm-placeholder); }
 
-/* 主按钮 */
+/* 新版红色按钮 */
 .btn-primary {
-    width: 100%;
-    background-color: var(--cm-accent);
-    color: white;
-    font-weight: 700; font-size: 14px;
-    padding: 12px 0; /* py-3 */
-    border: none; border-radius: 8px;
-    cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* shadow-md */
-    line-height: 1.25rem;
+    width: 100%; background-color: var(--cm-accent); color: white;
+    font-weight: 700; font-size: 14px; padding: 12px 0;
+    border: none; border-radius: 8px; cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 .btn-primary:hover { background-color: var(--cm-accent-hover); }
-.btn-primary:active { transform: scale(0.95); }
-.btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+.btn-primary:active { transform: scale(0.98); }
 
-/* 分割线 */
-.divider {
-    position: relative; text-align: center;
-    height: 16px; /* 稍微增加一点高度以容纳文字行高 */
-    display: flex; align-items: center; justify-content: center;
-}
-.divider::before {
-    content: ''; position: absolute; left: 0; right: 0;
-    height: 1px; background: var(--cm-border); /* gray-200 */
-}
-.divider span {
-    position: relative; z-index: 1;
-    background: #fff; padding: 0 12px;
-    font-size: 10px; /* text-[10px] */
-    font-weight: 700; color: var(--cm-placeholder);
-    text-transform: uppercase; letter-spacing: 0.1em; /* tracking-widest */
-}
+/* 分割线与社交按钮 */
+.divider { position: relative; text-align: center; height: 16px; display: flex; align-items: center; justify-content: center; }
+.divider::before { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: #e5e7eb; }
+.divider span { position: relative; z-index: 1; background: #fff; padding: 0 12px; font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; }
 
-/* 社交按钮 */
 .social-buttons { display: flex; gap: 12px; }
 .btn-social {
     flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 10px 0; /* py-2.5 */
-    border-radius: 8px;
-    font-size: 12px; /* text-xs */
-    font-weight: 700;
-    cursor: pointer; transition: all 0.2s;
-    border: 1px solid #d1d5db; /* gray-300 */
-    background: #fff; color: #374151;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-sm */
-    line-height: 1;
+    padding: 10px 0; border-radius: 8px; font-size: 12px; font-weight: 700;
+    cursor: pointer; border: 1px solid #d1d5db; background: #fff; color: #374151;
 }
 .btn-social:hover { background-color: #f9fafb; }
-.btn-social:active { transform: scale(0.95); }
-
-.btn-social.github {
-    background: #24292e; color: #fff; border-color: #24292e;
-}
-.btn-social.github:hover { background: #2f363d; }
+.btn-social.github { background: #24292e; color: #fff; border-color: #24292e; }
 
 /* 底部切换 */
-.auth-switch {
-    text-align: center; font-size: 12px; font-weight: 500; color: var(--cm-text-sub);
-}
-.auth-switch a {
-    color: var(--cm-accent); text-decoration: none; font-weight: 700; cursor: pointer;
-    margin-left: 2px;
-}
-.auth-switch a:hover { text-decoration: underline; }
+.auth-switch { text-align: center; font-size: 12px; font-weight: 500; color: #6b7280; }
+.auth-switch a { color: var(--cm-accent); text-decoration: none; font-weight: 700; cursor: pointer; }
 
+/* 错误提示 */
 .error-msg {
     color: #dc2626; font-size: 12px; font-weight: 500;
     background: #fef2f2; padding: 12px; border-radius: 8px; border: 1px solid #fee2e2;
-    display: none; margin-bottom: -8px; /* 稍微修正间距 */
+    display: none; margin-bottom: -8px;
 }
 .error-msg.show { display: block; }
+
+/* 工具类 */
 .hidden { display: none !important; }
