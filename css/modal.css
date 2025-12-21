@@ -204,3 +204,46 @@
         border-bottom: 1px solid #e0e0e0;
     }
 }
+
+/* =========================================
+   Auth Modal Styles
+   ========================================= */
+
+#auth-modal .social-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+#auth-modal .btn-social {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+#auth-modal .btn-social.google {
+    background: #fff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+#auth-modal .btn-social.google:hover {
+    background-color: #f9fafb;
+}
+
+#auth-modal .btn-social.github {
+    background: #24292e;
+    border: 1px solid #24292e;
+    color: #fff;
+}
+
+#auth-modal .btn-social.github:hover {
+    background-color: #2f363d;
+}
