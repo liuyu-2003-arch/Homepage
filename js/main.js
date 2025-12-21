@@ -100,10 +100,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.handleFeedback = handleFeedback;
     window.handleDonate = handleDonate;
     window.changeLanguage = changeLanguage;
+    window.switchAvatarTab = switchAvatarTab;
+    window.handleAvatarUrlInput = handleAvatarUrlInput;
+    window.updatePrefNamePreview = updatePrefNamePreview;
+    window.selectNewAvatar = selectNewAvatar;
+
 
     // 导入监听
     const importInput = document.getElementById('import-file-input');
     if(importInput) importInput.addEventListener('change', handleImport);
 
     window.addEventListener('resize', () => { render(); });
+
+    // --- 新增：点击外部关闭菜单 ---
+    document.addEventListener('click', (event) => {
+        const userPill = document.getElementById('user-pill');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        if (userDropdown && userDropdown.classList.contains('active')) {
+            if (!userPill.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.remove('active');
+            }
+        }
+    });
 });
