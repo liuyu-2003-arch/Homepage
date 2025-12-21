@@ -1,75 +1,227 @@
-/* 模态框整体容器 - 毛玻璃效果 */
+/* --- 模态框容器 (全屏遮罩) --- */
 .modal {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex; justify-content: center; align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* 深色半透明背景 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     z-index: 9999;
-    backdrop-filter: blur(15px) saturate(160%);
-    -webkit-backdrop-filter: blur(15px) saturate(160%);
-    animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(16px) saturate(180%); /* 核心：高级毛玻璃效果 */
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    animation: fadeIn 0.3s ease-out forwards;
+    opacity: 0;
 }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeIn { to { opacity: 1; } }
 
-/* 登录卡片主体 */
+/* --- 登录/注册卡片主体 --- */
 #auth-modal .modal-content {
     background: #ffffff;
-    padding: 40px 32px;
-    border-radius: 32px;
-    width: 360px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+    width: 380px; /* 稍微加宽，大气一点 */
+    padding: 40px;
+    border-radius: 28px; /* 大圆角 */
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2); /* 深邃的阴影 */
     display: flex;
     flex-direction: column;
     gap: 24px;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    transform: scale(0.95);
+    animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* 标题和副标题 */
+@keyframes popIn { to { transform: scale(1); } }
+
+/* --- 标题区域 --- */
 #auth-title {
-    font-size: 26px; font-weight: 700; color: #1d1d1f; text-align: center; margin: 0;
-}
-.auth-divider {
-    font-size: 14px; color: #86868b; text-align: center; margin-top: -12px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1d1d1f;
+    text-align: center;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.5px;
 }
 
-/* 现代感输入框 */
+.auth-subtitle {
+    font-size: 15px;
+    color: #86868b;
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: 400;
+}
+
+/* --- 表单区域 --- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* 输入框之间的间距 */
+}
+
+/* 输入框容器 */
 .input-row {
-    background: #f5f5f7;
+    background: #f2f2f7; /* iOS 风格浅灰背景 */
     border-radius: 14px;
     padding: 4px 16px;
-    border: 2px solid transparent;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
 }
+
+/* 输入框聚焦态 */
 .input-row:focus-within {
     background: #ffffff;
     border-color: #007aff;
-    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15); /* 蓝色光晕 */
 }
+
 .modal-content input {
-    width: 100%; height: 48px; border: none !important; background: transparent !important;
-    outline: none; font-size: 16px; color: #1d1d1f;
+    width: 100%;
+    height: 48px;
+    border: none !important;
+    background: transparent !important;
+    outline: none;
+    font-size: 17px;
+    color: #1d1d1f;
+    font-weight: 400;
 }
 
-/* 主登录按钮 */
+/* --- 按钮区域 --- */
 .modal-actions button.primary {
-    width: 100%; height: 52px; background: #007aff; color: #fff;
-    border: none; border-radius: 16px; font-size: 17px; font-weight: 600;
-    cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+    width: 100%;
+    height: 52px;
+    background: #007aff; /* Apple Blue */
+    color: #ffffff;
+    border: none;
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
 }
-.modal-actions button.primary:active { transform: scale(0.97); }
 
-/* 社交登录图标 */
-.social-icons { display: flex; justify-content: center; gap: 24px; margin: 8px 0; }
+.modal-actions button.primary:hover {
+    background: #0071e3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+.modal-actions button.primary:active {
+    transform: scale(0.98);
+}
+
+/* --- 社交登录 (圆形图标) --- */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 8px;
+}
+
 .social-btn {
-    width: 56px; height: 56px; border-radius: 50%; background: #ffffff;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.2s; border: 1px solid #d2d2d7;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #f5f5f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid rgba(0,0,0,0.05);
 }
-.social-btn:hover { background: #f5f5f7; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-.social-btn svg { width: 26px; height: 26px; }
 
-/* 底部切换文本 */
-.auth-footer { text-align: center; font-size: 14px; color: #86868b; }
-.auth-footer a { color: #007aff; text-decoration: none; font-weight: 600; }
+.social-btn:hover {
+    background: #ffffff;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.social-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* --- 分割线 --- */
+.divider-text {
+    font-size: 13px;
+    color: #86868b;
+    text-align: center;
+    margin: 10px 0;
+    position: relative;
+}
+
+/* --- 底部切换链接 --- */
+.auth-footer {
+    text-align: center;
+    font-size: 14px;
+    color: #86868b;
+    margin-top: 10px;
+}
+
+.auth-footer a {
+    color: #007aff;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* --- 注册页特有样式 (头像选择) --- */
+/* 适配 JS 生成的头像网格 */
+#avatar-selector {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+#avatar-selector img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+#avatar-selector img:hover {
+    transform: scale(1.1);
+}
+
+#avatar-selector img.selected {
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+/* 关闭按钮 */
+.close-btn-absolute {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    background: #f2f2f7;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #86868b;
+    font-size: 18px;
+    transition: all 0.2s;
+}
+
+.close-btn-absolute:hover {
+    background: #e5e5ea;
+    color: #1d1d1f;
+}
