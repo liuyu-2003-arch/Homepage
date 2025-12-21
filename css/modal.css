@@ -72,6 +72,12 @@
 .modal-actions button { flex: 1; padding: 10px; border: none; border-radius: 12px; cursor: pointer; background: #eee; font-size: 14px; font-weight: 600; }
 .modal-actions button.primary { background: #007AFF; color: white; }
 
+#auth-modal .modal-actions button {
+    background-color: #fa2d48;
+    color: white;
+    border-radius: 8px;
+}
+
 .page-list { list-style: none; padding: 0; margin: 0 0 20px 0; }
 .page-list-item {
     display: flex; align-items: center; padding: 8px; background: #f5f7f9; border-radius: 10px;
