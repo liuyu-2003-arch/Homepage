@@ -1,5 +1,5 @@
 import { initSupabase, loadData, saveData, exportConfig, importConfig, handleImport } from './api.js';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences, switchToSignUpView, switchToLoginView } from './auth.js';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences } from './auth.js';
 import { i18n } from './i18n.js';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
@@ -7,7 +7,7 @@ import {
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     openPrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
     autoFillInfo, updatePreview, selectStyle, selectPage, updatePrefNamePreview,
-    handleAvatarUrlInput, handleMenuEdit, openHelpModal, closeHelpModal, handleFeedback, handleDonate, changeLanguage
+    handleAvatarUrlInput
 } from './ui.js';
 import { t, showToast, startPillAnimation } from './utils.js';
 import { state } from './state.js';
@@ -25,103 +25,188 @@ async function loadTemplates() {
     for (const template of templates) {
         try {
             const response = await fetch(template.url);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const html = await response.text();
             const placeholder = document.getElementById(template.id);
-            if (placeholder) placeholder.outerHTML = html;
+            if (placeholder) {
+                placeholder.outerHTML = html;
+            }
         } catch (error) {
             console.error(`Failed to load template: ${template.url}`, error);
         }
     }
 }
 
+
 document.addEventListener('DOMContentLoaded', async () => {
-    document.body.style.visibility = 'hidden';
-
-    // 1. 优先加载模板和语言
+    // 1. 初始化基础配置
     await loadTemplates();
+    document.body.style.visibility = 'hidden';
     await i18n.loadTranslations(i18n.currentLang);
-
-    // 2. 初始化 UI 组件
     initTheme();
     initSwiper();
-    createAvatarSelector('avatar-selector', (url) => { state.selectedAvatarUrl = url; });
 
-    // 3. 初始化 Supabase 和数据
+    // 2. 注册页面的头像选择器
+    createAvatarSelector('avatar-selector', (url) => {
+        state.selectedAvatarUrl = url;
+    });
+    const authContainer = document.getElementById('avatar-selector');
+    if (authContainer && authContainer.firstChild) authContainer.firstChild.click();
+
+    // 3. 初始化 Supabase
     const sb = initSupabase();
     if (sb) {
-        await initAuth();
-        if (!state.currentUser) await loadData();
+        initAuth().then(() => { if (!state.currentUser) loadData(); });
     } else {
-        await loadData();
+        loadData();
     }
 
-    // 4. 【核心修复】强制恢复显示，放在所有 await 之后
-    document.body.style.visibility = 'visible';
+    // 4. 监听导入文件
+    const importInput = document.getElementById('import-file-input');
+    if(importInput) importInput.addEventListener('change', handleImport);
 
-    // 5. 挂载全局交互函数
-    window.handleLogin = handleLogin;
-    window.handleRegister = handleRegister;
-    window.toggleAuthModal = () => {
-        if (state.currentUser) {
-            document.getElementById('user-dropdown')?.classList.toggle('active');
-        } else {
-            document.getElementById('auth-modal')?.classList.remove('hidden');
-            switchToLoginView();
-        }
+    // 5. 绑定反馈按钮
+    window.handleFeedback = () => {
+        const subject = encodeURIComponent("Homepage Feedback");
+        const body = encodeURIComponent("Hi Developer,\n\nI have some feedback:");
+        window.location.href = `mailto:jemchmi@gmail.com?subject=${subject}&body=${body}`;
     };
-    window.closeAuthModal = () => document.getElementById('auth-modal')?.classList.add('hidden');
-    window.handleLogout = handleLogout;
-    window.handleOAuthLogin = handleOAuthLogin;
-    window.savePreferences = savePreferences;
-    window.openModal = openModal;
-    window.closeModal = closeModal;
-    window.toggleEditMode = toggleEditMode;
-    window.importConfig = importConfig;
-    window.exportConfig = exportConfig;
-    window.openThemeControls = openThemeControls;
-    window.closeThemeControls = closeThemeControls;
-    window.handleMenuEdit = handleMenuEdit;
-    window.openHelpModal = openHelpModal;
-    window.closeHelpModal = closeHelpModal;
-    window.openPrefModal = openPrefModal;
-    window.handleFeedback = handleFeedback;
-    window.handleDonate = handleDonate;
-    window.changeLanguage = changeLanguage;
-    window.switchAvatarTab = switchAvatarTab;
-    window.handleAvatarUrlInput = handleAvatarUrlInput;
-    window.updatePrefNamePreview = updatePrefNamePreview;
-    window.selectNewAvatar = selectNewAvatar;
-    window.saveBookmark = saveBookmark;
-    window.deleteBookmark = deleteBookmark;
+
+    // 【新增】绑定捐赠按钮 (已更新链接)
+    window.handleDonate = () => {
+        const donateUrl = 'https://buymeacoffee.com/324893';
+        window.open(donateUrl, '_blank');
+    };
+
+    // --- 新增：鼠标悬停触发动画重置 ---
+    const userTriggerArea = document.querySelector('.user-trigger-area');
+    if (userTriggerArea) {
+        userTriggerArea.addEventListener('mouseenter', startPillAnimation);
+        userTriggerArea.addEventListener('mousemove', startPillAnimation); // 持续移动也重置
+    }
+
+    // ============================================================
+    // 🔥 核心修复：挂载所有交互函数到 window
+    // ============================================================
+
+    // --- 弹窗逻辑 (重点修复) ---
     window.autoFillInfo = autoFillInfo;
     window.updatePreview = updatePreview;
     window.selectStyle = selectStyle;
     window.selectPage = selectPage;
+
+    // --- 账户 (Auth) ---
+    window.handleLogin = () => {
+        const email = document.getElementById('auth-email').value;
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) return showToast(t("msg_input_req"), "error");
+        handleLogin(email, pass);
+    };
+    window.handleRegister = () => {
+        const email = document.getElementById('auth-email').value;
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) return showToast(t("msg_input_req"), "error");
+        handleRegister(email, pass, state.selectedAvatarUrl);
+    };
+    window.handleLogout = handleLogout;
+    window.handleOAuthLogin = handleOAuthLogin;
+    window.savePreferences = savePreferences;
+
+    // --- 菜单与弹窗 ---
+    window.toggleAuthModal = () => {
+         if (state.currentUser) {
+            document.getElementById('user-dropdown').classList.toggle('active');
+        } else {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            switchToLoginView(); // Default to login view
+        }
+    };
+    window.closeAuthModal = () => {
+        document.getElementById('auth-modal').classList.add('hidden');
+    }
+    window.switchToSignUpView = () => {
+        document.getElementById('auth-title').textContent = 'Sign Up';
+        document.getElementById('signup-specifics').classList.remove('hidden');
+        document.getElementById('login-actions').classList.add('hidden');
+        document.getElementById('register-actions').classList.remove('hidden');
+        document.getElementById('social-login-container').classList.add('hidden');
+        document.getElementById('login-footer').classList.add('hidden');
+        document.getElementById('register-footer').classList.remove('hidden');
+    };
+    window.switchToLoginView = () => {
+        document.getElementById('auth-title').textContent = 'Login';
+        document.getElementById('signup-specifics').classList.add('hidden');
+        document.getElementById('login-actions').classList.remove('hidden');
+        document.getElementById('register-actions').classList.add('hidden');
+        document.getElementById('social-login-container').classList.remove('hidden');
+        document.getElementById('login-footer').classList.remove('hidden');
+        document.getElementById('register-footer').classList.add('hidden');
+    };
+    window.handleMenuEdit = () => {
+        document.getElementById('user-dropdown').classList.remove('active');
+        toggleEditMode(true);
+    };
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.toggleEditMode = toggleEditMode;
+
+    window.openHelpModal = () => {
+        document.getElementById('user-dropdown').classList.remove('active');
+        document.getElementById('help-modal').classList.remove('hidden');
+    };
+    window.closeHelpModal = () => {
+        document.getElementById('help-modal').classList.add('hidden');
+    };
+
+    // --- 书签操作 ---
+    window.saveBookmark = saveBookmark;
+    window.deleteBookmark = deleteBookmark;
+
+    // --- 页面管理 ---
     window.addPage = addPage;
     window.deletePage = deletePage;
     window.openPageEditModal = openPageEditModal;
     window.closePageEditModal = closePageEditModal;
+
+    // --- 导入导出 ---
+    window.importConfig = importConfig;
+    window.exportConfig = exportConfig;
+
+    // --- 主题控制 ---
+    window.openThemeControls = openThemeControls;
+    window.closeThemeControls = closeThemeControls;
     window.quickChangeTheme = quickChangeTheme;
-    window.changeTheme = changeTheme;
-    window.switchToSignUpView = switchToSignUpView;
-    window.switchToLoginView = switchToLoginView;
+    window.changeTheme = (color, el, pattern) => changeTheme(color, el, pattern);
 
+    // --- 偏好设置 ---
+    window.openPrefModal = openPrefModal;
+    window.switchAvatarTab = switchAvatarTab;
 
-    // 导入监听
-    const importInput = document.getElementById('import-file-input');
-    if(importInput) importInput.addEventListener('change', handleImport);
+    // 修改：改用 URL 处理函数
+    window.handleAvatarUrlInput = handleAvatarUrlInput;
+
+    window.selectNewAvatar = selectNewAvatar;
+
+    // 【新增】挂载预览更新函数
+    window.updatePrefNamePreview = updatePrefNamePreview;
+
+    // --- 语言 ---
+    window.changeLanguage = async (lang) => {
+        await i18n.loadTranslations(lang);
+    };
 
     window.addEventListener('resize', () => { render(); });
 
-    // --- 新增：点击外部关闭菜单 ---
-    document.addEventListener('click', (event) => {
-        const userPill = document.getElementById('user-pill');
-        const userDropdown = document.getElementById('user-dropdown');
+    // --- 核心修复：更新点击监听器 ---
+    document.addEventListener('click', (e) => {
+        const menu = document.getElementById('user-dropdown');
+        const pill = document.getElementById('user-pill');
 
-        if (userDropdown && userDropdown.classList.contains('active')) {
-            if (!userPill.contains(event.target) && !userDropdown.contains(event.target)) {
-                userDropdown.classList.remove('active');
+        if (menu && menu.classList.contains('active')) {
+            // 检查点击目标是否在菜单或按钮外部
+            if (!menu.contains(e.target) && (!pill || !pill.contains(e.target))) {
+                menu.classList.remove('active');
+                // 菜单关闭后，重新开始动画计时
+                startPillAnimation();
             }
         }
     });
