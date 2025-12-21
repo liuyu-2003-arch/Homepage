@@ -157,13 +157,11 @@ export async function handleOAuthLogin(provider) {
     const sb = getSupabase();
     if (!sb) return showToast(t("msg_sdk_error"), "error");
     showToast(`Navigating to ${provider}...`, "normal");
-    const redirectUrl = window.location.origin + window.location.pathname;
     try {
         const { error } = await sb.auth.signInWithOAuth({
             provider: provider,
             options: {
-                redirectTo: redirectUrl,
-                queryParams: { access_type: 'offline', prompt: 'consent' }
+                redirectTo: window.location.origin,
             }
         });
         if (error) throw error;
