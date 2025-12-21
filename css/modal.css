@@ -1,123 +1,118 @@
-/* 模态框基础 */
+/* 模态框背景 */
 .modal {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;
-    z-index: 200; backdrop-filter: blur(8px); /* 增强背景模糊 */
+    background: rgba(0, 0, 0, 0.4);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
 }
 
-/* 优化后的登录容器 */
+/* 登录卡片 */
 #auth-modal .modal-content {
-    background: white; 
-    padding: 35px; 
-    border-radius: 28px;
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 24px;
     width: 360px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.1); 
-    display: flex; 
-    flex-direction: column; 
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
     gap: 20px;
-    animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-@keyframes popUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
+/* 标题样式 */
 #auth-title {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
-    color: #1d1d1f;
+    color: #1a1a1a;
     text-align: center;
-    margin-bottom: 5px;
+    margin: 0;
 }
 
 .auth-divider {
     font-size: 13px;
-    color: #86868b;
+    color: #8e8e93;
     text-align: center;
-    margin-bottom: 15px;
 }
 
-/* 现代感输入框 */
+/* 输入框行 */
 .input-row {
-    display: flex; 
-    align-items: center; 
-    gap: 12px;
-    background: #f5f5f7;
+    background: #f2f2f7;
     border-radius: 12px;
-    padding: 0 15px;
-    border: 1px solid transparent;
+    padding: 0 16px;
     transition: all 0.2s;
+    border: 2px solid transparent;
 }
 
 .input-row:focus-within {
     background: #fff;
-    border-color: #007AFF;
-    box-shadow: 0 0 0 4px rgba(0,122,255,0.1);
-}
-
-.input-label { 
-    font-size: 13px; 
-    color: #86868b; 
-    width: 45px !important; 
-    font-weight: 500; 
+    border-color: #007aff;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
 }
 
 .modal-content input {
-    flex: 1;
+    width: 100%;
+    height: 48px;
     border: none !important;
     background: transparent !important;
-    font-size: 14px;
     outline: none;
-    height: 48px !important;
+    font-size: 15px;
 }
 
-/* 按钮优化 */
-.modal-actions { display: flex; gap: 10px; margin-top: 5px; }
-.modal-actions button { 
-    flex: 1; 
-    height: 48px;
-    border: none; 
-    border-radius: 14px; 
-    cursor: pointer; 
-    background: #f5f5f7; 
-    font-size: 15px; 
+/* 登录按钮 */
+.modal-actions button.primary {
+    width: 100%;
+    height: 50px;
+    background: #007aff;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
     font-weight: 600;
+    cursor: pointer;
     transition: transform 0.1s;
 }
-.modal-actions button:active { transform: scale(0.98); }
-.modal-actions button.primary { background: #007AFF; color: white; }
 
-/* 社交登录美化 */
+.modal-actions button.primary:active {
+    transform: scale(0.97);
+}
+
+/* 第三方登录按钮 */
 .social-icons {
     display: flex;
     justify-content: center;
     gap: 20px;
-    margin-top: 10px;
 }
 
 .social-btn {
-    width: 54px;
-    height: 54px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    background: #f5f5f7;
+    background: #f2f2f7;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    transition: 0.2s cubic-bezier(0.2, 0, 0.2, 1);
 }
 
 .social-btn:hover {
-    background: #e8e8ed;
+    background: #e5e5ea;
     transform: translateY(-2px);
 }
 
 .social-btn svg { width: 24px; height: 24px; }
 
-/* 关闭按钮 */
-.close-modal-btn {
-    position: absolute; top: 15px; right: 15px;
-    background: #f5f5f7; border: none; font-size: 20px;
-    color: #86868b; cursor: pointer; width: 32px; height: 32px;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+/* 底部切换链接 */
+.auth-footer {
+    text-align: center;
+    font-size: 14px;
+    color: #3a3a3c;
+}
+
+.auth-footer a {
+    color: #007aff;
+    text-decoration: none;
+    font-weight: 600;
 }
