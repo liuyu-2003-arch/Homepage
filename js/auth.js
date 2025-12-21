@@ -34,12 +34,12 @@ window.toggleAuthMode = () => {
     if (isSignUp) {
         title.innerText = "Create Account";
         submitBtn.innerText = "Create Account";
-        switchText.innerText = "Already have an account? "; // 注意末尾空格
+        switchText.innerText = "Already have an account? ";
         switchAction.innerText = "Sign In";
     } else {
         title.innerText = "Sign In";
         submitBtn.innerText = "Sign In";
-        switchText.innerText = "Don't have an account? "; // 注意末尾空格
+        switchText.innerText = "Don't have an account? ";
         switchAction.innerText = "Sign Up";
     }
 };

@@ -3,34 +3,41 @@
 :root {
     --cm-accent: #fa2d48;
     --cm-accent-hover: #d61e35;
-    --cm-bg-gray: #f9fafb;
-    --cm-border: #e5e7eb;
-    --cm-text-main: #111827;
-    --cm-text-sub: #6b7280;
-    --cm-placeholder: #9ca3af;
+    /* Tailwind Gray Palette */
+    --cm-bg-input: #f9fafb;  /* gray-50 */
+    --cm-border-light: #f3f4f6; /* gray-100 */
+    --cm-border: #e5e7eb;    /* gray-200 */
+    --cm-border-hover: #d1d5db; /* gray-300 */
+    --cm-text-sub: #6b7280;  /* gray-500 */
+    --cm-placeholder: #9ca3af; /* gray-400 */
+    --cm-text-main: #111827; /* gray-900 */
 }
 
 /* 模态框背景 */
 .modal {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(4px); /* 略微降低模糊度以匹配 CloudMusic */
+    -webkit-backdrop-filter: blur(4px);
     display: flex; justify-content: center; align-items: center;
     z-index: 9999;
-    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
 }
 .modal:not(.hidden) { opacity: 1; pointer-events: auto; }
 
 /* 卡片主体 */
 .modal-content {
     background: #ffffff;
-    width: 100%; max-width: 384px; /* 精确匹配 max-w-sm (24rem) */
-    border-radius: 16px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    width: 100%; max-width: 384px; /* max-w-sm */
+    border-radius: 16px; /* rounded-2xl */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
     overflow: hidden;
-    /* 核心字体栈：完全对应 Tailwind 的 font-sans */
+
+    /* 关键：字体渲染优化，让字体看起来更细致 */
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
     transform: scale(0.95);
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     animation: zoomIn 0.2s forwards;
@@ -39,13 +46,17 @@
 
 /* 头部 */
 .modal-header {
-    background-color: #f9fafb;
-    padding: 16px 24px;
-    border-bottom: 1px solid #f3f4f6;
+    background-color: #f9fafb; /* gray-50 */
+    padding: 16px 24px; /* py-4 px-6 */
+    border-bottom: 1px solid var(--cm-border-light);
     display: flex; justify-content: space-between; align-items: center;
+    height: 60px; /* 强制固定高度，防止字体行高差异 */
+    box-sizing: border-box;
 }
 .modal-header h3 {
-    margin: 0; font-size: 18px; font-weight: 600; color: var(--cm-text-main);
+    margin: 0; font-size: 18px; /* text-lg */
+    font-weight: 600; color: var(--cm-text-main);
+    line-height: 1.2;
 }
 .close-btn {
     background: none; border: none; cursor: pointer; color: var(--cm-placeholder);
@@ -54,35 +65,38 @@
 }
 .close-btn:hover { color: #4b5563; }
 
-/* 内容区域 */
+/* 内容区域 padding: 32px (p-8) */
 .modal-body {
-    padding: 32px; /* p-8 */
+    padding: 32px;
     display: flex; flex-direction: column;
-    gap: 24px; /* space-y-6: 板块间距 */
+    gap: 24px; /* space-y-6 */
 }
 
-/* 表单块：输入框+按钮 */
+/* 表单块 gap: 16px (space-y-4) */
 .auth-form {
     display: flex; flex-direction: column;
-    gap: 16px; /* space-y-4: 输入框与按钮间距 */
+    gap: 16px;
 }
 
 /* 输入框样式 */
 .input-wrapper label {
     display: block;
     font-size: 12px; /* text-xs */
-    font-weight: 700; color: #6b7280;
+    font-weight: 700; color: var(--cm-text-sub);
     text-transform: uppercase;
-    letter-spacing: -0.025em; /* tracking-tight */
-    margin-bottom: 6px;
+    letter-spacing: -0.025em; /* tracking-tight: 更紧凑 */
+    margin-bottom: 6px; /* mb-1.5 */
+    line-height: 1;
 }
 .input-wrapper input {
     width: 100%; box-sizing: border-box;
-    background-color: #f9fafb; /* bg-gray-50 */
-    border: 1px solid #e5e7eb;
+    background-color: var(--cm-bg-input);
+    border: 1px solid var(--cm-border);
     border-radius: 8px; /* rounded-lg */
     padding: 10px 16px; /* py-2.5 px-4 */
-    font-size: 14px; color: var(--cm-text-main);
+    font-size: 14px; /* text-sm */
+    color: var(--cm-text-main);
+    line-height: 1.25rem; /* 20px */
     transition: all 0.2s; outline: none;
 }
 .input-wrapper input:focus {
@@ -97,25 +111,31 @@
     background-color: var(--cm-accent);
     color: white;
     font-weight: 700; font-size: 14px;
-    padding: 12px; /* py-3 */
-    border: none; border-radius: 8px; /* rounded-lg */
+    padding: 12px 0; /* py-3 */
+    border: none; border-radius: 8px;
     cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* shadow-md */
+    line-height: 1.25rem;
 }
 .btn-primary:hover { background-color: var(--cm-accent-hover); }
-.btn-primary:active { transform: scale(0.95); } /* active:scale-95 */
+.btn-primary:active { transform: scale(0.95); }
 .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
 
 /* 分割线 */
-.divider { position: relative; text-align: center; height: 10px; display: flex; align-items: center; justify-content: center; }
+.divider {
+    position: relative; text-align: center;
+    height: 16px; /* 稍微增加一点高度以容纳文字行高 */
+    display: flex; align-items: center; justify-content: center;
+}
 .divider::before {
     content: ''; position: absolute; left: 0; right: 0;
-    height: 1px; background: #e5e7eb;
+    height: 1px; background: var(--cm-border); /* gray-200 */
 }
 .divider span {
     position: relative; z-index: 1;
     background: #fff; padding: 0 12px;
-    font-size: 10px; font-weight: 700; color: var(--cm-placeholder);
+    font-size: 10px; /* text-[10px] */
+    font-weight: 700; color: var(--cm-placeholder);
     text-transform: uppercase; letter-spacing: 0.1em; /* tracking-widest */
 }
 
@@ -123,13 +143,15 @@
 .social-buttons { display: flex; gap: 12px; }
 .btn-social {
     flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 10px; /* py-2.5 */
+    padding: 10px 0; /* py-2.5 */
     border-radius: 8px;
-    font-size: 12px; font-weight: 700;
+    font-size: 12px; /* text-xs */
+    font-weight: 700;
     cursor: pointer; transition: all 0.2s;
-    border: 1px solid #d1d5db; /* border-gray-300 */
+    border: 1px solid #d1d5db; /* gray-300 */
     background: #fff; color: #374151;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-sm */
+    line-height: 1;
 }
 .btn-social:hover { background-color: #f9fafb; }
 .btn-social:active { transform: scale(0.95); }
@@ -141,18 +163,18 @@
 
 /* 底部切换 */
 .auth-switch {
-    text-align: center; font-size: 12px; font-weight: 500; color: #6b7280;
+    text-align: center; font-size: 12px; font-weight: 500; color: var(--cm-text-sub);
 }
 .auth-switch a {
     color: var(--cm-accent); text-decoration: none; font-weight: 700; cursor: pointer;
-    margin-left: 4px;
+    margin-left: 2px;
 }
 .auth-switch a:hover { text-decoration: underline; }
 
 .error-msg {
     color: #dc2626; font-size: 12px; font-weight: 500;
-    background: #fef2f2; padding: 8px 12px; border-radius: 8px; border: 1px solid #fee2e2;
-    display: none;
+    background: #fef2f2; padding: 12px; border-radius: 8px; border: 1px solid #fee2e2;
+    display: none; margin-bottom: -8px; /* 稍微修正间距 */
 }
 .error-msg.show { display: block; }
 .hidden { display: none !important; }
