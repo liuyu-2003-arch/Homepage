@@ -44,8 +44,7 @@
 .candidate-random { background: #e8f2ff; color: #007AFF; font-size: 20px; }
 
 .form-group { display: flex; flex-direction: column; gap: 15px; }
-.input-row { display: flex; align-items: center; gap: 10px; }
-.input-label { font-size: 13px; color: #666; width: 65px; text-align: right; flex-shrink: 0; font-weight: 500; }
+.input-row { display: flex; align-items: center; gap: 0; }
 
 .modal-content input[type="text"],
 .modal-content input[type="email"],

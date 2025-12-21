@@ -2,7 +2,7 @@
     <div class="modal-content" style="max-width: 350px; position: relative;">
         <button class="close-modal-btn" onclick="closeAuthModal()">×</button>
 
-        <h3 id="auth-title">Login</h3>
+        <h3 id="auth-title">Sign in</h3>
         <div class="auth-divider" style="margin-top: -10px; margin-bottom: 10px;" data-i18n="modal_auth_subtitle">Login to edit and sync bookmarks</div>
 
         <!-- Avatar for registration, hidden in login mode -->
@@ -13,18 +13,16 @@
 
         <div class="form-group">
             <div class="input-row">
-                <label for="auth-email" class="input-label" style="width: 60px;" data-i18n="label_email">Email</label>
                 <input type="email" id="auth-email" placeholder="Email address">
             </div>
             <div class="input-row">
-                <label for="auth-password" class="input-label" style="width: 60px;" data-i18n="label_password">Pass</label>
                 <input type="password" id="auth-password" placeholder="Password (min 6 chars)">
             </div>
         </div>
 
         <!-- Action buttons -->
         <div id="login-actions" class="modal-actions">
-            <button onclick="handleLogin()" data-i18n="btn_login">Login</button>
+            <button onclick="handleLogin()" data-i18n="btn_login">Sign in</button>
         </div>
         <div id="register-actions" class="modal-actions hidden">
             <button class="primary" onclick="handleRegister()" data-i18n="btn_register">Register</button>
