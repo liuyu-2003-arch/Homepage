@@ -1,0 +1,5 @@
+{
+  "name": "CloudMusic",
+  "description": "A personal music library manager inspired by Apple Music. Save your favorite tracks, organize playlists, and enjoy a premium listening experience.",
+  "requestFramePermissions": []
+}
