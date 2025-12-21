@@ -1,200 +1,231 @@
 import { getSupabase, loadData } from './api.js';
 import { state } from './state.js';
-import { showToast, t, startPillAnimation } from './utils.js';
-
-let isSignUp = false;
+import { showToast, t, startPillAnimation } from './utils.js'; // 引入 startPillAnimation
 
 export async function initAuth() {
     const sb = getSupabase();
     if (!sb) return;
-    try {
-        const { data: { session } } = await sb.auth.getSession();
-        updateUserStatus(session?.user);
-        sb.auth.onAuthStateChange((_, session) => updateUserStatus(session?.user));
-    } catch (e) {
-        console.error("Auth init error:", e);
-    }
-}
+    const { data: { session } } = await sb.auth.getSession();
+    updateUserStatus(session?.user);
 
-// 切换 登录/注册 模式
-window.toggleAuthMode = () => {
-    isSignUp = !isSignUp;
-    const title = document.getElementById('auth-title');
-    const submitBtn = document.getElementById('auth-submit-btn');
-    const switchText = document.getElementById('switch-text');
-    const switchAction = document.getElementById('switch-action');
-    const errorMsg = document.getElementById('auth-error');
+    // 【修改点 1】监听 Auth 状态变化时，增加智能判断
+    sb.auth.onAuthStateChange((event, session) => {
+        const currentUser = state.currentUser;
+        const newUser = session?.user;
 
-    // 重置状态
-    if (errorMsg) {
-        errorMsg.classList.remove('show');
-        errorMsg.innerText = '';
-    }
+        let shouldAnimate = true;
 
-    if (isSignUp) {
-        title.innerText = "Create Account";
-        submitBtn.innerText = "Create Account";
-        switchText.innerText = "Already have an account? ";
-        switchAction.innerText = "Sign In";
-    } else {
-        title.innerText = "Sign In";
-        submitBtn.innerText = "Sign In";
-        switchText.innerText = "Don't have an account? ";
-        switchAction.innerText = "Sign Up";
-    }
-};
-
-window.switchToSignUpView = () => { if(!isSignUp) window.toggleAuthMode(); };
-window.switchToLoginView = () => { if(isSignUp) window.toggleAuthMode(); };
-
-// 统一提交处理
-window.handleAuthSubmit = async () => {
-    const email = document.getElementById('auth-email').value;
-    const password = document.getElementById('auth-password').value;
-    const submitBtn = document.getElementById('auth-submit-btn');
-    const errorMsg = document.getElementById('auth-error');
-
-    if (!email || !password) {
-        showError("Please enter both email and password.");
-        return;
-    }
-
-    const originalText = submitBtn.innerText;
-    submitBtn.innerText = "Processing...";
-    submitBtn.disabled = true;
-    errorMsg.classList.remove('show');
-
-    try {
-        if (isSignUp) {
-            await handleRegister(email, password);
-        } else {
-            await handleLogin(email, password);
+        // 如果是“已登录”或“刷新Token”事件，且用户ID一致，说明是 Tab 切换或后台刷新
+        // 此时将 shouldAnimate 设为 false，防止图标重新弹出
+        if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && currentUser && newUser && currentUser.id === newUser.id) {
+            shouldAnimate = false;
         }
-    } catch (err) {
-        // Error handled in functions
-    } finally {
-        submitBtn.innerText = originalText;
-        submitBtn.disabled = false;
-    }
-};
 
-function showError(msg) {
-    const el = document.getElementById('auth-error');
-    if (el) {
-        el.innerText = msg;
-        el.classList.add('show');
-    } else {
-        showToast(msg, "error");
-    }
-}
-
-export async function handleLogin(email, password) {
-    const sb = getSupabase();
-    if (!sb) return;
-    const { data, error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) {
-        showError(error.message);
-    } else {
-        showToast(t("msg_login_success"), "success");
-        window.closeAuthModal();
-    }
-}
-
-export async function handleRegister(email, password) {
-    const sb = getSupabase();
-    if (!sb) return;
-    const { data, error } = await sb.auth.signUp({
-        email, password
+        updateUserStatus(newUser, shouldAnimate);
     });
-    if (error) {
-        showError(error.message);
-    } else {
-        showToast("Check your email for confirmation!", "success");
-    }
 }
 
-export async function handleOAuthLogin(provider) {
-    const sb = getSupabase();
-    if (!sb) return;
-    const { error } = await sb.auth.signInWithOAuth({
-        provider,
-        options: {
-            redirectTo: window.location.origin + window.location.pathname,
-            queryParams: { access_type: 'offline' }
-        }
-    });
-    if (error) showToast(error.message, "error");
-}
-
+// 【修改点 2】增加 animate 参数，默认值为 true (保持原有行为)
 export function updateUserStatus(user, animate = true) {
     state.currentUser = user;
+
     const userPill = document.getElementById('user-pill');
+    const svgIcon = document.getElementById('user-icon-svg');
+    const imgIcon = document.getElementById('user-avatar-img');
+    const pillText = document.getElementById('user-pill-text');
+
+    const infoPanel = document.getElementById('user-info-panel');
+    const menuUserName = document.getElementById('menu-user-name');
+    const menuUserEmail = document.getElementById('menu-user-email');
+    const menuUserAvatar = document.getElementById('menu-user-avatar');
+
+    // Auth Modal Elements
+    const formGroup = document.querySelector('#auth-modal .form-group');
+    const socialSection = document.querySelector('.social-login-section');
+    const divider = document.querySelector('.auth-divider');
+    const loginBtn = document.querySelector('#auth-modal .modal-actions button:not(.primary)');
+    const actionBtn = document.querySelector('#auth-modal .modal-actions .primary');
+    const modalTitle = document.getElementById('auth-title');
+
     if (!userPill) return;
 
-    const pillText = document.getElementById('user-pill-text');
-    const imgIcon = document.getElementById('user-avatar-img');
-    const svgIcon = document.getElementById('user-icon-svg');
+    // 【修改点 3】仅当 animate 为 true 时才重置动画
+    if (animate) {
+        startPillAnimation();
+    }
 
     if (user) {
         userPill.classList.add('logged-in');
-
-        // 1. 设置头像
         const avatarUrl = user.user_metadata?.avatar_url;
-        if (avatarUrl && imgIcon) {
+
+        if (avatarUrl) {
             imgIcon.src = avatarUrl;
             imgIcon.style.display = 'block';
-            if (svgIcon) svgIcon.style.display = 'none';
+            svgIcon.style.display = 'none';
         } else {
-            // 如果已登录但没有头像，显示默认 SVG 或者占位图
-            if (imgIcon) imgIcon.style.display = 'none';
-            if (svgIcon) svgIcon.style.display = 'block';
+            imgIcon.style.display = 'none';
+            svgIcon.style.display = 'block';
+            svgIcon.setAttribute('fill', '#333');
         }
 
-        // 2. 关键修改：登录后显示用户名
+        const userName = user.user_metadata?.full_name || user.user_metadata?.display_name || user.email.split('@')[0];
         if (pillText) {
-            const displayName = user.user_metadata?.full_name || user.user_metadata?.display_name || user.email.split('@')[0];
-            pillText.innerText = displayName;
-            pillText.style.display = 'block'; // 确保显示
+            pillText.innerText = userName;
+            pillText.removeAttribute('data-i18n');
         }
 
-        // 3. 恢复样式
-        userPill.style.paddingRight = '14px';
+        if(infoPanel) infoPanel.classList.remove('hidden');
+        if(menuUserName) {
+            menuUserName.removeAttribute('data-i18n');
+            menuUserName.innerText = userName;
+        }
+        if(menuUserEmail) menuUserEmail.innerText = user.email;
+        if(menuUserAvatar) menuUserAvatar.src = avatarUrl || "https://api.dicebear.com/7.x/notionists/svg?seed=Guest";
+
+        const currentEmailEl = document.getElementById('current-email');
+        if(currentEmailEl) currentEmailEl.innerText = user.email;
 
         loadData();
     } else {
         userPill.classList.remove('logged-in');
 
-        // 未登录状态：显示 SVG 和 "Sign In" 文字
-        if (imgIcon) imgIcon.style.display = 'none';
-        if (svgIcon) svgIcon.style.display = 'block';
+        imgIcon.style.display = 'none';
+        svgIcon.style.display = 'block';
+        svgIcon.setAttribute('fill', 'white');
 
         if (pillText) {
-            pillText.style.display = 'block'; // 恢复显示
+            pillText.setAttribute('data-i18n', 'btn_login');
             pillText.innerText = t('btn_login');
         }
-        userPill.style.paddingRight = ''; // 恢复默认 padding
-    }
 
-    if (animate) startPillAnimation();
+        if(formGroup) formGroup.style.display = 'flex';
+        if(socialSection) socialSection.style.display = 'flex';
+        if(divider) divider.style.display = 'flex';
+        if(loginBtn) loginBtn.style.display = 'block';
+        if(actionBtn) actionBtn.textContent = t("btn_register");
+        if(modalTitle) modalTitle.textContent = t("modal_auth_title");
+
+        if(infoPanel) infoPanel.classList.add('hidden');
+        if(menuUserName) {
+            menuUserName.setAttribute('data-i18n', 'auth_guest');
+            menuUserName.innerText = t("auth_guest");
+        }
+    }
 }
+
+export async function handleLogin(email, password) {
+    const sb = getSupabase();
+    if (!sb) return showToast(t("msg_sdk_error"), "error");
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) showToast(error.message, "error");
+    else {
+        showToast(t("msg_login_success"), "success");
+        document.getElementById('auth-modal').classList.add('hidden');
+        if (data && data.user) updateUserStatus(data.user);
+    }
+}
+
+export async function handleRegister(email, password, avatarUrl) {
+    const sb = getSupabase();
+    if (!sb) return showToast(t("msg_sdk_error"), "error");
+    try {
+        const { data, error } = await sb.auth.signUp({
+            email, password,
+            options: { data: { avatar_url: avatarUrl } }
+        });
+        if (error) showToast(error.message, "error");
+        else {
+            showToast(t("msg_reg_success"), "success");
+            document.getElementById('auth-modal').classList.add('hidden');
+            if (data && data.user && data.session) updateUserStatus(data.user);
+        }
+    } catch(e) { showToast(e.message, "error"); }
+}
+
 
 export async function handleLogout() {
     const sb = getSupabase();
     if (sb) await sb.auth.signOut();
-    window.location.reload();
+    document.getElementById('user-dropdown').classList.remove('active');
+    showToast(t("msg_logout"), "normal");
+    if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+    updateUserStatus(null);
+    loadData();
+}
+
+export async function handleOAuthLogin(provider) {
+    const sb = getSupabase();
+    if (!sb) return showToast(t("msg_sdk_error"), "error");
+    showToast(`Navigating to ${provider}...`, "normal");
+    const redirectUrl = window.location.origin + window.location.pathname;
+    try {
+        const { error } = await sb.auth.signInWithOAuth({
+            provider: provider,
+            options: {
+                redirectTo: redirectUrl,
+                queryParams: { access_type: 'offline', prompt: 'consent' }
+            }
+        });
+        if (error) throw error;
+    } catch (e) { showToast(e.message, "error"); }
 }
 
 export async function savePreferences() {
     const sb = getSupabase();
     if (!sb || !state.currentUser) return;
-    const name = document.getElementById('pref-name')?.value;
-    const { error } = await sb.auth.updateUser({ data: { full_name: name } });
-    if (error) {
-        showToast(error.message, "error");
-    } else {
+
+    if (state.prefAvatarUrl && state.prefAvatarUrl.length > 3000000) {
+        showToast(t("msg_img_too_large"), "error");
+        return;
+    }
+
+    const name = document.getElementById('pref-name').value;
+
+    // --- 修改开始：获取区号和号码并合并 ---
+    const phoneCode = document.getElementById('pref-phone-code').value;
+    const phoneNumber = document.getElementById('pref-phone-number').value;
+
+    // 简单校验：必须是数字，且长度合理
+    if (phoneNumber && !/^\d{5,15}$/.test(phoneNumber)) {
+         showToast("无效的电话号码 / Invalid Phone Number", "error");
+         return;
+    }
+
+    const fullPhone = phoneNumber ? (phoneCode + phoneNumber) : '';
+    // --- 修改结束 ---
+
+    const updates = {
+        data: {
+            full_name: name,
+            phone_number: fullPhone,
+            avatar_url: state.prefAvatarUrl
+        }
+    };
+
+    const btn = document.querySelector('#pref-modal .primary');
+    if(btn) {
+        btn.textContent = 'Saving...';
+        btn.disabled = true;
+    }
+
+    try {
+        const { data, error } = await sb.auth.updateUser(updates);
+        if (error) throw error;
+
+        const { data: refreshData } = await sb.auth.refreshSession();
+        // 主动更新时，保持动画（使用默认 true）
+        updateUserStatus(refreshData.user || data.user);
+
         showToast(t("msg_save_success"), "success");
-        // 更新成功后，立即刷新右上角状态
-        const { data: { user } } = await sb.auth.getUser();
-        updateUserStatus(user, false);
+        // 关闭时也会触发动画重置
+        document.getElementById('pref-modal').classList.add('hidden');
+        startPillAnimation();
+    } catch (e) {
+        showToast(e.message, "error");
+    } finally {
+        if(btn) {
+            btn.textContent = t('btn_save') || 'Save';
+            btn.disabled = false;
+        }
     }
 }

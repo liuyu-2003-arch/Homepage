@@ -1,7 +1,6 @@
 import { state } from './state.js';
 import { saveData } from './api.js';
 import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation } from './utils.js';
-import { i18n } from './i18n.js';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000);
 let autoFillTimer = null;
@@ -567,7 +566,7 @@ export function openPrefModal() {
 
     state.prefAvatarUrl = currentAvatar;
 
-    renderAvatarGrid(currentUrl);
+    renderAvatarGrid(currentAvatar);
     switchAvatarTab('emoji');
 
     document.getElementById('user-dropdown').classList.remove('active');
@@ -946,34 +945,4 @@ export function updatePrefNamePreview(value) {
         // 如果输入为空，显示默认占位符或邮箱前缀（这里简化为 Display Name）
         previewEl.innerText = value || "Display Name";
     }
-}
-
-export function handleMenuEdit() {
-    const dropdown = document.getElementById('user-dropdown');
-    if(dropdown) dropdown.classList.remove('active');
-    toggleEditMode(true);
-}
-
-export function openHelpModal() {
-    const dropdown = document.getElementById('user-dropdown');
-    if(dropdown) dropdown.classList.remove('active');
-    document.getElementById('help-modal').classList.remove('hidden');
-}
-
-export function closeHelpModal() {
-    document.getElementById('help-modal').classList.add('hidden');
-}
-
-export function handleFeedback() {
-    window.open('https://github.com/yuliu-dev/homepage/issues', '_blank');
-}
-
-export function handleDonate() {
-    window.open('https://www.buymeacoffee.com/yuliu', '_blank');
-}
-
-export function changeLanguage(lang) {
-    i18n.loadTranslations(lang);
-    const dropdown = document.getElementById('user-dropdown');
-    if(dropdown) dropdown.classList.remove('active');
 }
