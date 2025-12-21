@@ -25,7 +25,7 @@ window.toggleAuthMode = () => {
     const switchAction = document.getElementById('switch-action');
     const errorMsg = document.getElementById('auth-error');
 
-    // 清除错误信息
+    // 重置状态
     if (errorMsg) {
         errorMsg.classList.remove('show');
         errorMsg.innerText = '';
@@ -34,17 +34,16 @@ window.toggleAuthMode = () => {
     if (isSignUp) {
         title.innerText = "Create Account";
         submitBtn.innerText = "Create Account";
-        switchText.innerText = "Already have an account? ";
+        switchText.innerText = "Already have an account? "; // 注意末尾空格
         switchAction.innerText = "Sign In";
     } else {
         title.innerText = "Sign In";
         submitBtn.innerText = "Sign In";
-        switchText.innerText = "Don't have an account? ";
+        switchText.innerText = "Don't have an account? "; // 注意末尾空格
         switchAction.innerText = "Sign Up";
     }
 };
 
-// 兼容旧代码调用
 window.switchToSignUpView = () => { if(!isSignUp) window.toggleAuthMode(); };
 window.switchToLoginView = () => { if(isSignUp) window.toggleAuthMode(); };
 
@@ -60,7 +59,6 @@ window.handleAuthSubmit = async () => {
         return;
     }
 
-    // 设置加载状态
     const originalText = submitBtn.innerText;
     submitBtn.innerText = "Processing...";
     submitBtn.disabled = true;
@@ -73,7 +71,7 @@ window.handleAuthSubmit = async () => {
             await handleLogin(email, password);
         }
     } catch (err) {
-        // 错误会在具体函数中处理，这里主要是重置按钮
+        // Error handled in functions
     } finally {
         submitBtn.innerText = originalText;
         submitBtn.disabled = false;
@@ -90,7 +88,6 @@ function showError(msg) {
     }
 }
 
-// 登录逻辑
 export async function handleLogin(email, password) {
     const sb = getSupabase();
     if (!sb) return;
@@ -103,7 +100,6 @@ export async function handleLogin(email, password) {
     }
 }
 
-// 注册逻辑
 export async function handleRegister(email, password) {
     const sb = getSupabase();
     if (!sb) return;
@@ -114,12 +110,9 @@ export async function handleRegister(email, password) {
         showError(error.message);
     } else {
         showToast("Check your email for confirmation!", "success");
-        // 注册成功后通常不需要立即关闭，或者提示用户查收邮件
-        // window.closeAuthModal();
     }
 }
 
-// OAuth 登录
 export async function handleOAuthLogin(provider) {
     const sb = getSupabase();
     if (!sb) return;
@@ -133,7 +126,6 @@ export async function handleOAuthLogin(provider) {
     if (error) showToast(error.message, "error");
 }
 
-// 更新用户头像和状态显示
 export function updateUserStatus(user, animate = true) {
     state.currentUser = user;
     const userPill = document.getElementById('user-pill');

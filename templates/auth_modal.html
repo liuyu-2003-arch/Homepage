@@ -13,7 +13,7 @@
         <div class="modal-body">
             <div id="auth-error" class="error-msg"></div>
 
-            <div class="form-group">
+            <div class="auth-form">
                 <div class="input-wrapper">
                     <label>Email</label>
                     <input type="email" id="auth-email" placeholder="hello@example.com" required>
@@ -22,11 +22,10 @@
                     <label>Password</label>
                     <input type="password" id="auth-password" placeholder="••••••••" required minlength="6">
                 </div>
+                <button id="auth-submit-btn" class="btn-primary" onclick="handleAuthSubmit()">
+                    Sign In
+                </button>
             </div>
-
-            <button id="auth-submit-btn" class="btn-primary" onclick="handleAuthSubmit()">
-                Sign In
-            </button>
 
             <div class="divider">
                 <span>Or continue with</span>
@@ -52,7 +51,7 @@
             </div>
 
             <div class="auth-switch">
-                <span id="switch-text">Don't have an account? </span>
+                <span id="switch-text">Don't have an account?</span>
                 <a id="switch-action" onclick="toggleAuthMode()">Sign Up</a>
             </div>
         </div>
