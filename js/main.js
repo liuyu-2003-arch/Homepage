@@ -87,42 +87,60 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ============================================================
     // 🔥 核心修复：挂载所有交互函数到 window
     // ============================================================
-
-    // --- 弹窗逻辑 (重点修复) ---
+    window.handleLogin = handleLogin;
+    window.handleRegister = handleRegister;
+    window.handleLogout = handleLogout;
+    window.handleOAuthLogin = handleOAuthLogin;
+    window.savePreferences = savePreferences;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.toggleEditMode = toggleEditMode;
+    window.openPageEditModal = openPageEditModal;
+    window.closePageEditModal = closePageEditModal;
+    window.openThemeControls = openThemeControls;
+    window.closeThemeControls = closeThemeControls;
+    window.openPrefModal = openPrefModal;
+    window.switchAvatarTab = switchAvatarTab;
+    window.handleAvatarUrlInput = handleAvatarUrlInput;
+    window.selectNewAvatar = selectNewAvatar;
+    window.updatePrefNamePreview = updatePrefNamePreview;
+    window.saveBookmark = saveBookmark;
+    window.deleteBookmark = deleteBookmark;
     window.autoFillInfo = autoFillInfo;
     window.updatePreview = updatePreview;
     window.selectStyle = selectStyle;
     window.selectPage = selectPage;
-
-    // --- 账户 (Auth) ---
-    window.handleLogin = () => {
-        const email = document.getElementById('auth-email').value;
-        const pass = document.getElementById('auth-password').value;
-        if(!email || !pass) return showToast(t("msg_input_req"), "error");
-        handleLogin(email, pass);
+    window.addPage = addPage;
+    window.deletePage = deletePage;
+    window.importConfig = importConfig;
+    window.exportConfig = exportConfig;
+    window.quickChangeTheme = quickChangeTheme;
+    window.changeTheme = changeTheme;
+    window.handleMenuEdit = () => {
+        document.getElementById('user-dropdown').classList.remove('active');
+        toggleEditMode(true);
     };
-    window.handleRegister = () => {
-        const email = document.getElementById('auth-email').value;
-        const pass = document.getElementById('auth-password').value;
-        if(!email || !pass) return showToast(t("msg_input_req"), "error");
-        handleRegister(email, pass, state.selectedAvatarUrl);
+    window.openHelpModal = () => {
+        document.getElementById('user-dropdown').classList.remove('active');
+        document.getElementById('help-modal').classList.remove('hidden');
     };
-    window.handleLogout = handleLogout;
-    window.handleOAuthLogin = handleOAuthLogin;
-    window.savePreferences = savePreferences;
-
-    // --- 菜单与弹窗 ---
+    window.closeHelpModal = () => {
+        document.getElementById('help-modal').classList.add('hidden');
+    };
+    window.changeLanguage = async (lang) => {
+        await i18n.loadTranslations(lang);
+    };
     window.toggleAuthModal = () => {
          if (state.currentUser) {
             document.getElementById('user-dropdown').classList.toggle('active');
         } else {
             document.getElementById('auth-modal').classList.remove('hidden');
-            switchToLoginView(); // Default to login view
+            window.switchToLoginView(); // Default to login view
         }
     };
     window.closeAuthModal = () => {
         document.getElementById('auth-modal').classList.add('hidden');
-    }
+    };
     window.switchToSignUpView = () => {
         document.getElementById('auth-title').textContent = 'Sign Up';
         document.getElementById('signup-specifics').classList.remove('hidden');
@@ -141,58 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('login-footer').classList.remove('hidden');
         document.getElementById('register-footer').classList.add('hidden');
     };
-    window.handleMenuEdit = () => {
-        document.getElementById('user-dropdown').classList.remove('active');
-        toggleEditMode(true);
-    };
-    window.openModal = openModal;
-    window.closeModal = closeModal;
-    window.toggleEditMode = toggleEditMode;
 
-    window.openHelpModal = () => {
-        document.getElementById('user-dropdown').classList.remove('active');
-        document.getElementById('help-modal').classList.remove('hidden');
-    };
-    window.closeHelpModal = () => {
-        document.getElementById('help-modal').classList.add('hidden');
-    };
-
-    // --- 书签操作 ---
-    window.saveBookmark = saveBookmark;
-    window.deleteBookmark = deleteBookmark;
-
-    // --- 页面管理 ---
-    window.addPage = addPage;
-    window.deletePage = deletePage;
-    window.openPageEditModal = openPageEditModal;
-    window.closePageEditModal = closePageEditModal;
-
-    // --- 导入导出 ---
-    window.importConfig = importConfig;
-    window.exportConfig = exportConfig;
-
-    // --- 主题控制 ---
-    window.openThemeControls = openThemeControls;
-    window.closeThemeControls = closeThemeControls;
-    window.quickChangeTheme = quickChangeTheme;
-    window.changeTheme = (color, el, pattern) => changeTheme(color, el, pattern);
-
-    // --- 偏好设置 ---
-    window.openPrefModal = openPrefModal;
-    window.switchAvatarTab = switchAvatarTab;
-
-    // 修改：改用 URL 处理函数
-    window.handleAvatarUrlInput = handleAvatarUrlInput;
-
-    window.selectNewAvatar = selectNewAvatar;
-
-    // 【新增】挂载预览更新函数
-    window.updatePrefNamePreview = updatePrefNamePreview;
-
-    // --- 语言 ---
-    window.changeLanguage = async (lang) => {
-        await i18n.loadTranslations(lang);
-    };
 
     window.addEventListener('resize', () => { render(); });
 
