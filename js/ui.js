@@ -567,7 +567,7 @@ export function openPrefModal() {
 
     state.prefAvatarUrl = currentAvatar;
 
-    renderAvatarGrid(currentAvatar);
+    renderAvatarGrid(currentUrl);
     switchAvatarTab('emoji');
 
     document.getElementById('user-dropdown').classList.remove('active');
@@ -965,11 +965,11 @@ export function closeHelpModal() {
 }
 
 export function handleFeedback() {
-    window.open('https://github.com/yourusername/yourrepo/issues', '_blank');
+    window.open('https://github.com/yuliu-dev/homepage/issues', '_blank');
 }
 
 export function handleDonate() {
-    window.open('https://www.buymeacoffee.com/yourusername', '_blank');
+    window.open('https://www.buymeacoffee.com/yuliu', '_blank');
 }
 
 export function changeLanguage(lang) {

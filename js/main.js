@@ -7,7 +7,7 @@ import {
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     openPrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
     autoFillInfo, updatePreview, selectStyle, selectPage, updatePrefNamePreview,
-    handleAvatarUrlInput, handleMenuEdit, openHelpModal, closeHelpModal
+    handleAvatarUrlInput, handleMenuEdit, openHelpModal, closeHelpModal, handleFeedback, handleDonate, changeLanguage
 } from './ui.js';
 import { t, showToast, startPillAnimation } from './utils.js';
 import { state } from './state.js';
@@ -97,6 +97,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.openHelpModal = openHelpModal;
     window.closeHelpModal = closeHelpModal;
     window.openPrefModal = openPrefModal;
+    window.handleFeedback = handleFeedback;
+    window.handleDonate = handleDonate;
+    window.changeLanguage = changeLanguage;
 
     // 导入监听
     const importInput = document.getElementById('import-file-input');

@@ -126,9 +126,6 @@ export async function handleOAuthLogin(provider) {
     if (error) showToast(error.message, "error");
 }
 
-/**
- * 核心修改：登录后隐藏文字标签，只保留头像
- */
 export function updateUserStatus(user, animate = true) {
     state.currentUser = user;
     const userPill = document.getElementById('user-pill');
@@ -153,14 +150,15 @@ export function updateUserStatus(user, animate = true) {
             if (svgIcon) svgIcon.style.display = 'block';
         }
 
-        // 2. 关键修改：登录后隐藏文字，避免“重复”
+        // 2. 关键修改：登录后显示用户名
         if (pillText) {
-            pillText.innerText = "";
-            pillText.style.display = 'none'; // 彻底隐藏
+            const displayName = user.user_metadata?.full_name || user.user_metadata?.display_name || user.email.split('@')[0];
+            pillText.innerText = displayName;
+            pillText.style.display = 'block'; // 确保显示
         }
 
-        // 3. 调整样式以适应只有头像的状态（去掉多余padding）
-        userPill.style.paddingRight = '6px';
+        // 3. 恢复样式
+        userPill.style.paddingRight = '14px';
 
         loadData();
     } else {
@@ -172,7 +170,7 @@ export function updateUserStatus(user, animate = true) {
 
         if (pillText) {
             pillText.style.display = 'block'; // 恢复显示
-            pillText.innerText = "Sign In";
+            pillText.innerText = t('btn_login');
         }
         userPill.style.paddingRight = ''; // 恢复默认 padding
     }
@@ -191,6 +189,12 @@ export async function savePreferences() {
     if (!sb || !state.currentUser) return;
     const name = document.getElementById('pref-name')?.value;
     const { error } = await sb.auth.updateUser({ data: { full_name: name } });
-    if (error) showToast(error.message, "error");
-    else showToast(t("msg_save_success"), "success");
+    if (error) {
+        showToast(error.message, "error");
+    } else {
+        showToast(t("msg_save_success"), "success");
+        // 更新成功后，立即刷新右上角状态
+        const { data: { user } } = await sb.auth.getUser();
+        updateUserStatus(user, false);
+    }
 }
