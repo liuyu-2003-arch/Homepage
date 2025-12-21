@@ -25,6 +25,7 @@ async function loadTemplates() {
     for (const template of templates) {
         try {
             const response = await fetch(template.url);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const html = await response.text();
             const placeholder = document.getElementById(template.id);
             if (placeholder) placeholder.outerHTML = html;
@@ -35,17 +36,18 @@ async function loadTemplates() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. 初始化基础配置
+    document.body.style.visibility = 'hidden';
+
+    // 1. 优先加载模板和语言
     await loadTemplates();
-    document.body.style.visibility = 'hidden'; // 先隐藏以防闪烁
     await i18n.loadTranslations(i18n.currentLang);
+
+    // 2. 初始化 UI 组件
     initTheme();
     initSwiper();
-
-    // 2. 注册页面的头像选择器
     createAvatarSelector('avatar-selector', (url) => { state.selectedAvatarUrl = url; });
 
-    // 3. 初始化 Supabase
+    // 3. 初始化 Supabase 和数据
     const sb = initSupabase();
     if (sb) {
         await initAuth();
@@ -54,35 +56,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadData();
     }
 
-    // 4. 【关键修复】所有初始化完成后，恢复页面可见性
+    // 4. 【核心修复】强制恢复显示，放在所有 await 之后
     document.body.style.visibility = 'visible';
 
-    // 5. 挂载全局交互函数 (确保 onclick 可用)
+    // 5. 挂载全局交互函数
     window.handleLogin = () => {
-        const email = document.getElementById('auth-email').value;
-        const pass = document.getElementById('auth-password').value;
+        const email = document.getElementById('auth-email')?.value;
+        const pass = document.getElementById('auth-password')?.value;
         if(!email || !pass) return showToast(t("msg_input_req"), "error");
         handleLogin(email, pass);
     };
 
     window.handleRegister = () => {
-        const email = document.getElementById('auth-email').value;
-        const pass = document.getElementById('auth-password').value;
-        if(!email || !pass) return showToast(t("msg_input_req"), "error");
+        const email = document.getElementById('auth-email')?.value;
+        const pass = document.getElementById('auth-password')?.value;
         handleRegister(email, pass, state.selectedAvatarUrl);
     };
 
     window.toggleAuthModal = () => {
-         if (state.currentUser) {
-            document.getElementById('user-dropdown').classList.toggle('active');
+        if (state.currentUser) {
+            document.getElementById('user-dropdown')?.classList.toggle('active');
         } else {
-            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('auth-modal')?.classList.remove('hidden');
             window.switchToLoginView();
         }
     };
 
-    // 其他全局挂载
-    window.closeAuthModal = () => document.getElementById('auth-modal').classList.add('hidden');
+    window.closeAuthModal = () => document.getElementById('auth-modal')?.classList.add('hidden');
     window.handleLogout = handleLogout;
     window.handleOAuthLogin = handleOAuthLogin;
     window.savePreferences = savePreferences;
@@ -98,6 +98,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     const importInput = document.getElementById('import-file-input');
     if(importInput) importInput.addEventListener('change', handleImport);
 
-    // 视窗调整监听
     window.addEventListener('resize', () => { render(); });
 });
