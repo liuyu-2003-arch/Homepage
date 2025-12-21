@@ -126,6 +126,9 @@ export async function handleOAuthLogin(provider) {
     if (error) showToast(error.message, "error");
 }
 
+/**
+ * 核心修改：登录后隐藏文字标签，只保留头像
+ */
 export function updateUserStatus(user, animate = true) {
     state.currentUser = user;
     const userPill = document.getElementById('user-pill');
@@ -137,20 +140,43 @@ export function updateUserStatus(user, animate = true) {
 
     if (user) {
         userPill.classList.add('logged-in');
+
+        // 1. 设置头像
         const avatarUrl = user.user_metadata?.avatar_url;
         if (avatarUrl && imgIcon) {
             imgIcon.src = avatarUrl;
             imgIcon.style.display = 'block';
             if (svgIcon) svgIcon.style.display = 'none';
+        } else {
+            // 如果已登录但没有头像，显示默认 SVG 或者占位图
+            if (imgIcon) imgIcon.style.display = 'none';
+            if (svgIcon) svgIcon.style.display = 'block';
         }
-        if (pillText) pillText.innerText = user.user_metadata?.full_name || user.email.split('@')[0];
+
+        // 2. 关键修改：登录后隐藏文字，避免“重复”
+        if (pillText) {
+            pillText.innerText = "";
+            pillText.style.display = 'none'; // 彻底隐藏
+        }
+
+        // 3. 调整样式以适应只有头像的状态（去掉多余padding）
+        userPill.style.paddingRight = '6px';
+
         loadData();
     } else {
         userPill.classList.remove('logged-in');
+
+        // 未登录状态：显示 SVG 和 "Sign In" 文字
         if (imgIcon) imgIcon.style.display = 'none';
         if (svgIcon) svgIcon.style.display = 'block';
-        if (pillText) pillText.innerText = t('btn_login') || "Login";
+
+        if (pillText) {
+            pillText.style.display = 'block'; // 恢复显示
+            pillText.innerText = "Sign In";
+        }
+        userPill.style.paddingRight = ''; // 恢复默认 padding
     }
+
     if (animate) startPillAnimation();
 }
 
