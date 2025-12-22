@@ -48,9 +48,9 @@
 
 #auth-modal .input-label {
     display: block;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 700;
-    color: #6b7280;
+    color: #888;
     text-transform: uppercase;
     margin-bottom: 6px;
 }
