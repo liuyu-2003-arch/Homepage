@@ -44,7 +44,16 @@
 .candidate-random { background: #e8f2ff; color: #007AFF; font-size: 20px; }
 
 .form-group { display: flex; flex-direction: column; gap: 15px; }
-.input-row { display: flex; align-items: center; gap: 0; }
+.input-row { display: block; }
+
+#auth-modal .input-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
 
 .modal-content input[type="text"],
 .modal-content input[type="email"],
@@ -60,6 +69,7 @@
     height: 44px;
     padding: 0 12px;
     box-sizing: border-box;
+    width: 100%;
 }
 .modal-content input:focus { border-color: #007AFF; background: white; }
 
