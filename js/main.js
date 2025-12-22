@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('register-footer').classList.remove('hidden');
     };
     window.switchToLoginView = () => {
-        document.getElementById('auth-title').textContent = 'Login';
+        document.getElementById('auth-title').textContent = 'Sign in';
         document.getElementById('signup-specifics').classList.add('hidden');
         document.getElementById('login-actions').classList.remove('hidden');
         document.getElementById('register-actions').classList.add('hidden');

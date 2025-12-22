@@ -103,7 +103,6 @@ export function updateUserStatus(user, animate = true) {
         if(divider) divider.style.display = 'flex';
         if(loginBtn) loginBtn.style.display = 'block';
         if(actionBtn) actionBtn.textContent = t("btn_register");
-        if(modalTitle) modalTitle.textContent = t("modal_auth_title");
 
         if(infoPanel) infoPanel.classList.add('hidden');
         if(menuUserName) {
