@@ -73,7 +73,6 @@ export const i18n = {
         // Update placeholders
         const placeholderElements = {
             'input-url': 'ph_url', 'input-title': 'ph_title', 'input-icon': 'ph_icon',
-            'auth-email': 'ph_email', 'auth-password': 'ph_password',
             'pref-name': 'label_display_name', 'pref-phone': 'label_phone'
         };
         for (const [id, key] of Object.entries(placeholderElements)) {
