@@ -73,6 +73,10 @@
 }
 .modal-content input:focus { border-color: #007AFF; background: white; }
 
+#auth-modal input::placeholder {
+    color: #999;
+}
+
 .page-options-container { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 8px; padding: 0; border: none; background: transparent; overflow-x: auto; }
 .page-option { height: 44px; padding: 0 16px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 14px; border-radius: 6px; cursor: pointer; transition: background-color 0.2s; background-color: #e9e9eb; color: #333; border: 1px solid #e0e0e0; white-space: nowrap; }
 .page-option:hover { background-color: #dcdce0; }
