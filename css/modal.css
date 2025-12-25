@@ -239,12 +239,13 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 10px 16px;
+    padding: 8px 16px; /* Reduced padding to decrease height by ~20% */
     border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
+    height: 35px; /* Explicitly set height to be smaller */
 }
 
 #auth-modal .btn-social.google {

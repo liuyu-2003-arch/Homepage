@@ -142,11 +142,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('auth-modal').classList.add('hidden');
     };
     window.switchToSignUpView = () => {
-        document.getElementById('auth-title').textContent = 'Sign Up';
+        document.getElementById('auth-title').textContent = 'Sign up';
         document.getElementById('signup-specifics').classList.remove('hidden');
         document.getElementById('login-actions').classList.add('hidden');
         document.getElementById('register-actions').classList.remove('hidden');
-        document.getElementById('social-login-container').classList.add('hidden');
+        document.getElementById('social-login-container').classList.remove('hidden');
         document.getElementById('login-footer').classList.add('hidden');
         document.getElementById('register-footer').classList.remove('hidden');
     };
