@@ -123,8 +123,12 @@
         border-radius: 20px !important;
     }
 
+    .input-wrapper {
+        display: block !important;
+    }
+
     .input-row {
-        display: flex !important; flex-direction: row !important;
+        display: block !important;
         justify-content: flex-start !important; align-items: center !important; gap: 10px !important;
     }
     .input-label {
