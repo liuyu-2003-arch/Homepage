@@ -245,7 +245,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
-    height: 35px; /* Explicitly set height to be smaller */
+    height: 40px; /* Explicitly set height to be smaller */
 }
 
 #auth-modal .btn-social.google {
