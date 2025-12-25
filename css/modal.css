@@ -231,6 +231,8 @@
 #auth-modal .social-buttons {
     display: flex;
     gap: 12px;
+    width: 95%; /* Increase width by 20% */
+    margin-left: 0%; /* Center the wider container */
 }
 
 #auth-modal .btn-social {
@@ -245,7 +247,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
-    height: 40px; /* Explicitly set height to be smaller */
+    height: 38px; /* Explicitly set height to be smaller */
 }
 
 #auth-modal .btn-social.google {
