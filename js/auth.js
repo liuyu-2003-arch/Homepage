@@ -112,7 +112,15 @@ export function updateUserStatus(user, animate = true) {
     }
 }
 
-export async function handleLogin(email, password) {
+export async function handleLogin() {
+    const email = document.getElementById('auth-email').value;
+    const password = document.getElementById('auth-password').value;
+
+    if (!email || !password) {
+        showToast(t("msg_input_required"), "error");
+        return;
+    }
+
     const sb = getSupabase();
     if (!sb) return showToast(t("msg_sdk_error"), "error");
     const { data, error } = await sb.auth.signInWithPassword({ email, password });
@@ -124,7 +132,17 @@ export async function handleLogin(email, password) {
     }
 }
 
-export async function handleRegister(email, password, avatarUrl) {
+export async function handleRegister() {
+    const email = document.getElementById('auth-email').value;
+    const password = document.getElementById('auth-password').value;
+    // 默认头像，因为注册界面不再提供选择
+    const avatarUrl = "https://api.dicebear.com/7.x/notionists/svg?seed=" + Math.random().toString(36).substring(7);
+
+    if (!email || !password) {
+        showToast(t("msg_input_required"), "error");
+        return;
+    }
+
     const sb = getSupabase();
     if (!sb) return showToast(t("msg_sdk_error"), "error");
     try {
