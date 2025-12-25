@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     window.switchToSignUpView = () => {
         document.getElementById('auth-title').textContent = 'Sign up';
-        document.getElementById('signup-specifics').classList.remove('hidden');
+        // document.getElementById('signup-specifics').classList.remove('hidden'); // REMOVED
         document.getElementById('login-actions').classList.add('hidden');
         document.getElementById('register-actions').classList.remove('hidden');
         document.getElementById('social-login-container').classList.remove('hidden');
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     window.switchToLoginView = () => {
         document.getElementById('auth-title').textContent = 'Sign in';
-        document.getElementById('signup-specifics').classList.add('hidden');
+        // document.getElementById('signup-specifics').classList.add('hidden'); // REMOVED
         document.getElementById('login-actions').classList.remove('hidden');
         document.getElementById('register-actions').classList.add('hidden');
         document.getElementById('social-login-container').classList.remove('hidden');
