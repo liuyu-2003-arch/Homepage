@@ -1,122 +1,56 @@
-/* 用户资料弹窗布局 */
-.profile-edit-container {
-    display: flex;
-    gap: 30px; /* 左右间距 */
-    padding: 10px;
-}
+/* --- 确保删除之前添加的 profile-edit-container 相关代码 --- */
 
-/* 左侧头像区域 */
-.profile-left-col {
-    flex: 0 0 100px; /* 固定宽度 */
+/* 偏好设置弹窗的预览容器 (必须保留) */
+.pref-preview-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
     padding-top: 10px;
 }
 
-.avatar-wrapper {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    cursor: pointer;
+/* 模仿右上角的药丸样式，但针对白色背景做了适配 */
+.pref-pill {
+    display: flex;
+    align-items: center;
+    background: #f5f5f7; /* 浅灰色背景 */
+    border: 1px solid #e0e0e0;
+    border-radius: 40px; /* 大圆角 */
+    padding: 5px 20px 5px 5px; /* 右侧留多点空间给文字 */
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 80%; /* 防止名字太长撑爆弹窗 */
+}
+
+.pref-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+/* 药丸内的头像圆圈 */
+.pref-pill-icon {
+    width: 48px;  /* 比右上角稍微大一点，作为主要展示 */
+    height: 48px;
     border-radius: 50%;
+    background: white;
     overflow: hidden;
-    border: 2px solid #e0e0e0;
-    transition: all 0.3s ease;
+    flex-shrink: 0;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.avatar-wrapper:hover {
-    border-color: #007bff;
-    box-shadow: 0 0 10px rgba(0,123,255,0.3);
-}
-
-.avatar-clickable {
+.pref-pill-icon img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* 鼠标悬停时的遮罩效果 */
-.avatar-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0; /* 默认透明 */
-    transition: opacity 0.2s;
-}
-
-.avatar-wrapper:hover .avatar-overlay {
-    opacity: 1; /* 悬停显示 */
-}
-
-.avatar-overlay span {
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-/* 右侧表单区域 */
-.profile-right-col {
-    flex: 1; /* 占据剩余空间 */
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* 表单控件微调 */
-.form-group {
-    margin-bottom: 10px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
+/* 药丸内的文字 */
+.pref-pill-text {
+    font-size: 16px;
+    font-weight: 600;
     color: #333;
-}
-
-.form-control {
-    width: 100%;
-    padding: 8px 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box; /* 确保 padding 不撑大宽度 */
-}
-
-.disabled-input {
-    background-color: #f5f5f5;
-    color: #666;
-    cursor: not-allowed;
-}
-
-/* 上传区域显示的动画（可选） */
-#avatar-upload-section {
-    animation: fadeIn 0.3s ease-in-out;
-    background: #f9f9f9;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px dashed #ccc;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* 移动端适配 */
-@media (max-width: 600px) {
-    .profile-edit-container {
-        flex-direction: column; /* 手机上改为垂直排列 */
-        align-items: center;
-    }
-
-    .profile-left-col {
-        margin-bottom: 20px;
-    }
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
