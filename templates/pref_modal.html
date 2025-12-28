@@ -1,73 +1,65 @@
-<div id="pref-modal" class="modal hidden">
-    <div class="modal-content" style="max-width: 380px; position: relative;">
-        <button class="close-modal-btn" onclick="document.getElementById('pref-modal').classList.add('hidden')">×</button>
+<div class="modal-content profile-modal-content">
+    <div class="modal-header">
+        <h2>个人资料设置</h2>
+        <span class="close-modal">&times;</span>
+    </div>
 
-        <h3 data-i18n="modal_pref_title">Account Preferences</h3>
+    <div class="modal-body">
+        <div class="profile-edit-container">
 
-        <div class="pref-preview-container">
-            <div id="pref-preview-pill" class="pref-pill">
-                <div class="pref-pill-icon">
-                    <img id="pref-current-img" src="" alt="Current Avatar">
-                </div>
-                <span id="pref-preview-name" class="pref-pill-text">Display Name</span>
-            </div>
-        </div>
-
-        <div class="avatar-tabs">
-            <div class="avatar-tab-item active" onclick="switchAvatarTab('emoji')" data-i18n="tab_emoji">Icons</div>
-            <div class="avatar-tab-item" onclick="switchAvatarTab('upload')" data-i18n="tab_url">URL</div>
-        </div>
-
-        <div id="avatar-panel-emoji" class="avatar-panel">
-            <div id="pref-avatar-grid" class="avatar-grid-scroll"></div>
-        </div>
-
-        <div id="avatar-panel-upload" class="avatar-panel hidden" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; padding: 20px 0;">
-            <p style="font-size: 13px; color: #666; margin: 0;" data-i18n="msg_input_url">Paste Image URL</p>
-            <input type="text"
-                   id="avatar-url-input"
-                   placeholder="https://example.com/avatar.png"
-                   oninput="handleAvatarUrlInput(this.value)"
-                   style="width: 80%; padding: 10px; border-radius: 10px; border: 1px solid #e0e0e0; background: #f9f9f9; font-size: 14px;">
-        </div>
-
-        <div class="form-group" style="margin-top: 15px;">
-            <div class="input-wrapper">
-                <label for="pref-name" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;" data-i18n="label_display_name">Display Name</label>
-                <div style="height: 8px;"></div>
-                <input type="text" id="pref-name" placeholder="Display Name" oninput="updatePrefNamePreview(this.value)">
-            </div>
-
-            <div class="input-wrapper">
-                <label style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;" data-i18n="label_phone">Phone</label>
-                <div style="height: 8px;"></div>
-                <div style="display: flex; flex: 1; gap: 8px;">
-                    <select id="pref-phone-code" style="width: 100px; border-radius: 10px; border: 1px solid #e0e0e0; background: #f9f9f9; padding: 0 5px; font-size: 14px; outline: none; cursor: pointer;">
-                        <option value="+86">🇨🇳 +86</option>
-                        <option value="+1">🇺🇸 +1</option>
-                        <option value="+852">🇭🇰 +852</option>
-                        <option value="+886">🇹🇼 +886</option>
-                        <option value="+81">🇯🇵 +81</option>
-                        <option value="+82">🇰🇷 +82</option>
-                        <option value="+44">🇬🇧 +44</option>
-                        <option value="+33">🇫🇷 +33</option>
-                        <option value="+49">🇩🇪 +49</option>
-                        <option value="+7">🇷🇺 +7</option>
-                        <option value="+61">🇦🇺 +61</option>
-                        <option value="+1">🇨🇦 +1</option>
-                    </select>
-                    <input type="tel"
-                           id="pref-phone-number"
-                           placeholder="Number"
-                           style="flex: 1; min-width: 0;"
-                           oninput="this.value = this.value.replace(/\D/g, '')">
+            <div class="profile-left-col">
+                <div class="avatar-wrapper" title="点击更换头像">
+                    <img id="pref-current-avatar" src="Logo/icon.png" alt="User Avatar" class="avatar-clickable">
+                    <div class="avatar-overlay">
+                        <span>更换</span>
+                    </div>
                 </div>
             </div>
-            </div>
 
-        <div class="modal-actions">
-            <button onclick="document.getElementById('pref-modal').classList.add('hidden')" data-i18n="btn_cancel">Cancel</button>
-            <button class="primary" onclick="savePreferences()" data-i18n="btn_save">Save Changes</button>
+            <div class="profile-right-col">
+
+                <div class="form-group">
+                    <label for="pref-nickname">昵称</label>
+                    <input type="text" id="pref-nickname" placeholder="输入新的昵称" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="text" id="pref-email" disabled class="form-control disabled-input">
+                </div>
+
+                <div id="avatar-upload-section" class="form-group" style="display: none;">
+                    <label for="pref-avatar-file">上传新头像</label>
+                    <input type="file" id="pref-avatar-file" accept="image/*" class="form-control">
+                    <small class="form-text text-muted">支持 jpg, png, gif 格式</small>
+                </div>
+
+            </div>
         </div>
     </div>
+
+    <div class="modal-footer">
+        <button id="pref-save-btn" class="btn-primary">保存修改</button>
+        <button class="btn-secondary close-modal-btn">取消</button>
+    </div>
 </div>
+
+<script>
+    (function() {
+        const avatarImg = document.getElementById('pref-current-avatar');
+        const uploadSection = document.getElementById('avatar-upload-section');
+
+        if (avatarImg && uploadSection) {
+            avatarImg.addEventListener('click', function() {
+                // 切换显示状态
+                if (uploadSection.style.display === 'none') {
+                    uploadSection.style.display = 'block';
+                    // 可选：自动触发文件选择框
+                    // document.getElementById('pref-avatar-file').click();
+                } else {
+                    uploadSection.style.display = 'none';
+                }
+            });
+        }
+    })();
+</script>
