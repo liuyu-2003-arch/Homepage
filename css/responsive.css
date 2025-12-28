@@ -138,7 +138,9 @@
 
     /* 修改：减小输入框高度 */
     .modal-content input {
-        flex: 1 !important; width: auto !important;
+        flex: 1 !important;
+        /* === 修改点：将 auto 改为 100% 以确保右侧对齐 === */
+        width: 100% !important;
         height: 40px !important; /* 从 52px 减小到 40px */
         font-size: 14px !important; padding: 0 10px;
         margin-bottom: 0 !important;

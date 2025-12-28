@@ -241,13 +241,14 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 8px 16px; /* Reduced padding to decrease height by ~20% */
+    padding: 8px 16px;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
-    height: 38px; /* Explicitly set height to be smaller */
+    /* === 修改点：增加高度约 10% (38px -> 42px) === */
+    height: 42px;
 }
 
 #auth-modal .btn-social.google {
