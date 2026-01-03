@@ -1,544 +1,619 @@
 [
   {
-    "title": "个人收藏",
+    "title": "Favorites",
     "bookmarks": [
       {
-        "title": "Notion",
+        "id": "mibooocggo4bac346wo",
         "url": "https://notion.so",
         "icon": "https://manifest.im/icon/notion.so",
         "style": "full",
-        "id": "mibooocggo4bac346wo"
+        "title": "Notion"
       },
       {
-        "title": "Dedao",
+        "id": "mibooocg6ifsz8svimu",
         "url": "https://www.dedao.cn/bought",
         "icon": "https://manifest.im/icon/www.dedao.cn",
         "style": "full",
-        "id": "mibooocg6ifsz8svimu"
+        "title": "Dedao"
       },
       {
-        "title": "Youtube",
+        "id": "mibooocgxukg2md4ees",
         "url": "https://youtube.com",
-        "icon": "https://img.logo.dev/youtube.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "id": "mibooocgxukg2md4ees"
+        "icon": "https://favicon.vemetric.com/youtube.com",
+        "style": "fit",
+        "title": "Youtube"
       },
       {
-        "title": "Bilibili",
+        "id": "mibooocgnkd4wlcily",
         "url": "https://www.bilibili.com",
         "icon": "https://favicon.vemetric.com/www.bilibili.com",
         "style": "full",
-        "id": "mibooocgnkd4wlcily"
+        "title": "Bilibili"
       },
       {
-        "title": "Subeasy",
-        "url": "https://www.subeasy.ai/workspace",
-        "icon": "https://subeasy.ai/favicon.ico",
-        "style": "white",
-        "id": "mibooocg3d08h37yjom"
-      },
-      {
-        "title": "Douban",
-        "url": "https://movie.douban.com/",
-        "icon": "https://cdn.brandfetch.io/movie.douban.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "fit",
-        "id": "mibooocg6ksem70at97"
-      },
-      {
-        "title": "Google",
-        "url": "https://Google.com",
-        "icon": "https://cdn.brandfetch.io/google.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "white",
-        "id": "mibooocgctd6k15mfsq"
-      },
-      {
-        "title": "NY Times",
-        "url": "https://m.cn.nytimes.com/",
-        "icon": "https://manifest.im/icon/m.cn.nytimes.com",
-        "style": "full",
-        "id": "mibooocgrdyluefobsl"
-      },
-      {
-        "title": "Gemini",
-        "url": "https://gemini.google.com/app",
-        "icon": "https://manifest.im/icon/gemini.google.com",
-        "style": "fit",
-        "id": "mibooocg1p2kmlhqsbu"
-      },
-      {
-        "title": "Grok",
-        "url": "https://grok.com/",
-        "icon": "https://cdn.brandfetch.io/grok.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "id": "mibooocgvnfgrg3hxed"
-      },
-      {
-        "title": "Chatgpt",
-        "url": "https://chatgpt.com",
-        "icon": "https://manifest.im/icon/chatgpt.com",
-        "style": "full",
-        "id": "mibooocgw6rzqbut0o9"
-      },
-      {
-        "title": "Sora",
-        "url": "https://sora.chatgpt.com",
-        "icon": "https://manifest.im/icon/sora.chatgpt.com",
-        "style": "full",
-        "id": "mibooocg577ak6khszh"
-      },
-      {
-        "title": "GitHub",
-        "url": "https://github.com",
-        "icon": "https://manifest.im/icon/github.com",
-        "style": "full",
-        "id": "mibooocgiovtru2rogh"
-      },
-      {
-        "title": "Vercel",
-        "url": "https://vercel.com",
-        "icon": "https://manifest.im/icon/vercel.com",
-        "style": "full",
-        "id": "mibooocgumwvwh70wn"
-      },
-      {
-        "id": "micsydpfc4fivqf8npg",
-        "title": "Telegram",
-        "url": "https://web.telegram.org/a/",
-        "icon": "https://img.logo.dev/web.telegram.org?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
-      },
-      {
-        "title": "Gmail",
-        "url": "https://mail.google.com/mail/u/0/",
-        "icon": "https://manifest.im/icon/mail.google.com",
-        "style": "white",
-        "id": "mibooocgv5kxh73xmms"
-      },
-      {
-        "id": "miepx4j9ab58h1vr5k6",
-        "title": "Perplexity",
-        "url": "https://www.perplexity.ai/",
-        "icon": "https://cdn.brandfetch.io/www.perplexity.ai?c=1idVW8VN57Jat7AexnZ",
-        "style": "full"
-      },
-      {
-        "id": "miepy2ln1a4dj0jx0wtg",
-        "title": "Claude",
-        "url": "https://claude.ai/",
-        "icon": "https://favicon.vemetric.com/claude.ai",
-        "style": "full"
-      }
-    ]
-  },
-  {
-    "title": "学习工具",
-    "bookmarks": [
-      {
-        "title": "Wikipedia",
-        "url": "https://zh.wikipedia.org/wiki/Wikipedia:%E9%A6%96%E9%A1%B5",
-        "icon": "https://manifest.im/icon/zh.wikipedia.org",
-        "style": "full",
-        "id": "mibooocgrih9u7wmtw"
-      },
-      {
-        "title": "BBC",
-        "url": "https://www.bbc.com/zhongwen/simp",
-        "icon": "https://cdn.brandfetch.io/www.bbc.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "id": "mibooocgnxpaibktu1o"
-      },
-      {
-        "title": "Grabcad",
-        "url": "https://grabcad.com/library",
-        "icon": "https://img.logo.dev/grabcad.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "id": "mibooocguwmdw2mja1r"
-      },
-      {
-        "title": "iFixit",
-        "url": "https://zh.ifixit.com/Teardown",
-        "icon": "https://img.logo.dev/zh.ifixit.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "fit",
-        "id": "mibooocg1w4hodlnmca"
-      },
-      {
-        "title": "Z-library",
-        "url": "https://z-library.sk/",
-        "icon": "https://manifest.im/icon/z-library.sk",
-        "style": "fit",
-        "id": "mibooocgrw5l7r8p99a"
-      },
-      {
-        "title": "Google Art",
-        "url": "https://artsandculture.google.com/",
-        "icon": "https://manifest.im/icon/artsandculture.google.com",
-        "style": "full",
-        "id": "mibooocgnga9eg221z"
-      },
-      {
-        "title": "Daily Art",
-        "url": "https://art.324893.xyz/",
-        "icon": "https://api.dicebear.com/9.x/shapes/svg?seed=temrrr",
-        "style": "full",
-        "id": "mibooocgjwmrwo41bjf"
-      },
-      {
-        "id": "midbmnvnqubzzyg6p",
-        "title": "Hundun",
-        "url": "https://www.hundun.cn/",
-        "icon": "https://img.logo.dev/www.hundun.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
-      },
-      {
-        "id": "midbn4v8lri899hmq1p",
-        "title": "X",
-        "url": "https://x.com/home",
-        "icon": "https://favicon.vemetric.com/x.com",
-        "style": "full"
-      },
-      {
-        "id": "midbkac2i1z91czdrka",
-        "title": "Leonardo",
-        "url": "https://app.leonardo.ai/",
-        "icon": "https://cdn.brandfetch.io/app.leonardo.ai?c=1idVW8VN57Jat7AexnZ",
-        "style": "full"
-      },
-      {
-        "id": "miepvyzft0h6yv1eo6",
-        "title": "Weread",
-        "url": "https://weread.qq.com/",
-        "icon": "https://favicon.vemetric.com/weread.qq.com",
-        "style": "full"
-      },
-      {
-        "id": "mieq34u7fw4sgcx1ho",
-        "title": "Makerworld",
-        "url": "https://makerworld.com/zh/3d-models",
-        "icon": "https://manifest.im/icon/makerworld.com",
-        "style": "full"
-      },
-      {
-        "id": "mier00w64evkxux8ox1",
-        "title": "Yixi",
-        "url": "https://yixi.tv/",
-        "icon": "https://img.logo.dev/yixi.tv?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
-      },
-      {
-        "id": "mier1cka1b7ultueupk",
-        "title": "Coursera",
-        "url": "https://www.coursera.org/",
-        "icon": "https://cdn.brandfetch.io/www.coursera.org?c=1idVW8VN57Jat7AexnZ",
-        "style": "full"
-      },
-      {
-        "id": "mier7s1fxwut51nfihe",
-        "title": "Indeed",
-        "url": "https://indeed.com",
-        "icon": "https://img.logo.dev/indeed.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
-      },
-      {
-        "id": "mierd8xtx9xbyzlog49",
-        "title": "KLX",
-        "url": "https://www.vistopia.com.cn/",
-        "icon": "https://img.logo.dev/www.vistopia.com.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
-      },
-      {
-        "id": "mierexpald47s750ijg",
-        "title": "Ted",
-        "url": "https://www.ted.com/",
-        "icon": "https://manifest.im/icon/www.ted.com",
-        "style": "full"
-      }
-    ]
-  },
-  {
-    "title": "影音娱乐",
-    "bookmarks": [
-      {
-        "title": "Spotify",
-        "url": "https://open.spotify.com/",
-        "icon": "https://img.logo.dev/open.spotify.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "id": "mibooocgxj44jon0jy"
-      },
-      {
-        "id": "mierh5ixzlwjat320s8",
-        "title": "Podcasts",
-        "url": "https://podcasts.apple.com/",
-        "icon": "https://favicon.vemetric.com/podcasts.apple.com",
-        "style": "full"
-      },
-      {
-        "id": "miepihi6f38igqpkny7",
-        "title": "The Movie DB",
-        "url": "https://www.themoviedb.org/",
-        "icon": "https://favicon.vemetric.com/www.themoviedb.org",
-        "style": "full"
-      },
-      {
-        "id": "miepe028guvn7z5j6p",
-        "title": "Imdb",
-        "url": "https://www.imdb.com/",
-        "icon": "https://img.logo.dev/www.imdb.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
-      },
-      {
-        "title": "Cilixiong",
-        "url": "https://www.cilixiong.org/movie/",
-        "icon": "https://manifest.im/icon/www.cilixiong.org",
-        "style": "full",
-        "id": "mibooocg9qj52goaju"
-      },
-      {
-        "title": "Alipansou",
-        "url": "https://alipansou.com/",
-        "icon": "https://favicon.vemetric.com/alipansou.com",
-        "style": "fit",
-        "id": "mibooocgaaeujkkssn"
-      },
-      {
-        "title": "Upyunso",
-        "url": "https://www.upyunso.com/",
-        "icon": "https://img.logo.dev/www.upyunso.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "fit",
-        "id": "mibooocgkq3nblf1gna"
-      },
-      {
-        "title": "91panta",
-        "url": "https://91panta.cn/",
-        "icon": "https://api.dicebear.com/9.x/identicon/svg?seed=nowf5",
-        "style": "full",
-        "id": "mibooocgwqjkcliv0ed"
-      },
-      {
-        "id": "miepmql63atcrh9hyhm",
-        "title": "Google Aliyun",
-        "url": "https://www.google.com/search?q=https://www.aliyundrive.com+%E8%82%96%E7%94%B3%E5%85%8B%E7%9A%84%E6%95%91%E8%B5%8E&newwindow=1&sxsrf=AJOqlzVJfRSCMuz4Ah-SfKHmcjXjgivccw:1679122128936&ei=0F4VZNzSOKeNur8P3LWm-A4&ved=0ahUKEwjc-p2w8eT9AhWnhu4BHdyaCe8Q4dUDCBA&uact=5&oq=https://www.aliyundrive.com+%E8%82%96%E7%94%B3%E5%85%8B%E7%9A%84%E6%95%91%E8%B5%8E&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQyBQgAEKIESgQIQRgAUABY7iFgtydoAXAAeACAAZwCiAGOBJIBAzItMpgBAKABAqABAcABAQ&sclient=gws-wiz-serp",
-        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=qfl3v",
-        "style": "full"
-      },
-      {
-        "id": "miepo5oz2u7te1vfafg",
-        "title": "Magnet",
-        "url": "https://www.google.com/search?q=magnet%3A%3Fxt%3D+%E9%98%BF%E4%B8%BD%E5%A1%94&newwindow=1&sca_esv=742aa62f8b445c9b&sxsrf=AE3TifPE9YmGGnR5OM3S-gYeC8E6WAl7iA%3A1764083296126&ei=YMYlac6zB82xhbIPyZuYuQg&ved=0ahUKEwjO4-Cxyo2RAxXNWEEAHckNJocQ4dUDCBE&uact=5&oq=magnet%3A%3Fxt%3D+%E9%98%BF%E4%B8%BD%E5%A1%94&gs_lp=Egxnd3Mtd2l6LXNlcnAiFW1hZ25ldDo_eHQ9IOmYv-S4veWhlEjyP1DKFFi-PXABeACQAQOYAbYIoAHOKaoBCzMtNC4xLjEuMi4xuAEDyAEA-AEBmAIAoAIAmAMAiAYBkgcAoAfLA7IHALgHAMIHAMgHAA&sclient=gws-wiz-serp",
-        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=ervqsq",
-        "style": "full"
-      }
-    ]
-  },
-  {
-    "title": "代码工具",
-    "bookmarks": [
-      {
-        "title": "Cloudflare",
-        "url": "https://www.cloudflare.com/zh-cn/",
-        "icon": "https://manifest.im/icon/www.cloudflare.com",
-        "style": "fit",
-        "id": "mibooocgttju5attj7a"
-      },
-      {
-        "title": "Us-west-1",
-        "url": "https://us-west-1.run.claw.cloud/",
-        "icon": "https://img.logo.dev/us-west-1.run.claw.cloud?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "fit",
-        "id": "mibooocgll1d4ucyf9n"
-      },
-      {
-        "id": "mid9okof7qugkre384m",
-        "title": "Ai Studio",
-        "url": "https://aistudio.google.com/",
-        "icon": "https://favicon.vemetric.com/aistudio.google.com",
-        "style": "full"
-      },
-      {
-        "id": "midbjml0cwdmvbm878d",
-        "title": "Colab",
-        "url": "https://colab.research.google.com/github/alembics/disco-diffusion/blob/main/Disco_Diffusion.ipynb#scrollTo=PromptsTop",
-        "icon": "https://favicon.vemetric.com/colab.research.google.com",
-        "style": "fit"
-      },
-      {
-        "id": "miepzfavq34y5q5cvf",
-        "title": "Studio",
-        "url": "https://studio.firebase.google.com/",
-        "icon": "https://favicon.vemetric.com/studio.firebase.google.com",
-        "style": "fit"
-      },
-      {
-        "id": "mif9j57y2dhvyfldk1q",
-        "title": "Supabase",
-        "url": "https://supabase.com/",
-        "icon": "https://favicon.vemetric.com/supabase.com",
-        "style": "full"
-      }
-    ]
-  },
-  {
-    "title": "其他",
-    "bookmarks": [
-      {
-        "title": "Shadowsocks",
-        "url": "https://secure.shadowsocks.au/aff.php?aff=78994",
-        "icon": "https://img.logo.dev/secure.shadowsocks.au?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "id": "mibooocg2z1qv5lcu7y"
-      },
-      {
-        "title": "yt-dlp",
+        "id": "mibooocg4udfj48jcqn",
         "url": "https://yt-dlp.324893.xyz/",
         "icon": "https://manifest.im/icon/yt-dlp.324893.xyz",
         "style": "full",
-        "id": "mibooocg4udfj48jcqn"
+        "title": "yt-dlp"
       },
       {
-        "title": "Cobalt",
-        "url": "https://cobalt.tools/",
-        "icon": "https://manifest.im/icon/cobalt.tools",
-        "style": "full",
-        "id": "mibooocggle4a072qf6"
+        "id": "mibooocg3d08h37yjom",
+        "url": "https://www.subeasy.ai/workspace",
+        "icon": "https://subeasy.ai/favicon.ico",
+        "style": "white",
+        "title": "Subeasy"
       },
       {
-        "title": "Whisper",
-        "url": "https://whisper.324893.xyz/",
-        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=5ubfma",
-        "style": "full",
-        "id": "mibooocgldbnk47twx"
-      },
-      {
-        "title": "FFmpeg",
-        "url": "https://ffmpeg.324893.xyz/",
-        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=o4k7i",
-        "style": "full",
-        "id": "mibooocgt61tw8dhqj"
-      },
-      {
-        "title": "Tingwu",
-        "url": "https://tingwu.aliyun.com/home",
-        "icon": "https://favicon.vemetric.com/tingwu.aliyun.com",
+        "id": "mibooocg6ksem70at97",
+        "url": "https://movie.douban.com/",
+        "icon": "https://cdn.brandfetch.io/movie.douban.com?c=1idVW8VN57Jat7AexnZ",
         "style": "fit",
-        "id": "mibooocgvqiaku0c1ai"
+        "title": "Douban"
       },
       {
-        "id": "midbiokxdv5uxsy1mn",
-        "title": "Meetings",
-        "url": "https://meetings.feishu.cn/minutes/me",
-        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=c8z6",
-        "style": "full"
+        "id": "mibooocgctd6k15mfsq",
+        "url": "https://Google.com",
+        "icon": "https://cdn.brandfetch.io/google.com?c=1idVW8VN57Jat7AexnZ",
+        "style": "white",
+        "title": "Google"
       },
       {
-        "title": "Aliyundrive",
-        "url": "https://aliyundrive.com",
-        "icon": "https://manifest.im/icon/aliyundrive.com",
+        "id": "mivpg1zworavb83cgq",
+        "url": "https://nytimes.324893.xyz/",
+        "icon": "https://favicon.vemetric.com/cn.nytimes.com",
         "style": "full",
-        "id": "mibooocg1asoj080xgu"
+        "title": "NY Times"
       },
       {
-        "id": "mieqrq52yyo8inlb9j",
-        "title": "iCloud",
-        "url": "https://www.icloud.com/",
-        "icon": "https://img.logo.dev/www.icloud.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
-      },
-      {
-        "id": "midbsfzo5wxg064euv7",
-        "title": "Google Drive",
-        "url": "https://drive.google.com/drive/my-drive",
-        "icon": "https://api.dicebear.com/9.x/bottts/svg?seed=kgnc2m",
-        "style": "fit"
-      },
-      {
-        "title": "Yun",
-        "url": "https://yun.139.com",
-        "icon": "https://manifest.im/icon/yun.139.com",
-        "style": "full",
-        "id": "mibooocgomou5m0ra8c"
-      },
-      {
-        "title": "Appstorrent",
-        "url": "https://appstorrent.ru/",
-        "icon": "https://manifest.im/icon/appstorrent.ru",
-        "style": "full",
-        "id": "mibooocg96pozsobsnu"
-      },
-      {
-        "title": "Macked",
-        "url": "https://macked.app/",
-        "icon": "https://manifest.im/icon/macked.app",
+        "id": "mibooocg1p2kmlhqsbu",
+        "url": "https://gemini.google.com/app",
+        "icon": "https://manifest.im/icon/gemini.google.com",
         "style": "fit",
-        "id": "mibooocgngqpn1mmbz"
+        "title": "Gemini"
       },
       {
-        "id": "midblx03va5dbtxzc8c",
-        "title": "Feishu",
-        "url": "https://www.feishu.cn/",
-        "icon": "https://img.logo.dev/www.feishu.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "fit"
+        "id": "mid9okof7qugkre384m",
+        "url": "https://aistudio.google.com/",
+        "icon": "https://favicon.vemetric.com/aistudio.google.com",
+        "style": "full",
+        "title": "Ai Studio"
+      },
+      {
+        "id": "miepy2ln1a4dj0jx0wtg",
+        "url": "https://claude.ai/",
+        "icon": "https://favicon.vemetric.com/claude.ai",
+        "style": "fit",
+        "title": "Claude"
+      },
+      {
+        "id": "mibooocgvnfgrg3hxed",
+        "url": "https://grok.com/",
+        "icon": "https://cdn.brandfetch.io/grok.com?c=1idVW8VN57Jat7AexnZ",
+        "style": "full",
+        "title": "Grok"
+      },
+      {
+        "id": "miepx4j9ab58h1vr5k6",
+        "url": "https://www.perplexity.ai/",
+        "icon": "https://cdn.brandfetch.io/www.perplexity.ai?c=1idVW8VN57Jat7AexnZ",
+        "style": "full",
+        "title": "Perplexity"
+      },
+      {
+        "id": "mibooocgw6rzqbut0o9",
+        "url": "https://chatgpt.com",
+        "icon": "https://manifest.im/icon/chatgpt.com",
+        "style": "full",
+        "title": "Chatgpt"
+      },
+      {
+        "id": "mibooocg577ak6khszh",
+        "url": "https://sora.chatgpt.com",
+        "icon": "https://manifest.im/icon/sora.chatgpt.com",
+        "style": "full",
+        "title": "Sora"
+      },
+      {
+        "id": "micsydpfc4fivqf8npg",
+        "url": "https://web.telegram.org/a/",
+        "icon": "https://img.logo.dev/web.telegram.org?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Telegram"
+      },
+      {
+        "id": "mibooocgiovtru2rogh",
+        "url": "https://github.com",
+        "icon": "https://manifest.im/icon/github.com",
+        "style": "full",
+        "title": "GitHub"
+      },
+      {
+        "id": "mibooocgumwvwh70wn",
+        "url": "https://vercel.com",
+        "icon": "https://manifest.im/icon/vercel.com",
+        "style": "full",
+        "title": "Vercel"
+      },
+      {
+        "id": "mibooocgv5kxh73xmms",
+        "url": "https://mail.google.com/mail/u/0/",
+        "icon": "https://manifest.im/icon/mail.google.com",
+        "style": "white",
+        "title": "Gmail"
+      },
+      {
+        "id": "mjis3hdv9fyvkscxxyg",
+        "url": "https://stitch.withgoogle.com/",
+        "icon": "https://favicon.vemetric.com/stitch.withgoogle.com",
+        "style": "full",
+        "title": "Stitch"
+      },
+      {
+        "id": "mjpz3y419iudcfdn3fa",
+        "url": "https://uc.324893.xyz/",
+        "icon": "https://favicon.vemetric.com/uc.324893.xyz",
+        "style": "full",
+        "title": "UC"
+      }
+    ]
+  },
+  {
+    "title": "Learning",
+    "bookmarks": [
+      {
+        "id": "miepvyzft0h6yv1eo6",
+        "url": "https://weread.qq.com/",
+        "icon": "https://favicon.vemetric.com/weread.qq.com",
+        "style": "full",
+        "title": "Weread"
+      },
+      {
+        "id": "mibooocgrw5l7r8p99a",
+        "url": "https://z-library.sk/",
+        "icon": "https://manifest.im/icon/z-library.sk",
+        "style": "fit",
+        "title": "Z-library"
+      },
+      {
+        "id": "mier1cka1b7ultueupk",
+        "url": "https://www.coursera.org/",
+        "icon": "https://cdn.brandfetch.io/www.coursera.org?c=1idVW8VN57Jat7AexnZ",
+        "style": "full",
+        "title": "Coursera"
+      },
+      {
+        "id": "mierexpald47s750ijg",
+        "url": "https://www.ted.com/",
+        "icon": "https://manifest.im/icon/www.ted.com",
+        "style": "full",
+        "title": "Ted"
+      },
+      {
+        "id": "mier00w64evkxux8ox1",
+        "url": "https://yixi.tv/",
+        "icon": "https://img.logo.dev/yixi.tv?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Yixi"
+      },
+      {
+        "id": "mibooocgrih9u7wmtw",
+        "url": "https://zh.wikipedia.org/wiki/Wikipedia:%E9%A6%96%E9%A1%B5",
+        "icon": "https://manifest.im/icon/zh.wikipedia.org",
+        "style": "full",
+        "title": "Wikipedia"
+      },
+      {
+        "id": "mibooocgnga9eg221z",
+        "url": "https://artsandculture.google.com/",
+        "icon": "https://manifest.im/icon/artsandculture.google.com",
+        "style": "full",
+        "title": "Google Art"
+      },
+      {
+        "id": "mibooocgjwmrwo41bjf",
+        "url": "https://art.324893.xyz/",
+        "icon": "https://api.dicebear.com/9.x/shapes/svg?seed=temrrr",
+        "style": "full",
+        "title": "Daily Art"
+      },
+      {
+        "id": "midbkac2i1z91czdrka",
+        "url": "https://app.leonardo.ai/",
+        "icon": "https://cdn.brandfetch.io/app.leonardo.ai?c=1idVW8VN57Jat7AexnZ",
+        "style": "full",
+        "title": "Leonardo"
+      },
+      {
+        "id": "mibooocguwmdw2mja1r",
+        "url": "https://grabcad.com/library",
+        "icon": "https://img.logo.dev/grabcad.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Grabcad"
+      },
+      {
+        "id": "mibooocg1w4hodlnmca",
+        "url": "https://zh.ifixit.com/Teardown",
+        "icon": "https://img.logo.dev/zh.ifixit.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "fit",
+        "title": "iFixit"
+      },
+      {
+        "id": "mierd8xtx9xbyzlog49",
+        "url": "https://www.vistopia.com.cn/",
+        "icon": "https://img.logo.dev/www.vistopia.com.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "KLX"
+      },
+      {
+        "id": "midbmnvnqubzzyg6p",
+        "url": "https://www.hundun.cn/",
+        "icon": "https://img.logo.dev/www.hundun.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Hundun"
+      },
+      {
+        "id": "mieq34u7fw4sgcx1ho",
+        "url": "https://makerworld.com/zh/3d-models",
+        "icon": "https://manifest.im/icon/makerworld.com",
+        "style": "full",
+        "title": "Makerworld"
+      },
+      {
+        "id": "mier7s1fxwut51nfihe",
+        "url": "https://indeed.com",
+        "icon": "https://img.logo.dev/indeed.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Indeed"
+      },
+      {
+        "id": "mibooocgrdyluefobsl",
+        "url": "https://cn.nytimes.com/zh-hant/",
+        "icon": "https://cdn.brandfetch.io/cn.nytimes.com?c=1idVW8VN57Jat7AexnZ",
+        "style": "full",
+        "title": "NY Times"
+      },
+      {
+        "id": "misxml0kpp5xx8qqi3q",
+        "url": "https://notebooklm.google.com/",
+        "icon": "https://img.logo.dev/notebooklm.google.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "white",
+        "title": "Notebooklm"
+      }
+    ]
+  },
+  {
+    "title": "Movies",
+    "bookmarks": [
+      {
+        "id": "mibooocgxj44jon0jy",
+        "url": "https://open.spotify.com/",
+        "icon": "https://img.logo.dev/open.spotify.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Spotify"
+      },
+      {
+        "id": "mierh5ixzlwjat320s8",
+        "url": "https://podcasts.apple.com/",
+        "icon": "https://favicon.vemetric.com/podcasts.apple.com",
+        "style": "full",
+        "title": "Podcasts"
+      },
+      {
+        "id": "miepihi6f38igqpkny7",
+        "url": "https://www.themoviedb.org/",
+        "icon": "https://favicon.vemetric.com/www.themoviedb.org",
+        "style": "full",
+        "title": "The Movie DB"
+      },
+      {
+        "id": "miepe028guvn7z5j6p",
+        "url": "https://www.imdb.com/",
+        "icon": "https://img.logo.dev/www.imdb.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Imdb"
+      },
+      {
+        "id": "mibooocg9qj52goaju",
+        "url": "https://www.cilixiong.org/movie/",
+        "icon": "https://manifest.im/icon/www.cilixiong.org",
+        "style": "full",
+        "title": "Cilixiong"
+      },
+      {
+        "id": "mibooocgaaeujkkssn",
+        "url": "https://alipansou.com/",
+        "icon": "https://favicon.vemetric.com/alipansou.com",
+        "style": "fit",
+        "title": "Alipansou"
+      },
+      {
+        "id": "mibooocgkq3nblf1gna",
+        "url": "https://www.upyunso.com/",
+        "icon": "https://img.logo.dev/www.upyunso.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "fit",
+        "title": "Upyunso"
+      },
+      {
+        "id": "mibooocgwqjkcliv0ed",
+        "url": "https://91panta.cn/",
+        "icon": "https://api.dicebear.com/9.x/identicon/svg?seed=nowf5",
+        "style": "full",
+        "title": "91panta"
+      },
+      {
+        "id": "miepmql63atcrh9hyhm",
+        "url": "https://www.google.com/search?q=https://www.aliyundrive.com+%E8%82%96%E7%94%B3%E5%85%8B%E7%9A%84%E6%95%91%E8%B5%8E&newwindow=1&sxsrf=AJOqlzVJfRSCMuz4Ah-SfKHmcjXjgivccw:1679122128936&ei=0F4VZNzSOKeNur8P3LWm-A4&ved=0ahUKEwjc-p2w8eT9AhWnhu4BHdyaCe8Q4dUDCBA&uact=5&oq=https://www.aliyundrive.com+%E8%82%96%E7%94%B3%E5%85%8B%E7%9A%84%E6%95%91%E8%B5%8E&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQyBQgAEKIESgQIQRgAUABY7iFgtydoAXAAeACAAZwCiAGOBJIBAzItMpgBAKABAqABAcABAQ&sclient=gws-wiz-serp",
+        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=qfl3v",
+        "style": "full",
+        "title": "Google Aliyun"
+      },
+      {
+        "id": "miepo5oz2u7te1vfafg",
+        "url": "https://www.google.com/search?q=magnet%3A%3Fxt%3D+%E9%98%BF%E4%B8%BD%E5%A1%94&newwindow=1&sca_esv=742aa62f8b445c9b&sxsrf=AE3TifPE9YmGGnR5OM3S-gYeC8E6WAl7iA%3A1764083296126&ei=YMYlac6zB82xhbIPyZuYuQg&ved=0ahUKEwjO4-Cxyo2RAxXNWEEAHckNJocQ4dUDCBE&uact=5&oq=magnet%3A%3Fxt%3D+%E9%98%BF%E4%B8%BD%E5%A1%94&gs_lp=Egxnd3Mtd2l6LXNlcnAiFW1hZ25ldDo_eHQ9IOmYv-S4veWhlEjyP1DKFFi-PXABeACQAQOYAbYIoAHOKaoBCzMtNC4xLjEuMi4xuAEDyAEA-AEBmAIAoAIAmAMAiAYBkgcAoAfLA7IHALgHAMIHAMgHAA&sclient=gws-wiz-serp",
+        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=ervqsq",
+        "style": "full",
+        "title": "Magnet"
+      }
+    ]
+  },
+  {
+    "title": "Social",
+    "bookmarks": [
+      {
+        "id": "midbn4v8lri899hmq1p",
+        "url": "https://x.com/home",
+        "icon": "https://favicon.vemetric.com/x.com",
+        "style": "full",
+        "title": "X"
       },
       {
         "id": "midbnlfyt7tv9ul7im",
-        "title": "Quora",
         "url": "https://www.quora.com/",
         "icon": "https://img.logo.dev/www.quora.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
+        "style": "full",
+        "title": "Quora"
       },
       {
         "id": "midbojdqrj8sg41r0is",
-        "title": "Tumblr",
         "url": "https://www.tumblr.com/",
         "icon": "https://cdn.brandfetch.io/www.tumblr.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "full"
+        "style": "full",
+        "title": "Tumblr"
       },
       {
         "id": "midbp7ge6h9l75ik51m",
-        "title": "Instagram",
         "url": "https://www.instagram.com/",
         "icon": "https://manifest.im/icon/www.instagram.com",
-        "style": "full"
+        "style": "full",
+        "title": "Instagram"
       },
       {
         "id": "midbpzg8nshztny6y9g",
-        "title": "Pinterest",
         "url": "https://pinterest.com",
         "icon": "https://cdn.brandfetch.io/pinterest.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "fit"
-      },
-      {
-        "title": "Google Earth",
-        "url": "https://earth.google.com/",
-        "icon": "https://manifest.im/icon/earth.google.com",
-        "style": "white",
-        "id": "mibooocgdf1559a699m"
+        "style": "fit",
+        "title": "Pinterest"
       },
       {
         "id": "mieprd26n7b0gckwp8",
-        "title": "Archive",
         "url": "https://archive.org/",
         "icon": "https://cdn.brandfetch.io/archive.org?c=1idVW8VN57Jat7AexnZ",
-        "style": "full"
+        "style": "full",
+        "title": "Archive"
+      },
+      {
+        "id": "mibooocgnxpaibktu1o",
+        "url": "https://www.bbc.com/zhongwen/simp",
+        "icon": "https://cdn.brandfetch.io/www.bbc.com?c=1idVW8VN57Jat7AexnZ",
+        "style": "full",
+        "title": "BBC"
       },
       {
         "id": "mieptqfyamvjno7268q",
-        "title": "Snopes",
         "url": "https://www.snopes.com/",
         "icon": "https://img.logo.dev/www.snopes.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
+        "style": "full",
+        "title": "Snopes"
+      }
+    ]
+  },
+  {
+    "title": "Code",
+    "bookmarks": [
+      {
+        "id": "mibooocgttju5attj7a",
+        "url": "https://dash.cloudflare.com/",
+        "icon": "https://manifest.im/icon/www.cloudflare.com",
+        "style": "fit",
+        "title": "Cloudflare"
+      },
+      {
+        "id": "mibooocgll1d4ucyf9n",
+        "url": "https://us-west-1.run.claw.cloud/",
+        "icon": "https://img.logo.dev/us-west-1.run.claw.cloud?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "fit",
+        "title": "Us-west-1"
+      },
+      {
+        "id": "midbjml0cwdmvbm878d",
+        "url": "https://colab.research.google.com/github/alembics/disco-diffusion/blob/main/Disco_Diffusion.ipynb#scrollTo=PromptsTop",
+        "icon": "https://favicon.vemetric.com/colab.research.google.com",
+        "style": "fit",
+        "title": "Colab"
+      },
+      {
+        "id": "miepzfavq34y5q5cvf",
+        "url": "https://studio.firebase.google.com/",
+        "icon": "https://favicon.vemetric.com/studio.firebase.google.com",
+        "style": "fit",
+        "title": "Studio"
+      },
+      {
+        "id": "mif9j57y2dhvyfldk1q",
+        "url": "https://supabase.com/",
+        "icon": "https://favicon.vemetric.com/supabase.com",
+        "style": "full",
+        "title": "Supabase"
+      },
+      {
+        "id": "mijj74rlfqlqehzrpnm",
+        "url": "https://search.google.com/search-console?resource_id=sc-domain:324893.xyz",
+        "icon": "https://api.dicebear.com/9.x/bottts/svg?seed=dj2atj",
+        "style": "full",
+        "title": "Search"
+      },
+      {
+        "id": "mijsfcqrp0fv95jriq8",
+        "url": "https://realfavicongenerator.net/",
+        "icon": "https://cdn.brandfetch.io/realfavicongenerator.net?c=1idVW8VN57Jat7AexnZ",
+        "style": "full",
+        "title": "Favicon"
+      },
+      {
+        "id": "mj4hu8edx0voiyu3yjc",
+        "url": "https://console.cloud.google.com/welcome/new?project=verlingo",
+        "icon": "https://img.logo.dev/console.cloud.google.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "fit",
+        "title": "Console"
+      },
+      {
+        "id": "mjlliw8mj5hjhsrxtg",
+        "url": "https://www.spaceship.com/",
+        "icon": "https://manifest.im/icon/www.spaceship.com",
+        "style": "full",
+        "title": "Spaceship"
+      }
+    ]
+  },
+  {
+    "title": "Others",
+    "bookmarks": [
+      {
+        "id": "mibooocg2z1qv5lcu7y",
+        "url": "https://secure.shadowsocks.au/aff.php?aff=78994",
+        "icon": "https://img.logo.dev/secure.shadowsocks.au?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Shadowsocks"
+      },
+      {
+        "id": "mibooocggle4a072qf6",
+        "url": "https://cobalt.tools/",
+        "icon": "https://manifest.im/icon/cobalt.tools",
+        "style": "full",
+        "title": "Cobalt"
+      },
+      {
+        "id": "mibooocgldbnk47twx",
+        "url": "https://whisper.324893.xyz/",
+        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=5ubfma",
+        "style": "full",
+        "title": "Whisper"
+      },
+      {
+        "id": "mibooocgt61tw8dhqj",
+        "url": "https://ffmpeg.324893.xyz/",
+        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=o4k7i",
+        "style": "full",
+        "title": "FFmpeg"
+      },
+      {
+        "id": "mibooocgvqiaku0c1ai",
+        "url": "https://tingwu.aliyun.com/home",
+        "icon": "https://favicon.vemetric.com/tingwu.aliyun.com",
+        "style": "fit",
+        "title": "Tingwu"
+      },
+      {
+        "id": "midbiokxdv5uxsy1mn",
+        "url": "https://meetings.feishu.cn/minutes/me",
+        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=c8z6",
+        "style": "full",
+        "title": "Meetings"
+      },
+      {
+        "id": "mibooocg1asoj080xgu",
+        "url": "https://aliyundrive.com",
+        "icon": "https://manifest.im/icon/aliyundrive.com",
+        "style": "full",
+        "title": "Aliyundrive"
+      },
+      {
+        "id": "mieqrq52yyo8inlb9j",
+        "url": "https://www.icloud.com/",
+        "icon": "https://img.logo.dev/www.icloud.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "iCloud"
+      },
+      {
+        "id": "midbsfzo5wxg064euv7",
+        "url": "https://drive.google.com/drive/my-drive",
+        "icon": "https://api.dicebear.com/9.x/bottts/svg?seed=kgnc2m",
+        "style": "fit",
+        "title": "Google Drive"
+      },
+      {
+        "id": "mibooocgomou5m0ra8c",
+        "url": "https://yun.139.com",
+        "icon": "https://manifest.im/icon/yun.139.com",
+        "style": "full",
+        "title": "Yun"
+      },
+      {
+        "id": "mibooocg96pozsobsnu",
+        "url": "https://appstorrent.ru/",
+        "icon": "https://manifest.im/icon/appstorrent.ru",
+        "style": "full",
+        "title": "Appstorrent"
+      },
+      {
+        "id": "mibooocgngqpn1mmbz",
+        "url": "https://macked.app/",
+        "icon": "https://manifest.im/icon/macked.app",
+        "style": "fit",
+        "title": "Macked"
+      },
+      {
+        "id": "midblx03va5dbtxzc8c",
+        "url": "https://www.feishu.cn/",
+        "icon": "https://img.logo.dev/www.feishu.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "fit",
+        "title": "Feishu"
+      },
+      {
+        "id": "mibooocgdf1559a699m",
+        "url": "https://earth.google.com/",
+        "icon": "https://manifest.im/icon/earth.google.com",
+        "style": "white",
+        "title": "Google Earth"
       },
       {
         "id": "mier91rpip3ylnctvxc",
-        "title": "Taobao",
         "url": "https://www.taobao.com/",
         "icon": "https://img.logo.dev/www.taobao.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
+        "style": "full",
+        "title": "Taobao"
       },
       {
         "id": "mier9ghssxaq8lpkbe",
-        "title": "JD",
         "url": "https://www.jd.com/",
         "icon": "https://img.logo.dev/www.jd.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full"
+        "style": "full",
+        "title": "JD"
+      },
+      {
+        "id": "mijnrfoaycoxcs7re7g",
+        "url": "https://www.giffgaff.com/orders/affiliate/jemch799_1731597513128",
+        "icon": "https://favicon.vemetric.com/www.giffgaff.com",
+        "style": "full",
+        "title": "Giffgaff"
+      },
+      {
+        "id": "mijnz88qk9z1s6mwj2",
+        "url": "https://mail.qq.com",
+        "icon": "https://favicon.vemetric.com/mail.qq.com",
+        "style": "white",
+        "title": "Mail"
       }
     ]
   }
