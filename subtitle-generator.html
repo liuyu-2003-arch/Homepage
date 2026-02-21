@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字幕 → HTML 生成器</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Noto+Serif+SC:wght@300;400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0e0f11;
+  --bg2: #13141a;
+  --bg3: #1a1b24;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --accent: #5b8fff;
+  --accent2: #7aaeff;
+  --green: #4ade80;
+  --gold: #c9a84c;
+  --red: #f87171;
+  --text: #d4d0c8;
+  --text-dim: #7a7870;
+  --text-mute: #38383a;
+  --mono: 'DM Mono', 'Fira Code', monospace;
+  --serif: 'Noto Serif SC', serif;
+}
+
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(91,143,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,143,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* HEADER */
+.header {
+  position: relative;
+  z-index: 10;
+  padding: 28px 48px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-mark {
+  width: 30px; height: 30px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+}
+.logo-text { font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+.logo-text strong { color: var(--text); font-weight: 400; }
+.header-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-mute); }
+
+/* MAIN */
+.main {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+}
+
+/* LEFT */
+.left {
+  padding: 40px 48px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 10px;
+}
+
+/* Drop zone */
+.dropzone {
+  border: 1.5px dashed var(--border2);
+  border-radius: 10px;
+  padding: 44px 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  background: rgba(91,143,255,0.02);
+}
+.dropzone:hover, .dropzone.drag-over { border-color: var(--accent); background: rgba(91,143,255,0.05); }
+.dropzone.has-file { border-color: var(--green); background: rgba(74,222,128,0.04); border-style: solid; }
+.drop-icon { font-size: 34px; margin-bottom: 10px; display: block; opacity: 0.45; }
+.drop-title { font-family: var(--mono); font-size: 13px; color: var(--text); margin-bottom: 5px; }
+.drop-sub { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.05em; }
+.drop-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.file-info { display: none; flex-direction: column; align-items: center; gap: 5px; }
+.file-name { font-family: var(--mono); font-size: 12px; color: var(--green); word-break: break-all; max-width: 100%; }
+.file-stats { font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+
+
+
+/* Generate button */
+.gen-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.gen-btn:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(91,143,255,0.3); }
+.gen-btn:active { transform: none; }
+.gen-btn:disabled { background: var(--bg3); color: var(--text-mute); cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* RIGHT */
+.right {
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+/* Terminal */
+.terminal {
+  background: #080809;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.terminal-bar {
+  background: var(--bg3);
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid var(--border);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-r { background: #ff5f57; }
+.dot-y { background: #febc2e; }
+.dot-g { background: #28c840; }
+.terminal-title { font-family: var(--mono); font-size: 11px; color: var(--text-mute); margin-left: 4px; }
+.terminal-body {
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.9;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 200px;
+  max-height: 360px;
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a32 transparent;
+}
+.log-line { display: flex; gap: 8px; }
+.log-time { color: var(--text-mute); flex-shrink: 0; }
+.log-info { color: var(--accent2); }
+.log-ok { color: var(--green); }
+.log-warn { color: var(--gold); }
+.log-err { color: var(--red); }
+.log-dim { color: var(--text-dim); }
+
+/* Progress */
+.progress-section { display: flex; flex-direction: column; gap: 8px; }
+.progress-label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; }
+.progress-label-left { color: var(--text-dim); }
+.progress-label-right { color: var(--text-mute); }
+.progress-bar { height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(to right, var(--accent), var(--accent2)); border-radius: 2px; width: 0%; transition: width 0.3s; }
+
+/* Download */
+.dl-btn {
+  width: 100%;
+  padding: 13px;
+  background: rgba(74,222,128,0.1);
+  border: 1px solid rgba(74,222,128,0.3);
+  border-radius: 8px;
+  color: var(--green);
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: none;
+}
+.dl-btn:hover { background: rgba(74,222,128,0.15); }
+.dl-btn.visible { display: block; }
+
+/* Tips */
+.tips { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.tips-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-mute); margin-bottom: 10px; }
+.tip-row { display: flex; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); line-height: 1.6; margin-bottom: 5px; }
+.tip-key { color: var(--accent); flex-shrink: 0; }
+
+@keyframes blink { 50% { opacity: 0; } }
+.cursor { display: inline-block; width: 6px; height: 11px; background: var(--accent); vertical-align: middle; animation: blink 1s step-end infinite; margin-left: 2px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-mark">▶</div>
+    <div class="logo-text"><strong>Subtitle</strong> → HTML Generator</div>
+  </div>
+  <div class="header-tag">v1.1 · local tool</div>
+</header>
+
+<div class="main">
+  <!-- LEFT -->
+  <div class="left">
+
+    <!-- 01 Upload -->
+    <div>
+      <div class="section-label">上传字幕文件</div>
+      <div class="dropzone" id="dropzone">
+        <input type="file" class="drop-input" id="fileInput" accept=".srt,.ass,.ssa,.vtt,.txt">
+        <div id="dropDefault">
+          <span class="drop-icon">📄</span>
+          <div class="drop-title">拖入或点击选择文件</div>
+          <div class="drop-sub">支持 .srt · .ass · .ssa · .vtt · .txt</div>
+        </div>
+        <div class="file-info" id="fileInfo">
+          <span style="font-size:26px">✅</span>
+          <div class="file-name" id="fileName">—</div>
+          <div class="file-stats" id="fileStats">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generate -->
+    <button class="gen-btn" id="genBtn" onclick="generate()" disabled>
+      生成 HTML 文件
+    </button>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <div class="terminal-title">generator.log</div>
+      </div>
+      <div class="terminal-body" id="logBody">
+        <div class="log-line">
+          <span class="log-time">  0s</span>
+          <span class="log-dim">等待文件上传...</span>
+          <span class="cursor"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress-section" id="progressSection" style="display:none">
+      <div class="progress-label">
+        <span class="progress-label-left" id="progressLabel">处理中...</span>
+        <span class="progress-label-right" id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <button class="dl-btn" id="dlBtn" onclick="downloadFile()">
+      ⬇ 下载 HTML 文件
+    </button>
+
+    <div class="tips">
+      <div class="tips-title">使用说明</div>
+      <div class="tip-row"><span class="tip-key">1.</span><span>拖入或点击上传字幕文件</span></div>
+      <div class="tip-row"><span class="tip-key">2.</span><span>点击生成，下载 HTML（标题自动取文件名）</span></div>
+      <div class="tip-row"><span class="tip-key">3.</span><span>放入 <code style="color:var(--accent);font-size:10px">subtitle/</code> 文件夹推送 GitHub Pages 即可访问</span></div>
+      <div class="tip-row" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--border)">
+        <span class="tip-key">↔</span>
+        <span>生成的页面支持：点击时间轴跳转、全文搜索、空格播放/暂停、方向键 ±10s</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let parsedSubs = [];
+let generatedHTML = '';
+let outputFilename = 'subtitle.html';
+let pageTitle = '';
+let startTime = Date.now();
+
+// ── LOGGING ──
+function log(text, type = 'dim') {
+  const body = document.getElementById('logBody');
+  const t = String(Math.floor((Date.now() - startTime) / 1000)).padStart(3, ' ') + 's';
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  line.innerHTML = `<span class="log-time">${t}</span><span class="log-${type}">${text}</span>`;
+  body.appendChild(line);
+  body.scrollTop = body.scrollHeight;
+}
+function clearLog() {
+  startTime = Date.now();
+  document.getElementById('logBody').innerHTML = '';
+}
+
+// ── FILE DRAG & DROP ──
+const dz = document.getElementById('dropzone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+document.getElementById('fileInput').addEventListener('change', e => {
+  if (e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+function handleFile(file) {
+  clearLog();
+  log(`读取: ${file.name}`, 'info');
+  const reader = new FileReader();
+  reader.onload = e => {
+    const content = e.target.result;
+    const ext = file.name.split('.').pop().toLowerCase();
+    try {
+      if      (ext === 'srt')                  parsedSubs = parseSRT(content);
+      else if (ext === 'vtt')                  parsedSubs = parseVTT(content);
+      else if (ext === 'ass' || ext === 'ssa') parsedSubs = parseASS(content);
+      else                                     parsedSubs = parseTXT(content);
+
+      if (!parsedSubs.length) throw new Error('未解析到字幕内容');
+
+      const dur = parsedSubs[parsedSubs.length - 1].end;
+      const mins = Math.floor(dur / 60), secs = Math.floor(dur % 60);
+
+      dz.classList.add('has-file');
+      document.getElementById('dropDefault').style.display = 'none';
+      document.getElementById('fileInfo').style.display = 'flex';
+      document.getElementById('fileName').textContent = file.name;
+      document.getElementById('fileStats').textContent = `${parsedSubs.length} 句 · ${mins}分${secs}秒`;
+
+      outputFilename = deriveFilename(file.name);
+      pageTitle = file.name.replace(/\.[^.]+$/, '').replace(/_/g, ' ').trim();
+      log(`✓ 解析成功: ${parsedSubs.length} 句字幕`, 'ok');
+      log(`  时长: ${mins}分${secs}秒`, 'dim');
+      log(`  输出文件名: ${outputFilename}`, 'dim');
+      document.getElementById('genBtn').disabled = false;
+    } catch (err) {
+      log(`✗ 解析失败: ${err.message}`, 'err');
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+function deriveFilename(name) {
+  let base = name.replace(/\.[^.]+$/, '');
+  // Keep only ASCII alphanumeric, replace others with dash
+  let ascii = base.replace(/[^\x00-\x7F]/g, '-').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase();
+  if (!ascii || ascii.length < 2) ascii = 'subtitle-' + Date.now();
+  return ascii + '.html';
+}
+
+// ── PARSERS ──
+function parseSRT(text) {
+  const blocks = text.trim().split(/\n\n+/);
+  const subs = [];
+  for (const block of blocks) {
+    const lines = block.trim().split('\n');
+    let timeLine = null, textStart = null;
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].includes('-->')) { timeLine = lines[i]; textStart = i + 1; break; }
+    }
+    if (!timeLine) continue;
+    const m = timeLine.match(/(\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}[,\.]\d{3})/);
+    if (!m) continue;
+    const text = lines.slice(textStart).join(' ').replace(/<[^>]+>/g, '').trim();
+    if (text) subs.push({ start: t2s(m[1]), end: t2s(m[2]), text });
+  }
+  return subs;
+}
+function parseVTT(text) {
+  const lines = text.split('\n');
+  const subs = [];
+  let i = 0;
+  while (i < lines.length) {
+    if (lines[i].includes('-->')) {
+      const m = lines[i].match(/(\d{2}:\d{2}:\d{2}[\.,]\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}[\.,]\d{3})/);
+      if (m) {
+        i++;
+        const tl = [];
+        while (i < lines.length && lines[i].trim()) { tl.push(lines[i].trim()); i++; }
+        const text = tl.join(' ').replace(/<[^>]+>/g, '').trim();
+        if (text) subs.push({ start: t2s(m[1]), end: t2s(m[2]), text });
+      }
+    }
+    i++;
+  }
+  return subs;
+}
+function parseASS(text) {
+  const subs = [];
+  const lines = text.split('\n');
+  let inE = false, fmt = [];
+  for (const line of lines) {
+    if (line.startsWith('[Events]')) { inE = true; continue; }
+    if (inE && line.startsWith('Format:')) fmt = line.replace('Format:', '').split(',').map(s => s.trim());
+    if (inE && line.startsWith('Dialogue:')) {
+      const parts = line.replace('Dialogue:', '').split(',');
+      const obj = {}; fmt.forEach((f, i) => { obj[f] = (parts[i] || '').trim(); });
+      const ti = fmt.indexOf('Text');
+      const rawText = parts.slice(ti).join(',').replace(/\{[^}]+\}/g, '').replace(/\\N/g, ' ').trim();
+      const start = at2s(obj['Start'] || ''), end = at2s(obj['End'] || '');
+      if (rawText) subs.push({ start, end, text: rawText });
+    }
+  }
+  return subs;
+}
+function parseTXT(text) {
+  return text.split('\n').map(l => l.trim()).filter(Boolean)
+    .map((l, i) => ({ start: i * 3, end: i * 3 + 2.5, text: l }));
+}
+function t2s(t) {
+  const p = t.replace(',', '.').split(':');
+  return parseFloat(p[0]) * 3600 + parseFloat(p[1]) * 60 + parseFloat(p[2]);
+}
+function at2s(t) {
+  const p = t.split(':');
+  return p.length < 3 ? 0 : parseFloat(p[0]) * 3600 + parseFloat(p[1]) * 60 + parseFloat(p[2]);
+}
+
+// ── PROGRESS ──
+function setProgress(pct, label) {
+  document.getElementById('progressSection').style.display = 'flex';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = Math.round(pct) + '%';
+  if (label) document.getElementById('progressLabel').textContent = label;
+}
+
+// ── GENERATE ──
+function generate() {
+  if (!parsedSubs.length) return;
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  document.getElementById('dlBtn').classList.remove('visible');
+  clearLog();
+
+  const dispTitle  = pageTitle;
+  const series     = '';
+
+  log('生成时间轴字幕页面...', 'info');
+  setProgress(30, '构建数据...');
+
+  setTimeout(() => {
+    try {
+      generatedHTML = buildTimelineHTML(parsedSubs, dispTitle, series, outputFilename);
+      setProgress(100, '完成');
+      log('✓ 生成完成', 'ok');
+      log(`  标题: ${dispTitle}`, 'dim');
+      log(`  文件: ${outputFilename}`, 'dim');
+      log(`  大小: ${(generatedHTML.length / 1024).toFixed(1)} KB`, 'dim');
+      document.getElementById('dlBtn').classList.add('visible');
+    } catch (err) {
+      log(`✗ 生成失败: ${err.message}`, 'err');
+    }
+    btn.disabled = false;
+  }, 60);
+}
+
+// ── ESCAPE ──
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtFull(sec) {
+  const h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=Math.floor(sec%60);
+  return [h,m,s].map(x=>String(x).padStart(2,'0')).join(':');
+}
+
+// ── BUILD HTML ──
+function buildTimelineHTML(subs, title, seriesLabel, filename) {
+  const totalDuration = subs[subs.length - 1].end;
+  const mins = Math.floor(totalDuration / 60), secs = Math.floor(totalDuration % 60);
+
+  const subsJson = JSON.stringify(subs.map(s => ({
+    s: Math.round(s.start * 100) / 100,
+    e: Math.round(s.end * 100) / 100,
+    t: s.text
+  })));
+
+  const seriesHTML = seriesLabel ? `<div class="series-label">${esc(seriesLabel)}</div>` : '';
+
+  return `<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(title)}</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0c;--bg2:#111116;--border:rgba(255,255,255,.06);--gold:#c9a84c;--gold2:#e8c97a;--text:#d4cfc8;--text-dim:#6b6760;--text-mute:#38383a;--abg:rgba(201,168,76,.08)}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Noto Serif SC','Songti SC',serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.35}
+.hd{position:fixed;top:0;left:0;right:0;z-index:100;background:linear-gradient(to bottom,rgba(10,10,12,.97) 55%,transparent);padding:22px 40px 44px}
+.series-label{font-family:'Crimson Pro',serif;font-size:11px;font-style:italic;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);opacity:.75;margin-bottom:5px}
+h1{font-size:clamp(15px,2.2vw,21px);font-weight:300;letter-spacing:.08em;color:#f0ece4;line-height:1.4}
+.meta{margin-top:5px;font-family:'Crimson Pro',serif;font-size:12px;color:var(--text-mute);letter-spacing:.04em}
+.ctrls{position:fixed;top:22px;right:40px;z-index:101;display:flex;gap:8px}
+.btn{background:none;border:1px solid var(--border);color:var(--text-mute);padding:5px 13px;font-family:'Noto Serif SC',serif;font-size:11px;letter-spacing:.08em;cursor:pointer;transition:all .2s;border-radius:2px}
+.btn:hover{border-color:var(--gold);color:var(--gold)}
+.btn.on{border-color:var(--gold);color:var(--gold);background:var(--abg)}
+.srch{position:fixed;top:70px;right:40px;z-index:100}
+.srch input{background:rgba(20,20,26,.92);border:1px solid var(--border);color:var(--text);padding:7px 14px;font-family:'Noto Serif SC',serif;font-size:12px;width:190px;outline:none;border-radius:2px;transition:border-color .2s;backdrop-filter:blur(10px)}
+.srch input::placeholder{color:var(--text-mute)}
+.srch input:focus{border-color:rgba(201,168,76,.4)}
+.main{display:grid;grid-template-columns:1fr 290px;padding-top:90px;padding-bottom:68px;min-height:100vh}
+.sl{padding:28px 44px 28px 38px;overflow-y:auto;height:calc(100vh - 158px);position:sticky;top:90px;scrollbar-width:thin;scrollbar-color:#222228 transparent}
+.sl::-webkit-scrollbar{width:3px}
+.sl::-webkit-scrollbar-thumb{background:#222228;border-radius:2px}
+.si{display:flex;align-items:baseline;gap:16px;padding:8px 14px;border-left:2px solid transparent;cursor:pointer;transition:all .2s;border-radius:0 3px 3px 0;margin-bottom:1px}
+.si:hover{background:rgba(255,255,255,.025);border-left-color:var(--text-mute)}
+.si.act{background:var(--abg);border-left-color:var(--gold)}
+.si.sm{background:rgba(201,168,76,.05)}
+.st{font-family:'Crimson Pro',serif;font-size:11px;color:var(--text-mute);flex-shrink:0;width:48px;letter-spacing:.04em;transition:color .2s}
+.si.act .st{color:var(--gold);opacity:.65}
+.sx{font-size:14.5px;font-weight:300;line-height:1.75;letter-spacing:.05em;color:var(--text-dim);transition:color .2s;flex:1}
+.si.act .sx{color:#f0ece4;font-weight:400}
+.sx mark{background:rgba(201,168,76,.14);color:var(--gold2);padding:0 2px;border-radius:2px}
+.sp{border-left:1px solid var(--border);background:var(--bg2);position:sticky;top:90px;height:calc(100vh - 158px);overflow-y:auto;display:flex;flex-direction:column}
+.np{padding:32px 22px;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border-bottom:1px solid var(--border)}
+.np-lb{font-family:'Crimson Pro',serif;font-size:10px;font-style:italic;letter-spacing:.28em;text-transform:uppercase;color:var(--text-mute);margin-bottom:20px}
+.np-dc{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.np-dl{width:26px;height:1px;background:linear-gradient(to right,transparent,var(--gold));opacity:.35}
+.np-dl:last-child{background:linear-gradient(to left,transparent,var(--gold))}
+.np-dd{width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:.45}
+.np-tx{font-size:clamp(15px,2.2vw,21px);font-weight:300;letter-spacing:.07em;line-height:1.85;color:#f0ece4;min-height:72px;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.np-ix{margin-top:18px;font-family:'Crimson Pro',serif;font-size:11px;color:var(--text-mute);letter-spacing:.1em}
+.stats{padding:18px 22px}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:11px;letter-spacing:.04em}
+.sr-l{color:var(--text-mute);font-family:'Crimson Pro',serif}
+.sr-v{color:var(--text-dim)}
+.pw{position:fixed;bottom:0;left:0;right:0;z-index:100;padding:14px 40px 18px;background:linear-gradient(to top,rgba(10,10,12,.97) 55%,transparent)}
+.td{display:flex;justify-content:space-between;font-family:'Crimson Pro',serif;font-size:11px;color:var(--text-dim);letter-spacing:.08em;margin-bottom:6px}
+.pb{width:100%;height:2px;background:var(--text-mute);cursor:pointer;border-radius:1px}
+.pf{height:100%;background:linear-gradient(to right,var(--gold),var(--gold2));border-radius:1px;width:0%;pointer-events:none}
+.curtain{position:fixed;inset:0;background:#000;z-index:9998;animation:cr 1.2s ease forwards .1s}
+@keyframes cr{to{opacity:0;pointer-events:none}}
+@media(max-width:700px){.main{grid-template-columns:1fr}.sp{display:none}.hd{padding:14px 18px 36px}.sl{padding:16px}.pw{padding:10px 18px 14px}.ctrls,.srch{display:none}}
+</style>
+</head>
+<body>
+<div class="curtain"></div>
+<header class="hd">
+  ${seriesHTML}
+  <h1>${esc(title)}</h1>
+  <div class="meta">${subs.length.toLocaleString()} 句字幕 · ${mins}分${secs}秒</div>
+</header>
+<div class="ctrls">
+  <button class="btn on" id="btnA" onclick="tA()">自动跟随</button>
+  <button class="btn" id="btnC" onclick="tC()">紧凑</button>
+</div>
+<div class="srch"><input type="text" placeholder="搜索字幕…" id="q" oninput="doQ()"></div>
+<div class="main">
+  <div class="sl" id="sl"></div>
+  <aside class="sp">
+    <div class="np">
+      <div class="np-lb">Now Playing</div>
+      <div class="np-dc"><div class="np-dl"></div><div class="np-dd"></div><div class="np-dl"></div></div>
+      <div class="np-tx" id="npTx">——</div>
+      <div class="np-ix" id="npIx">— / ${subs.length}</div>
+    </div>
+    <div class="stats">
+      <div class="sr"><span class="sr-l">总时长</span><span class="sr-v">${mins}分${secs}秒</span></div>
+      <div class="sr"><span class="sr-l">字幕总数</span><span class="sr-v">${subs.length.toLocaleString()}</span></div>
+      <div class="sr"><span class="sr-l">当前进度</span><span class="sr-v" id="sPct">0%</span></div>
+      <div class="sr"><span class="sr-l">当前时间</span><span class="sr-v" id="sTm">00:00:00</span></div>
+      <div class="sr" id="sqR" style="display:none"><span class="sr-l">搜索结果</span><span class="sr-v" id="sqC">0</span></div>
+    </div>
+  </aside>
+</div>
+<div class="pw">
+  <div class="td"><span id="tL">00:00:00</span><span id="tR">${fmtFull(totalDuration)}</span></div>
+  <div class="pb" id="pb" onclick="seek(event)"><div class="pf" id="pf"></div></div>
+</div>
+<script>
+const S=${subsJson},DUR=${totalDuration};
+let cur=-1,aF=true,cpt=false,play=false,ct=0,lT=null;
+const sl=document.getElementById('sl');
+const fr=document.createDocumentFragment();
+S.forEach((s,i)=>{
+  const d=document.createElement('div');d.className='si';d.id='i'+i;d.onclick=()=>jump(i);
+  const ts=document.createElement('span');ts.className='st';ts.textContent=fmt(s.s);
+  const tx=document.createElement('span');tx.className='sx';tx.textContent=s.t;
+  d.appendChild(ts);d.appendChild(tx);fr.appendChild(d);
+});
+sl.appendChild(fr);
+function fmt(v){const h=Math.floor(v/3600),m=Math.floor((v%3600)/60),s=Math.floor(v%60);return h>0?[h,m,s].map(x=>String(x).padStart(2,'0')).join(':'):[m,s].map(x=>String(x).padStart(2,'0')).join(':');}
+function fmtF(v){const h=Math.floor(v/3600),m=Math.floor((v%3600)/60),s=Math.floor(v%60);return[h,m,s].map(x=>String(x).padStart(2,'0')).join(':');}
+function fi(t){let lo=0,hi=S.length-1,r=-1;while(lo<=hi){const mid=(lo+hi)>>1;if(S[mid].s<=t){r=mid;lo=mid+1;}else hi=mid-1;}return r;}
+function act(idx){
+  if(idx===cur)return;
+  if(cur>=0){const e=document.getElementById('i'+cur);if(e)e.classList.remove('act');}
+  cur=idx;
+  if(idx>=0){const e=document.getElementById('i'+idx);if(e){e.classList.add('act');if(aF)e.scrollIntoView({behavior:'smooth',block:'center'});}
+  document.getElementById('npTx').textContent=S[idx].t;document.getElementById('npIx').textContent=(idx+1)+' / '+S.length;}
+}
+function jump(i){ct=S[i].s;act(i);upd();}
+function upd(){const p=(ct/DUR)*100;document.getElementById('pf').style.width=p+'%';document.getElementById('tL').textContent=fmtF(ct);document.getElementById('sTm').textContent=fmtF(ct);document.getElementById('sPct').textContent=Math.round(p)+'%';}
+function seek(e){const r=document.getElementById('pb').getBoundingClientRect();ct=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*DUR;act(fi(ct));upd();play=true;lT=null;}
+function frame(ts){if(play){if(lT!==null){ct+=(ts-lT)/1000;if(ct>DUR){ct=DUR;play=false;}act(fi(ct));upd();}lT=ts;}else lT=null;requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.code==='Space'){e.preventDefault();play=!play;if(play)lT=null;}if(e.code==='ArrowRight'){ct=Math.min(DUR,ct+10);act(fi(ct));upd();}if(e.code==='ArrowLeft'){ct=Math.max(0,ct-10);act(fi(ct));upd();}});
+function tA(){aF=!aF;document.getElementById('btnA').classList.toggle('on',aF);}
+function tC(){cpt=!cpt;document.getElementById('btnC').classList.toggle('on',cpt);document.querySelectorAll('.si').forEach(l=>{l.style.paddingTop=cpt?'4px':'';l.style.paddingBottom=cpt?'4px':'';l.style.marginBottom=cpt?'0':'';});document.querySelectorAll('.sx').forEach(t=>{t.style.fontSize=cpt?'12.5px':'';});}
+function doQ(){const q=document.getElementById('q').value.trim();let cnt=0;document.querySelectorAll('.si').forEach((line,i)=>{const tx=line.querySelector('.sx');if(q&&S[i].t.includes(q)){line.classList.add('sm');const ps=S[i].t.split(q);tx.innerHTML='';ps.forEach((p,pi)=>{tx.appendChild(document.createTextNode(p));if(pi<ps.length-1){const mk=document.createElement('mark');mk.textContent=q;tx.appendChild(mk);}});cnt++;}else{line.classList.remove('sm');tx.textContent=S[i].t;}});const row=document.getElementById('sqR');if(q){row.style.display='flex';document.getElementById('sqC').textContent=cnt+' 处';const f=document.querySelector('.sm');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});}else row.style.display='none';}
+<\/script>
+</body>
+</html>`;
+}
+
+// ── DOWNLOAD ──
+function downloadFile() {
+  if (!generatedHTML) return;
+  const blob = new Blob([generatedHTML], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = outputFilename; a.click();
+  URL.revokeObjectURL(url);
+  log(`✓ 下载: ${outputFilename}`, 'ok');
+  log('  放入 subtitle/ 文件夹推送 GitHub 即可在线访问', 'dim');
+}
+</script>
+</body>
+</html>
