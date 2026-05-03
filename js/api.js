@@ -2,6 +2,7 @@ import { CONFIG } from './config.js';
 import { state } from './state.js';
 import { generateUniqueId, updateSyncStatus, showToast, t } from './utils.js';
 import { render } from './ui.js';
+import { logger } from './logger.js';
 
 let supabaseClient = null;
 
@@ -10,7 +11,7 @@ export function initSupabase() {
         try {
             supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
         } catch (e) {
-            console.error("Supabase Init Error", e);
+            logger.error("Supabase Init Error", e);
         }
     }
     return supabaseClient;
@@ -35,7 +36,7 @@ export async function loadData() {
                 state.pages = ensureBookmarkIds(state.pages);
                 render();
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { logger.error(e); }
     }
 
     if (state.currentUser && supabaseClient) {
@@ -51,7 +52,7 @@ export async function loadData() {
                 localStorage.setItem('pagedData', JSON.stringify(state.pages));
                 render();
             }
-        } catch (e) { console.error("Cloud load error", e); }
+        } catch (e) { logger.error("Cloud load error", e); }
     }
     document.body.style.visibility = 'visible';
 }
@@ -73,13 +74,13 @@ export async function saveData() {
             if (error) throw error;
             updateSyncStatus('saved');
         } catch (e) {
-            console.error("Cloud save fail", e);
+            logger.error("Cloud save fail", e);
             updateSyncStatus('error');
         }
     }
 }
 
-// 导入导出功能
+// Import/export functions
 export function exportConfig() {
     const dataStr = JSON.stringify(state.pages, null, 2);
     const blob = new Blob([dataStr], { type: "application/json" });
@@ -116,7 +117,7 @@ export function handleImport(event) {
     reader.readAsText(file);
 }
 
-// 辅助函数
+// Helper functions
 function ensureBookmarkIds(pages) {
     if (!Array.isArray(pages)) return [];
     pages.forEach(page => {
@@ -130,7 +131,7 @@ function migrateData(oldData) {
     const pageTitles = oldData.pageTitles || ["Page 1", "Page 2", "Page 3"];
     let bookmarks = oldData.bookmarks || oldData;
 
-    // 如果已经是新结构直接返回
+    // If already in new structure, return as-is
     if (Array.isArray(oldData) && oldData.length > 0 && oldData[0].bookmarks) return oldData;
 
     if (!Array.isArray(bookmarks)) bookmarks = [];

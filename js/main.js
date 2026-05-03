@@ -1,6 +1,7 @@
 import { initSupabase, loadData, saveData, exportConfig, importConfig, handleImport } from './api.js';
 import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences } from './auth.js';
 import { i18n } from './i18n.js';
+import { logger } from './logger.js';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList,
@@ -32,7 +33,7 @@ async function loadTemplates() {
                 placeholder.outerHTML = html;
             }
         } catch (error) {
-            console.error(`Failed to load template: ${template.url}`, error);
+            logger.error(`Failed to load template: ${template.url}`, error);
         }
     }
 }
@@ -76,6 +77,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.handleDonate = () => {
         const donateUrl = 'https://buymeacoffee.com/324893';
         window.open(donateUrl, '_blank');
+    };
+
+    window.toggleDebugMode = () => {
+        if (logger.isDebug()) {
+            logger.disableDebug();
+            showToast('Debug mode disabled', 'normal');
+        } else {
+            logger.enableDebug();
+            showToast('Debug mode enabled', 'normal');
+        }
     };
 
     // --- 新增：鼠标悬停触发动画重置 ---

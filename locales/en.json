@@ -17,6 +17,7 @@
     "btn_export": "📤 Export",
     "btn_done": "Done",
     "btn_cancel": "Cancel",
+    "menu_debug": "Debug Mode",
     "btn_confirm": "Confirm",
     "btn_add_page": "➕ Add New Page",
     "btn_login": "Sign in",
@@ -89,5 +90,6 @@
     "confirm_delete_title": "Delete Bookmark",
     "confirm_delete_msg": "Are you sure you want to delete this bookmark?",
     "btn_delete": "Delete",
-    "btn_cancel": "Cancel"
+    "btn_cancel": "Cancel",
+    "menu_debug": "Debug Mode"
 }
