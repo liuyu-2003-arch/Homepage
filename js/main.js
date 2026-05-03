@@ -19,7 +19,8 @@ async function loadTemplates() {
         { id: 'page-edit-modal-placeholder', url: 'templates/page_edit_modal.html' },
         { id: 'pref-modal-placeholder', url: 'templates/pref_modal.html' },
         { id: 'auth-modal-placeholder', url: 'templates/auth_modal.html' },
-        { id: 'help-modal-placeholder', url: 'templates/help_modal.html' }
+        { id: 'help-modal-placeholder', url: 'templates/help_modal.html' },
+        { id: 'confirm-modal-placeholder', url: 'templates/confirm_modal.html' }
     ];
 
     for (const template of templates) {

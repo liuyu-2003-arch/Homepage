@@ -85,5 +85,9 @@
     "help_syncing_content": "通过创建帐户，您的书签和设置将在您的所有设备上自动同步。只需登录即可从任何地方访问您的个性化主页。",
     "help_homepage_title": "设置为主页：",
     "help_homepage_content": "要将此页面设置为浏览器的​​主页，请在浏览器的​​设置中手动执行此操作。出于安全原因，网站无法自动执行此操作。",
-    "help_got_it": "知道了！"
+    "help_got_it": "知道了！",
+    "confirm_delete_title": "删除书签",
+    "confirm_delete_msg": "确定要删除此书签吗？",
+    "btn_delete": "删除",
+    "btn_cancel": "取消"
 }

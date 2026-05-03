@@ -82,5 +82,9 @@
     "help_syncing_content": "通過建立帳戶，您的書籤和設定將在您的所有裝置上自動同步。只需登入即可從任何地方存取您的個性化主頁。",
     "help_homepage_title": "設定為首頁：",
     "help_homepage_content": "要將此頁面設定為瀏覽器的首頁，請在瀏覽器的設定中手動執行此操作。出於安全原因，網站無法自動執行此操作。",
-    "help_got_it": "知道了！"
+    "help_got_it": "知道了！",
+    "confirm_delete_title": "刪除書籤",
+    "confirm_delete_msg": "確定要刪除此書籤嗎？",
+    "btn_delete": "刪除",
+    "btn_cancel": "取消"
 }

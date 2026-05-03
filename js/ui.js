@@ -5,6 +5,36 @@ import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAn
 export const debouncedSaveData = debounce(() => saveData(), 1000);
 let autoFillTimer = null;
 
+// --- Custom Confirm Modal (replaces browser confirm) ---
+export function showConfirm(message, title) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('confirm-modal');
+        const msgEl = document.getElementById('confirm-message');
+        const titleEl = document.getElementById('confirm-title');
+        const cancelBtn = document.getElementById('confirm-cancel');
+        const okBtn = document.getElementById('confirm-ok');
+
+        if (!modal) { resolve(true); return; } // Fallback
+
+        if (message) msgEl.textContent = message;
+        if (title) titleEl.textContent = title;
+
+        modal.classList.remove('hidden');
+
+        const cleanup = () => {
+            modal.classList.add('hidden');
+            cancelBtn.removeEventListener('click', onCancel);
+            okBtn.removeEventListener('click', onOk);
+        };
+
+        const onCancel = () => { cleanup(); resolve(false); };
+        const onOk = () => { cleanup(); resolve(true); };
+
+        cancelBtn.addEventListener('click', onCancel);
+        okBtn.addEventListener('click', onOk);
+    });
+}
+
 // --- 渲染核心 (Render) ---
 export function render() {
     const oldScrollTops = [];
@@ -215,16 +245,17 @@ export function saveBookmark() {
     render();
 }
 
-export function deleteBookmark(e, bookmarkId) {
+export async function deleteBookmark(e, bookmarkId) {
     e.stopPropagation();
-    if (confirm('Are you sure?')) {
-        let found = false;
-        for (const page of state.pages) {
-            const index = page.bookmarks.findIndex(b => b.id === bookmarkId);
-            if (index !== -1) { page.bookmarks.splice(index, 1); found = true; break; }
-        }
-        if (found) { saveData(); render(); }
+    const confirmed = await showConfirm(t('confirm_delete_msg'), t('confirm_delete_title'));
+    if (!confirmed) return;
+
+    let found = false;
+    for (const page of state.pages) {
+        const index = page.bookmarks.findIndex(b => b.id === bookmarkId);
+        if (index !== -1) { page.bookmarks.splice(index, 1); found = true; break; }
     }
+    if (found) { saveData(); render(); }
 }
 
 // --- 自动填充与图标 ---
