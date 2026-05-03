@@ -40,25 +40,53 @@ export function render() {
             else if (item.style === 'fit') styleClass = 'style-fit';
             div.className = `bookmark-item ${styleClass}`;
             div.dataset.id = item.id;
-
-            // 将 URL 绑定到 DOM，供手动点击逻辑使用
             div.dataset.url = item.url;
 
-            // 桌面端点击逻辑
-            div.onclick = (e) => {
+            // 使用事件监听器而非 onclick 字符串
+            div.addEventListener('click', (e) => {
                 if (state.isEditing) {
                     if (!e.target.classList.contains('delete-btn')) openModal(originalPageIndex, originalBookmarkIndex);
                 } else {
-                    // --- 修改：在新窗口打开链接 ---
                     if (!state.hasDragged) window.open(item.url, '_blank');
                 }
-            };
+            });
 
             const firstChar = item.title ? item.title.charAt(0).toUpperCase() : 'A';
-            let iconHtml = item.icon && item.icon.trim() !== "" ?
-                `<img src="${item.icon}" onload="this.style.display='block'; this.nextElementSibling.style.display='none'" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><div class="text-icon" style="display:none">${firstChar}</div>` :
-                `<div class="text-icon">${firstChar}</div>`;
-            div.innerHTML = `<div class="delete-btn" onclick="deleteBookmark(event, '${item.id}')">×</div><div class="icon-box">${iconHtml}</div><div class="bookmark-title">${item.title}</div>`;
+
+            // 构建 DOM 结构而非 innerHTML，防止 XSS
+            const deleteBtn = document.createElement('div');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = '×';
+            deleteBtn.addEventListener('click', (e) => deleteBookmark(e, item.id));
+
+            const iconBox = document.createElement('div');
+            iconBox.className = 'icon-box';
+
+            if (item.icon && item.icon.trim() !== "") {
+                const img = document.createElement('img');
+                img.src = item.icon;
+                img.addEventListener('load', () => { img.style.display = 'block'; textIcon.style.display = 'none'; });
+                img.addEventListener('error', () => { img.style.display = 'none'; textIcon.style.display = 'flex'; });
+                const textIcon = document.createElement('div');
+                textIcon.className = 'text-icon';
+                textIcon.textContent = firstChar;
+                textIcon.style.display = 'none';
+                iconBox.appendChild(img);
+                iconBox.appendChild(textIcon);
+            } else {
+                const textIcon = document.createElement('div');
+                textIcon.className = 'text-icon';
+                textIcon.textContent = firstChar;
+                iconBox.appendChild(textIcon);
+            }
+
+            const titleEl = document.createElement('div');
+            titleEl.className = 'bookmark-title';
+            titleEl.textContent = item.title; // textContent 防止 XSS
+
+            div.appendChild(deleteBtn);
+            div.appendChild(iconBox);
+            div.appendChild(titleEl);
             content.appendChild(div);
         });
         pageEl.appendChild(content);
@@ -268,12 +296,12 @@ export function generateIconCandidates(urlVal) {
         const img = document.createElement('img');
         img.src = src.url;
 
-        item.onclick = () => {
+        item.addEventListener('click', () => {
             document.getElementById('input-icon').value = src.url;
             updatePreview();
             document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('active'));
             item.classList.add('active');
-        };
+        });
 
         img.onerror = () => { item.style.display = 'none'; };
         item.appendChild(img);
@@ -292,8 +320,8 @@ function renderRandomButtons(container) {
     randomTypes.forEach(rnd => {
         const item = document.createElement('div');
         item.className = 'candidate-item candidate-random';
-        item.innerText = rnd.icon;
-        item.onclick = () => {
+        item.textContent = rnd.icon;
+        item.addEventListener('click', () => {
             const seed = Math.random().toString(36).substring(7);
             let url = '';
             if(rnd.type === 'random-shapes') url = `https://api.dicebear.com/9.x/shapes/svg?seed=${seed}`;
@@ -306,7 +334,7 @@ function renderRandomButtons(container) {
             updatePreview();
             document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('active'));
             item.classList.add('active');
-        };
+        });
         container.appendChild(item);
     });
 }
@@ -626,8 +654,13 @@ function renderAvatarGrid(currentUrl) {
         const div = document.createElement('div');
         div.className = 'emoji-item';
         div.style.border = "2px solid #007AFF";
-        div.innerHTML = `<img src="${currentUrl}" style="width:100%; height:100%; object-fit: cover;">`;
-        div.onclick = () => selectNewAvatar(div, currentUrl);
+        const img = document.createElement('img');
+        img.src = currentUrl;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        div.appendChild(img);
+        div.addEventListener('click', () => selectNewAvatar(div, currentUrl));
         container.appendChild(div);
     }
 
@@ -643,8 +676,13 @@ function renderAvatarGrid(currentUrl) {
             const url = `https://api.dicebear.com/9.x/${c.style}/svg?seed=${seed}`;
             const div = document.createElement('div');
             div.className = 'emoji-item';
-            div.innerHTML = `<img src="${url}" style="width:100%; height:100%;" loading="lazy">`;
-            div.onclick = () => selectNewAvatar(div, url);
+            const img = document.createElement('img');
+            img.src = url;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.loading = 'lazy';
+            div.appendChild(img);
+            div.addEventListener('click', () => selectNewAvatar(div, url));
             container.appendChild(div);
         }
     });
@@ -666,12 +704,14 @@ export function createAvatarSelector(containerId, onSelect) {
         const url = `https://api.dicebear.com/7.x/notionists/svg?seed=${seed + Math.random()}`;
         const div = document.createElement('div');
         div.className = 'avatar-option';
-        div.innerHTML = `<img src="${url}">`;
-        div.onclick = () => {
+        const img = document.createElement('img');
+        img.src = url;
+        div.appendChild(img);
+        div.addEventListener('click', () => {
             container.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
             div.classList.add('selected');
             if(onSelect) onSelect(url);
-        };
+        });
         container.appendChild(div);
     });
 }
@@ -881,7 +921,7 @@ function renderPaginationDots() {
         // 配合 CSS 显示标题
         dot.setAttribute('data-title', state.visualPages[i].title || `Page ${i + 1}`);
 
-        dot.onclick = (e) => { e.stopPropagation(); state.currentPage = i; updateSwiperPosition(true); renderPaginationDots(); };
+        dot.addEventListener('click', (e) => { e.stopPropagation(); state.currentPage = i; updateSwiperPosition(true); renderPaginationDots(); });
         dotsContainer.appendChild(dot);
     }
     dotsContainer.classList.add('visible');
