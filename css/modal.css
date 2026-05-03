@@ -71,7 +71,18 @@
     box-sizing: border-box;
     width: 100%;
 }
-.modal-content input:focus { border-color: #007AFF; background: white; }
+.modal-content input:focus {
+    border-color: #007AFF; background: white; outline: none;
+}
+
+.modal-content input:focus-visible {
+    outline: 2px solid #007AFF;
+    outline-offset: 2px;
+}
+
+.page-title-input:focus {
+    background: white; outline: 2px solid rgba(0,122,255,0.3); outline-offset: 1px;
+}
 
 #auth-modal input::placeholder {
     color: #999;

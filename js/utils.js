@@ -10,7 +10,7 @@ export function debounce(func, wait) {
 }
 
 export function generateUniqueId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
 
 export function showToast(message, type = 'normal') {
