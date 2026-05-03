@@ -80,7 +80,7 @@ export function updateUserStatus(user, animate = true) {
             menuUserName.innerText = userName;
         }
         if(menuUserEmail) menuUserEmail.innerText = user.email;
-        if(menuUserAvatar) menuUserAvatar.src = avatarUrl || "https://api.dicebear.com/7.x/notionists/svg?seed=Guest";
+        if(menuUserAvatar) menuUserAvatar.src = avatarUrl || `https://api.dicebear.com/9.x/shapes/svg?seed=${Math.random()}`;
 
         const currentEmailEl = document.getElementById('current-email');
         if(currentEmailEl) currentEmailEl.innerText = user.email;
@@ -136,7 +136,7 @@ export async function handleRegister() {
     const email = document.getElementById('auth-email').value;
     const password = document.getElementById('auth-password').value;
     // 默认头像，因为注册界面不再提供选择
-    const avatarUrl = "https://api.dicebear.com/7.x/notionists/svg?seed=" + Math.random().toString(36).substring(7);
+    const avatarUrl = `https://api.dicebear.com/9.x/notionists/svg?seed=${Math.random().toString(36).substring(2)}`;
 
     if (!email || !password) {
         showToast(t("msg_input_required"), "error");

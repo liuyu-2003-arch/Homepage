@@ -614,7 +614,7 @@ export function openPrefModal() {
     }
     // --- 修改结束 ---
 
-    const currentAvatar = meta.avatar_url || "https://api.dicebear.com/7.x/notionists/svg?seed=Guest";
+    const currentAvatar = meta.avatar_url || `https://api.dicebear.com/9.x/shapes/svg?seed=${Math.random()}`;
     document.getElementById('pref-current-img').src = currentAvatar;
 
     // 【新增】初始化预览药丸的文字
@@ -650,7 +650,7 @@ export function handleAvatarUrlInput(url) {
     // 2. 更新模版中的大预览图
     const currentImg = document.getElementById('pref-current-img');
     if (currentImg) {
-        currentImg.src = url || "https://api.dicebear.com/7.x/notionists/svg?seed=Guest"; // 如果为空显示默认
+        currentImg.src = url || `https://api.dicebear.com/9.x/shapes/svg?seed=${Math.random()}`; // 如果为空显示默认
     }
 
     // 3. 取消所有 emoji 的选中状态（因为用户选择了自定义 URL）
@@ -732,7 +732,7 @@ export function createAvatarSelector(containerId, onSelect) {
     container.innerHTML = '';
     const seeds = ['Felix', 'Aneka', 'Zoe', 'Jack', 'Bear', 'Molly'];
     seeds.forEach(seed => {
-        const url = `https://api.dicebear.com/7.x/notionists/svg?seed=${seed + Math.random()}`;
+        const url = `https://api.dicebear.com/9.x/notionists/svg?seed=${seed + Math.random()}`;
         const div = document.createElement('div');
         div.className = 'avatar-option';
         const img = document.createElement('img');
