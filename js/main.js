@@ -79,16 +79,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.open(donateUrl, '_blank');
     };
 
-    window.toggleDebugMode = () => {
-        if (logger.isDebug()) {
-            logger.disableDebug();
-            showToast('Debug mode disabled', 'normal');
-        } else {
-            logger.enableDebug();
-            showToast('Debug mode enabled', 'normal');
-        }
-    };
-
     // --- 新增：鼠标悬停触发动画重置 ---
     const userTriggerArea = document.querySelector('.user-trigger-area');
     if (userTriggerArea) {

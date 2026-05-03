@@ -1,21 +1,13 @@
-// Simple logger utility
-// Set DEBUG=true in localStorage to enable console output
-const DEBUG_KEY = 'homepage_debug';
-
+// Simple logger utility - Debug mode enabled by default
 export const logger = {
-    _debug: null,
+    _debug: true,
     isDebug() {
-        if (this._debug === null) {
-            this._debug = localStorage.getItem(DEBUG_KEY) === 'true';
-        }
         return this._debug;
     },
     enableDebug() {
-        localStorage.setItem(DEBUG_KEY, 'true');
         this._debug = true;
     },
     disableDebug() {
-        localStorage.removeItem(DEBUG_KEY);
         this._debug = false;
     },
     error(...args) {
