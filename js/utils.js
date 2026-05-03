@@ -15,7 +15,18 @@ export function generateUniqueId() {
 
 export function showToast(message, type = 'normal') {
     const container = document.getElementById('toast-container');
-    if (!container) return alert(message);
+    if (!container) {
+        // Fallback: create a temporary toast container if none exists
+        const tempContainer = document.createElement('div');
+        tempContainer.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999';
+        const toast = document.createElement('div');
+        toast.style.cssText = 'background:rgba(0,0,0,0.85);color:white;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:500;display:inline-block';
+        toast.textContent = message;
+        tempContainer.appendChild(toast);
+        document.body.appendChild(tempContainer);
+        setTimeout(() => tempContainer.remove(), 3000);
+        return;
+    }
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.textContent = message;
