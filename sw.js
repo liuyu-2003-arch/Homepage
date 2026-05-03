@@ -1,4 +1,4 @@
-const CACHE_NAME = 'homepage-v1.4';
+const CACHE_NAME = 'homepage-v1.5';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
@@ -16,6 +16,7 @@ const STATIC_ASSETS = [
     '/js/utils.js',
     '/js/i18n.js',
     '/js/config.js',
+    '/js/logger.js',
     '/templates/user_dropdown.html',
     '/templates/bookmark_modal.html',
     '/templates/page_edit_modal.html',
