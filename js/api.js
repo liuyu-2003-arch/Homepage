@@ -24,7 +24,12 @@ export function getSupabase() {
 export async function loadData() {
     const storedData = localStorage.getItem('pagedData');
     if (storedData) {
-        state.pages = JSON.parse(storedData);
+        try {
+            const parsed = JSON.parse(storedData);
+            state.pages = Array.isArray(parsed) ? parsed : [];
+        } catch {
+            state.pages = [];
+        }
         render();
         document.body.style.visibility = 'visible';
     } else {
