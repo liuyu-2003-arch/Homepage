@@ -1,4 +1,4 @@
-const CACHE_NAME = 'homepage-v1.5';
+const CACHE_NAME = 'homepage-v1.5-reborn';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
