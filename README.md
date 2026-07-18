@@ -68,7 +68,7 @@
     USING (auth.uid() = user_id);
     ```
 3.  进入项目的 **Settings** -> **API**，找到 `Project URL` 和 `anon` `public` key。
-4.  在 `script.js` 文件中，替换开头的 `SUPABASE_URL` 和 `SUPABASE_KEY` 为你自己的信息。
+4.  在 `js/config.js` 文件中，替换 `SUPABASE_URL` 和 `SUPABASE_KEY` 为你自己的信息。
 
 ## 🛠️ 使用方法
 

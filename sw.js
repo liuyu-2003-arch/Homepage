@@ -1,32 +1,14 @@
-const CACHE_NAME = 'homepage-v1.5-reborn';
+const CACHE_NAME = 'homepage-v1.6';
+const APP_SCOPE = self.registration.scope;
 const STATIC_ASSETS = [
-    '/',
-    '/index.html',
-    '/css/base.css',
-    '/css/bookmark.css',
-    '/css/modal.css',
-    '/css/controls.css',
-    '/css/user.css',
-    '/css/responsive.css',
-    '/js/main.js',
-    '/js/ui.js',
-    '/js/api.js',
-    '/js/auth.js',
-    '/js/state.js',
-    '/js/utils.js',
-    '/js/i18n.js',
-    '/js/config.js',
-    '/js/logger.js',
-    '/templates/user_dropdown.html',
-    '/templates/bookmark_modal.html',
-    '/templates/page_edit_modal.html',
-    '/templates/pref_modal.html',
-    '/templates/auth_modal.html',
-    '/templates/help_modal.html',
-    '/templates/confirm_modal.html',
-    '/homepage_config.json',
-    'https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js'
-];
+    '', 'index.html',
+    'css/base.css', 'css/bookmark.css', 'css/modal.css', 'css/controls.css', 'css/user.css', 'css/responsive.css',
+    'js/main.js', 'js/ui.js', 'js/api.js', 'js/auth.js', 'js/state.js', 'js/utils.js', 'js/i18n.js', 'js/config.js', 'js/logger.js',
+    'templates/user_dropdown.html', 'templates/bookmark_modal.html', 'templates/page_edit_modal.html',
+    'templates/pref_modal.html', 'templates/auth_modal.html', 'templates/help_modal.html', 'templates/confirm_modal.html',
+    'homepage_config.json'
+].map((path) => new URL(path, APP_SCOPE).href);
+const STATIC_ASSET_URLS = new Set(STATIC_ASSETS);
 
 // Install: pre-cache core assets
 self.addEventListener('install', (event) => {
@@ -54,10 +36,14 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // Skip non-GET requests and Supabase API calls
-    if (event.request.method !== 'GET' || url.hostname.includes('supabase.co')) {
+    // Never cache third-party icons, avatars, or API requests. They are dynamic
+    // and would otherwise grow the cache without limit.
+    if (event.request.method !== 'GET' || url.origin !== self.location.origin) {
         return;
     }
+
+    const isLocale = url.pathname.startsWith(new URL('locales/', APP_SCOPE).pathname) && url.pathname.endsWith('.json');
+    if (!STATIC_ASSET_URLS.has(url.href) && !isLocale) return;
 
     // Network-first for JSON config files
     if (url.pathname.endsWith('.json')) {

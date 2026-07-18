@@ -5,6 +5,35 @@ import { render } from './ui.js';
 import { logger } from './logger.js';
 
 let supabaseClient = null;
+let saveQueue = Promise.resolve();
+let latestSaveVersion = 0;
+
+const LEGACY_STORAGE_KEY = 'pagedData';
+const GUEST_STORAGE_KEY = 'pagedData:guest';
+const MAX_IMPORT_SIZE = 2 * 1024 * 1024;
+
+function getStorageKey(userId = state.currentUser?.id) {
+    return userId ? `pagedData:user:${userId}` : GUEST_STORAGE_KEY;
+}
+
+function readCachedPages(key) {
+    try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+        logger.error('Failed to read cached bookmarks', error);
+        return null;
+    }
+}
+
+function writeCachedPages(key, pages) {
+    try {
+        localStorage.setItem(key, JSON.stringify(pages));
+    } catch (error) {
+        logger.error('Failed to cache bookmarks locally', error);
+        showToast(t('msg_save_fail'), 'error');
+    }
+}
 
 export function initSupabase() {
     if (window.supabase && window.supabase.createClient) {
@@ -22,14 +51,14 @@ export function getSupabase() {
 }
 
 export async function loadData() {
-    const storedData = localStorage.getItem('pagedData');
-    if (storedData) {
-        try {
-            const parsed = JSON.parse(storedData);
-            state.pages = Array.isArray(parsed) ? parsed : [];
-        } catch {
-            state.pages = [];
-        }
+    // The previous shared key may contain another account's data. It cannot be
+    // safely attributed, so discard it instead of exposing it after sign-out.
+    try { localStorage.removeItem(LEGACY_STORAGE_KEY); } catch (error) { logger.error(error); }
+
+    const cacheKey = getStorageKey();
+    const storedData = readCachedPages(cacheKey);
+    if (Array.isArray(storedData)) {
+        state.pages = ensureBookmarkIds(migrateData(storedData));
         render();
         document.body.style.visibility = 'visible';
     } else {
@@ -54,7 +83,7 @@ export async function loadData() {
 
             if (data && data.config_data) {
                 state.pages = ensureBookmarkIds(data.config_data);
-                localStorage.setItem('pagedData', JSON.stringify(state.pages));
+                writeCachedPages(getStorageKey(state.currentUser.id), state.pages);
                 render();
             }
         } catch (e) { logger.error("Cloud load error", e); }
@@ -63,26 +92,34 @@ export async function loadData() {
 }
 
 export async function saveData() {
-    localStorage.setItem('pagedData', JSON.stringify(state.pages));
+    const userId = state.currentUser?.id;
+    const pagesSnapshot = JSON.parse(JSON.stringify(state.pages));
+    writeCachedPages(getStorageKey(userId), pagesSnapshot);
 
-    if (state.currentUser && supabaseClient) {
-        updateSyncStatus('saving');
-        try {
-            const { error } = await supabaseClient
-                .from('user_configs')
-                .upsert({
-                    user_id: state.currentUser.id,
-                    config_data: state.pages,
-                    updated_at: new Date()
-                }, { onConflict: 'user_id' });
+    if (!userId || !supabaseClient) return;
 
-            if (error) throw error;
-            updateSyncStatus('saved');
-        } catch (e) {
-            logger.error("Cloud save fail", e);
-            updateSyncStatus('error');
-        }
-    }
+    const version = ++latestSaveVersion;
+    updateSyncStatus('saving');
+    saveQueue = saveQueue.catch(() => {}).then(async () => {
+        // A queued older snapshot must never overwrite a newer edit.
+        if (version !== latestSaveVersion) return;
+
+        const { error } = await supabaseClient
+            .from('user_configs')
+            .upsert({
+                user_id: userId,
+                config_data: pagesSnapshot,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'user_id' });
+
+        if (error) throw error;
+        if (version === latestSaveVersion) updateSyncStatus('saved');
+    }).catch((error) => {
+        logger.error('Cloud save fail', error);
+        if (version === latestSaveVersion) updateSyncStatus('error');
+    });
+
+    return saveQueue;
 }
 
 // Import/export functions
@@ -106,6 +143,11 @@ export function importConfig() {
 export function handleImport(event) {
     const file = event.target.files[0];
     if (!file) return;
+    if (file.size > MAX_IMPORT_SIZE) {
+        showToast(t('msg_import_fail'), 'error');
+        event.target.value = '';
+        return;
+    }
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
@@ -117,6 +159,8 @@ export function handleImport(event) {
             showToast(t('msg_import_success'), "success");
         } catch (err) {
             showToast(t('msg_import_fail'), "error");
+        } finally {
+            event.target.value = '';
         }
     };
     reader.readAsText(file);

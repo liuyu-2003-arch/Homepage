@@ -163,7 +163,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
 
-    window.addEventListener('resize', () => { render(); });
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(render, 150);
+    });
 
     // --- 核心修复：更新点击监听器 ---
     document.addEventListener('click', (e) => {

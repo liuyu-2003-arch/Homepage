@@ -167,6 +167,7 @@ export async function handleLogout() {
     showToast(t("msg_logout"), "normal");
     if (window.location.hash) history.replaceState(null, '', window.location.pathname);
     updateUserStatus(null);
+    state.pages = [];
     loadData();
 }
 
