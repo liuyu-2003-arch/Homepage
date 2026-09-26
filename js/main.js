@@ -187,6 +187,65 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 150);
     });
 
+    // --- 事件委托：统一处理 data-action ---
+    const ACTIONS = {
+        navigate: (el) => location.href = el.dataset.arg,
+        closeModal: () => closeModal(),
+        closePageEditModal: () => closePageEditModal(),
+        closeThemeControls: () => closeThemeControls(),
+        closeAuthModal: () => window.closeAuthModal(),
+        closeHelpModal: () => window.closeHelpModal(),
+        openModal: () => openModal(),
+        openPageEditModal: () => openPageEditModal(),
+        openThemeControls: () => openThemeControls(),
+        openHelpModal: () => window.openHelpModal(),
+        saveBookmark: () => saveBookmark(),
+        handleLogin: () => handleLogin(),
+        handleRegister: () => handleRegister(),
+        handleLogout: () => handleLogout(),
+        handleMenuEdit: () => window.handleMenuEdit(),
+        handleFeedback: () => window.handleFeedback(),
+        handleDonate: () => window.handleDonate(),
+        importConfig: () => importConfig(),
+        exportConfig: () => exportConfig(),
+        addPage: () => addPage(),
+        toggleAuthModal: () => window.toggleAuthModal(),
+        toggleEditMode: () => toggleEditMode(false),
+        switchToSignUpView: () => window.switchToSignUpView(),
+        switchToLoginView: () => window.switchToLoginView(),
+        updatePreview: () => updatePreview(),
+        changeLanguage: (el) => window.changeLanguage(el.dataset.arg),
+        handleOAuthLogin: (el) => handleOAuthLogin(el.dataset.arg),
+        quickChangeTheme: (el) => quickChangeTheme(null, el.dataset.arg),
+        selectStyle: (el) => selectStyle(el),
+        changeTheme: (el) => changeTheme(el.dataset.arg, el, null),
+        savePreferences: () => window.savePreferences(),
+    };
+
+    document.addEventListener('click', (e) => {
+        const el = e.target.closest('[data-action]');
+        if (!el) return;
+        const action = el.dataset.action;
+        if (ACTIONS[action]) { e.preventDefault(); ACTIONS[action](el, e); }
+    });
+
+    // Input delegation
+    document.addEventListener('input', (e) => {
+        const el = e.target.closest('[data-action]');
+        if (el) {
+            const action = el.dataset.action;
+            if (el.hasAttribute('data-input')) {
+                const fn = window[action];
+                if (fn) fn(el.value);
+            } else if (ACTIONS[action]) {
+                ACTIONS[action](el, e);
+            }
+        }
+        // Digit filter
+        const filterEl = e.target.closest('[data-filter="digits"]');
+        if (filterEl) filterEl.value = filterEl.value.replace(/\D/g, '');
+    });
+
     // --- 关闭用户下拉菜单 ---
     document.addEventListener('click', (e) => {
         const menu = document.getElementById('user-dropdown');

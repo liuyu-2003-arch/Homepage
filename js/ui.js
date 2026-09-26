@@ -562,6 +562,8 @@ export function changeTheme(color, element, pattern) {
         bg.style.backgroundColor = color;
         localStorage.setItem('themeColor', color);
         document.body.classList.toggle('dark-mode', color === '#1a1a1a');
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', color);
         if (element) {
             document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
             element.classList.add('active');

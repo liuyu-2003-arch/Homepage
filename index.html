@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://unpkg.com https://static.cloudflareinsights.com 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://static.cloudflareinsights.com; object-src 'none'; base-uri 'none'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://unpkg.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://static.cloudflareinsights.com; object-src 'none'; base-uri 'none'; form-action 'self'">
     <title>My Homepage - 极简起始页</title>
     <meta name="description" content="仿 iOS 毛玻璃风格的浏览器起始页，支持多页书签、云端同步、多语言。">
 
     <!-- Open Graph -->
     <meta property="og:title" content="My Homepage">
     <meta property="og:description" content="仿 iOS 毛玻璃风格的浏览器起始页，支持多页书签、云端同步、多语言。">
-    <meta property="og:image" content="preview.jpg">
+    <meta property="og:image" content="https://pre.324893.xyz/preview.jpg">
     <meta property="og:type" content="website">
 
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007AFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/%3E%3C/svg%3E">
@@ -21,7 +21,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e4d0e5">
     <meta name="apple-mobile-web-app-title" content="My Homepage">
-    <meta name="app-version" content="2.8.4">
+    <meta name="app-version" content="2.9.0">
 
     <!-- Preconnect for external resources -->
     <link rel="preconnect" href="https://ossrsfyqbrzeauzksvpv.supabase.co">
@@ -54,7 +54,7 @@
     <div id="sync-status" class="sync-status" role="status" aria-live="polite"></div>
 
     <div class="user-trigger-area">
-        <div id="user-pill" class="user-pill" onclick="toggleAuthModal()">
+        <div id="user-pill" class="user-pill" data-action="toggleAuthModal">
             <div class="user-pill-icon">
                 <svg id="user-icon-svg" viewBox="0 0 24 24" width="20" height="20" style="fill: white;">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -74,35 +74,35 @@
     </div>
 
     <div id="edit-controls" class="edit-controls hidden">
-        <button onclick="openModal()" data-i18n="btn_add_bookmark">➕ Add Bookmark</button>
-        <button onclick="openPageEditModal()" data-i18n="btn_edit_page">📝 Edit Pages</button>
-        <button onclick="importConfig()" data-i18n="btn_import">📥 Import</button>
-        <button onclick="exportConfig()" data-i18n="btn_export">📤 Export</button>
-        <button class="done-btn" onclick="toggleEditMode(false)" data-i18n="btn_done">Done</button>
+        <button data-action="openModal" data-i18n="btn_add_bookmark">➕ Add Bookmark</button>
+        <button data-action="openPageEditModal" data-i18n="btn_edit_page">📝 Edit Pages</button>
+        <button data-action="importConfig" data-i18n="btn_import">📥 Import</button>
+        <button data-action="exportConfig" data-i18n="btn_export">📤 Export</button>
+        <button class="done-btn" data-action="toggleEditMode" data-i18n="btn_done">Done</button>
     </div>
 
     <div id="theme-controls" class="edit-controls hidden" style="z-index: 1001;">
         <div class="theme-swatches">
-            <div class="swatch" style="background: #e4d0e5" onclick="changeTheme('#e4d0e5', this, null)"></div>
-            <div class="swatch" style="background: #f5dbe3" onclick="changeTheme('#f5dbe3', this, null)"></div>
-            <div class="swatch" style="background: #f9e8ee" onclick="changeTheme('#f9e8ee', this, null)"></div>
-            <div class="swatch" style="background: #dbe4f5" onclick="changeTheme('#dbe4f5', this, null)"></div>
-            <div class="swatch" style="background: #f0f0f2" onclick="changeTheme('#f0f0f2', this, null)"></div>
-            <div class="swatch" style="background: #1a1a1a; border: 1px solid #555;" onclick="changeTheme('#1a1a1a', this, null)"></div>
+            <div class="swatch" style="background: #e4d0e5" data-action="changeTheme" data-arg="#e4d0e5" data-self></div>
+            <div class="swatch" style="background: #f5dbe3" data-action="changeTheme" data-arg="#f5dbe3" data-self></div>
+            <div class="swatch" style="background: #f9e8ee" data-action="changeTheme" data-arg="#f9e8ee" data-self></div>
+            <div class="swatch" style="background: #dbe4f5" data-action="changeTheme" data-arg="#dbe4f5" data-self></div>
+            <div class="swatch" style="background: #f0f0f2" data-action="changeTheme" data-arg="#f0f0f2" data-self></div>
+            <div class="swatch" style="background: #1a1a1a; border: 1px solid #555;" data-action="changeTheme" data-arg="#1a1a1a" data-self></div>
         </div>
 
         <div class="control-divider"></div>
 
         <div class="theme-patterns">
-            <button class="pattern-btn" data-pattern="none" onclick="quickChangeTheme(null, 'none')" data-i18n="theme_default">Wave</button>
-            <button class="pattern-btn" data-pattern="bg-pattern-aurora" onclick="quickChangeTheme(null, 'bg-pattern-aurora')" data-i18n="theme_aurora">Aurora</button>
-            <button class="pattern-btn" data-pattern="bg-pattern-flow" onclick="quickChangeTheme(null, 'bg-pattern-flow')" data-i18n="theme_flow">Flow</button>
-            <button class="pattern-btn" data-pattern="bg-pattern-lines-d" onclick="quickChangeTheme(null, 'bg-pattern-lines-d')" data-i18n="theme_lines_d">Lines</button>
+            <button class="pattern-btn" data-pattern="none" data-action="quickChangeTheme" data-arg="none" data-i18n="theme_default">Wave</button>
+            <button class="pattern-btn" data-pattern="bg-pattern-aurora" data-action="quickChangeTheme" data-arg="bg-pattern-aurora" data-i18n="theme_aurora">Aurora</button>
+            <button class="pattern-btn" data-pattern="bg-pattern-flow" data-action="quickChangeTheme" data-arg="bg-pattern-flow" data-i18n="theme_flow">Flow</button>
+            <button class="pattern-btn" data-pattern="bg-pattern-lines-d" data-action="quickChangeTheme" data-arg="bg-pattern-lines-d" data-i18n="theme_lines_d">Lines</button>
         </div>
 
         <div class="control-divider"></div>
 
-        <button class="done-btn" onclick="closeThemeControls()" data-i18n="btn_done">Done</button>
+        <button class="done-btn" data-action="closeThemeControls" data-i18n="btn_done">Done</button>
     </div>
 
     <div id="modal-placeholder"></div>

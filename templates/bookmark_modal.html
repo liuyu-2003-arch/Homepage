@@ -14,9 +14,9 @@
             <div class="candidate-section">
                 <div id="icon-candidates" class="candidate-grid"></div>
                 <div class="style-select-group">
-                    <div class="style-option" data-style="full" onclick="selectStyle(this)" data-i18n="style_full">Full</div>
-                    <div class="style-option" data-style="fit" onclick="selectStyle(this)" data-i18n="style_fit">Fit</div>
-                    <div class="style-option" data-style="white" onclick="selectStyle(this)" data-i18n="style_white">White</div>
+                    <div class="style-option" data-style="full" data-action="selectStyle" data-self data-i18n="style_full">Full</div>
+                    <div class="style-option" data-style="fit" data-action="selectStyle" data-self data-i18n="style_fit">Fit</div>
+                    <div class="style-option" data-style="white" data-action="selectStyle" data-self data-i18n="style_white">White</div>
                 </div>
             </div>
         </div>
@@ -24,17 +24,17 @@
             <div class="input-wrapper">
                 <label for="input-url" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;" data-i18n="label_url">URL</label>
                 <div style="height: 8px;"></div>
-                <input type="text" id="input-url" placeholder="e.g. bilibili.com" oninput="autoFillInfo()">
+                <input type="text" id="input-url" placeholder="e.g. bilibili.com" data-action="autoFillInfo" data-input>
             </div>
             <div class="input-wrapper">
                 <label for="input-title" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;" data-i18n="label_title">Title</label>
                 <div style="height: 8px;"></div>
-                <input type="text" id="input-title" placeholder="Title" oninput="updatePreview()">
+                <input type="text" id="input-title" placeholder="Title" data-action="updatePreview" data-input>
             </div>
             <div class="input-wrapper">
                 <label for="input-icon" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;" data-i18n="label_logo">Logo URL</label>
                 <div style="height: 8px;"></div>
-                <input type="text" id="input-icon" placeholder="Icon URL (Optional)" oninput="updatePreview()">
+                <input type="text" id="input-icon" placeholder="Icon URL (Optional)" data-action="updatePreview" data-input>
             </div>
             <div class="input-wrapper">
                 <span style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;" data-i18n="label_page">Page</span>
@@ -43,8 +43,8 @@
             </div>
         </div>
         <div class="modal-actions">
-            <button onclick="closeModal()" data-i18n="btn_cancel">Cancel</button>
-            <button class="primary" onclick="saveBookmark()" data-i18n="btn_confirm">Confirm</button>
+            <button data-action="closeModal" data-i18n="btn_cancel">Cancel</button>
+            <button class="primary" data-action="saveBookmark" data-i18n="btn_confirm">Confirm</button>
         </div>
     </div>
 </div>

@@ -1,6 +1,6 @@
 <div id="help-modal" class="modal hidden" role="dialog" aria-modal="true">
     <div class="modal-content" style="max-width: 500px;">
-        <button class="close-modal-btn" onclick="closeHelpModal()">×</button>
+        <button class="close-modal-btn" data-action="closeHelpModal">×</button>
         <h3 data-i18n="help_title">How to Use This Homepage</h3>
         <div style="font-size: 14px; color: #333; line-height: 1.6;">
             <p><strong data-i18n="help_editing_title">Editing Bookmarks:</strong> <span data-i18n="help_editing_content">To add, edit, or remove bookmarks, click the "Edit Bookmark" button in the user menu. This will enter edit mode, allowing you to manage your bookmarks.</span></p>
@@ -9,8 +9,8 @@
             <p><strong data-i18n="help_homepage_title">Setting as Homepage:</strong> <span data-i18n="help_homepage_content">To set this page as your browser's homepage, please do so manually in your browser's settings. For security reasons, websites cannot do this automatically.</span></p>
         </div>
         <div class="modal-actions" style="margin-top: 20px;">
-            <button class="primary" onclick="closeHelpModal()" data-i18n="help_got_it">Got it!</button>
+            <button class="primary" data-action="closeHelpModal" data-i18n="help_got_it">Got it!</button>
         </div>
-        <div id="app-version" style="text-align: center; font-size: 11px; color: #8a8a8a; margin-top: 10px;">v2.8.4</div>
+        <div id="app-version" style="text-align: center; font-size: 11px; color: #8a8a8a; margin-top: 10px;">v2.9.0</div>
     </div>
 </div>

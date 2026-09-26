@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'">
     <title>Account Preferences - My Homepage</title>
     <meta name="app-version" content="2.7.2">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007AFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/%3E%3C/svg%3E">
@@ -196,8 +196,8 @@
 
 
             <div class="tabs">
-                <button class="tab active" data-tab="emoji" onclick="switchAvatarTab('emoji')" data-i18n="tab_emoji">Icons</button>
-                <button class="tab" data-tab="upload" onclick="switchAvatarTab('upload')" data-i18n="tab_url">URL</button>
+                <button class="tab active" data-tab="emoji" data-action="switchAvatarTab" data-arg="emoji" data-i18n="tab_emoji">Icons</button>
+                <button class="tab" data-tab="upload" data-action="switchAvatarTab" data-arg="upload" data-i18n="tab_url">URL</button>
             </div>
 
             <div id="panel-emoji" class="grid-wrap">
@@ -207,13 +207,13 @@
             <div id="panel-upload" class="url-panel">
                 <p data-i18n="msg_input_url">Paste Image URL</p>
                 <div class="field">
-                    <input type="text" id="avatar-url-input" placeholder="https://example.com/avatar.png" oninput="handleAvatarUrlInput(this.value)">
+                    <input type="text" id="avatar-url-input" placeholder="https://example.com/avatar.png" data-action="handleAvatarUrlInput" data-input>
                 </div>
             </div>
 
             <div class="field">
                 <label for="pref-name" data-i18n="label_display_name">Display Name</label>
-                <input type="text" id="pref-name" placeholder="Display Name" oninput="updatePrefNamePreview(this.value)">
+                <input type="text" id="pref-name" placeholder="Display Name" data-action="updatePrefNamePreview" data-input>
             </div>
 
             <div class="field">
@@ -233,13 +233,13 @@
                         <option value="+61">🇦🇺 +61</option>
                     </select>
                     <input type="tel" id="pref-phone-number" placeholder="Number"
-                           oninput="this.value = this.value.replace(/\D/g, '')">
+                           data-filter="digits">
                 </div>
             </div>
 
             <div class="actions">
-                <button class="btn-cancel" onclick="location.href='index.html'" data-i18n="btn_cancel">Cancel</button>
-                <button class="btn-save" id="btn-save" onclick="savePreferences()" data-i18n="btn_save">Save Changes</button>
+                <button class="btn-cancel" data-action="navigate" data-arg="index.html" data-i18n="btn_cancel">Cancel</button>
+                <button class="btn-save" id="btn-save" data-action="savePreferences" data-i18n="btn_save">Save Changes</button>
             </div>
         </div>
     </div>

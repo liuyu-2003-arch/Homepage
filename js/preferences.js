@@ -7,6 +7,30 @@ import { logger } from './logger.js';
 let supabaseClient = null;
 window.prefAvatarUrl = window.prefAvatarUrl || '';
 
+// Event delegation for data-action
+const PREF_ACTIONS = {
+    navigate: (el) => location.href = el.dataset.arg,
+    switchAvatarTab: (el) => window.switchAvatarTab(el.dataset.arg),
+    handleAvatarUrlInput: (el) => window.handleAvatarUrlInput(el.value),
+    updatePrefNamePreview: (el) => window.updatePrefNamePreview(el.value),
+    savePreferences: () => window.savePreferences(),
+};
+document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-action]');
+    if (!el) return;
+    const fn = PREF_ACTIONS[el.dataset.action];
+    if (fn) { e.preventDefault(); fn(el, e); }
+});
+document.addEventListener('input', (e) => {
+    const el = e.target.closest('[data-action][data-input]');
+    if (el) {
+        const fn = PREF_ACTIONS[el.dataset.action];
+        if (fn) fn(el, e);
+    }
+    const filterEl = e.target.closest('[data-filter="digits"]');
+    if (filterEl) filterEl.value = filterEl.value.replace(/\D/g, '');
+});
+
 // Render avatar grid immediately (module runs after DOM parsing)
 renderAvatarGrid();
 
