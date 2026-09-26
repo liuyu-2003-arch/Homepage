@@ -1,7 +1,7 @@
 import { state } from './state.js';
 import { saveData } from './api.js';
 import { CONFIG } from './config.js';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, closeDialog } from './utils.js';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -20,7 +20,7 @@ export function showConfirm(message, title) {
         if (message) msgEl.textContent = message;
         if (title) titleEl.textContent = title;
 
-        modal.classList.remove('hidden');
+        openDialog('confirm-modal');
 
         let settled = false;
         const cleanup = (val) => {
@@ -182,7 +182,7 @@ export function openModal(pageIndex = -1, bookmarkIndex = -1) {
     if (controls) controls.classList.add('hidden');
 
     state.currentEditInfo = { pageIndex, bookmarkIndex };
-    document.getElementById('modal').classList.remove('hidden');
+    openDialog('modal');
     const titleInput = document.getElementById('input-title');
     const urlInput = document.getElementById('input-url');
     const iconInput = document.getElementById('input-icon');
@@ -456,7 +456,7 @@ export function openPageEditModal() {
     const controls = document.getElementById('edit-controls');
     if (controls) controls.classList.add('hidden');
 
-    document.getElementById('page-edit-modal').classList.remove('hidden');
+    openDialog('page-edit-modal');
     renderPageList();
 }
 

@@ -62,9 +62,11 @@ export async function loadData() {
         try {
             const response = await fetch('homepage_config.json');
             if (response.ok) {
+                const data = await response.json();
+                state.pages = ensureBookmarkIds(sanitizePages(migrateData(data)));
                 emit('dataReloaded');
             }
-        } catch (e) { logger.error("Cloud load error", e); }
+        } catch (e) { logger.error("Config load error", e); }
     }
 
     if (state.currentUser && supabaseClient) {

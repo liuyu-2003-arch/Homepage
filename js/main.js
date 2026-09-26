@@ -9,7 +9,7 @@ import {
     autoFillInfo, updatePreview, selectStyle, selectPage,
     handleAvatarUrlInput, debouncedSaveData
 } from './ui.js';
-import { t, showToast, startPillAnimation, openExternal } from './utils.js';
+import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js';
 import { state, onDataReloaded } from './state.js';
 import { CONFIG } from './config.js';
 
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     window.openHelpModal = () => {
         document.getElementById('user-dropdown').classList.remove('active');
-        document.getElementById('help-modal').classList.remove('hidden');
+        openDialog('help-modal');
     };
     window.closeHelpModal = () => {
         document.getElementById('help-modal').classList.add('hidden');
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
          if (state.currentUser) {
             document.getElementById('user-dropdown').classList.toggle('active');
         } else {
-            document.getElementById('auth-modal').classList.remove('hidden');
+            openDialog('auth-modal');
             window.switchToLoginView();
         }
     };
