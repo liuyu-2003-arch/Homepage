@@ -75,7 +75,7 @@ window.switchAvatarTab = function(tabName) {
         el.classList.toggle('active', el.dataset.tab === tabName);
     });
     document.getElementById('panel-emoji').style.display = tabName === 'emoji' ? 'block' : 'none';
-    document.getElementById('panel-upload').classList.toggle('active', tabName === 'upload');
+    document.getElementById('panel-upload').style.display = tabName === 'upload' ? 'block' : 'none';
 };
 
 window.handleAvatarUrlInput = function(url) {
