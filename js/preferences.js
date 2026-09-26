@@ -5,7 +5,7 @@ import { i18n } from './i18n.js';
 import { logger } from './logger.js';
 
 let supabaseClient = null;
-let prefAvatarUrl = '';
+window.window.prefAvatarUrl = window.window.prefAvatarUrl || '';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await i18n.loadTranslations(i18n.currentLang);
@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (session?.user) {
             state.currentUser = session.user;
             populateForm(session.user);
-            renderAvatarGrid(prefAvatarUrl);
         } else {
             location.href = 'index.html';
         }
@@ -60,12 +59,12 @@ function populateForm(user) {
     const img = document.getElementById('pref-current-img');
     img.referrerPolicy = 'no-referrer';
     if (meta.avatar_url) {
-        prefAvatarUrl = meta.avatar_url;
+        window.prefAvatarUrl = meta.avatar_url;
         img.style.display = 'block';
         img.src = meta.avatar_url;
     } else {
         const h = Math.floor(Math.random() * 360);
-        prefAvatarUrl = `avatar-default-${h}`;
+        window.prefAvatarUrl = `avatar-default-${h}`;
         img.style.display = 'none';
         img.parentElement.style.background = `linear-gradient(135deg, hsl(${h},70%,65%), hsl(${(h+40)%360},70%,55%))`;
     }
@@ -80,7 +79,7 @@ window.switchAvatarTab = function(tabName) {
 };
 
 window.handleAvatarUrlInput = function(url) {
-    prefAvatarUrl = url;
+    window.prefAvatarUrl = url;
     const safe = safeUrl(url);
     const img = document.getElementById('pref-current-img');
     if (safe) {
@@ -97,7 +96,7 @@ window.handleAvatarUrlInput = function(url) {
 function selectAvatar(el, url, c1, c2) {
     document.querySelectorAll('.grid-item').forEach(i => i.classList.remove('selected'));
     el.classList.add('selected');
-    prefAvatarUrl = url;
+    window.prefAvatarUrl = url;
     const img = document.getElementById('pref-current-img');
     if (c1 && c2) {
         img.style.display = 'none';
@@ -202,7 +201,7 @@ window.savePreferences = async function() {
         showToast(t('msg_please_login'), 'error');
         return;
     }
-    if (prefAvatarUrl && prefAvatarUrl.length > CONFIG.MAX_AVATAR_URL_LENGTH) {
+    if (window.prefAvatarUrl && window.prefAvatarUrl.length > CONFIG.MAX_AVATAR_URL_LENGTH) {
         showToast(t('msg_img_too_large'), 'error');
         return;
     }
@@ -222,7 +221,7 @@ window.savePreferences = async function() {
 
     try {
         const { error } = await supabaseClient.auth.updateUser({
-            data: { full_name: name, phone_number: fullPhone, avatar_url: prefAvatarUrl }
+            data: { full_name: name, phone_number: fullPhone, avatar_url: window.prefAvatarUrl }
         });
         if (error) throw error;
         showToast(t('msg_save_success'), 'success');
