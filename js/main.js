@@ -49,8 +49,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     initSwiper();
 
     // 显示版本号
-    const versionEl = document.getElementById('app-version');
-    if (versionEl) versionEl.textContent = 'v' + CONFIG.APP_VERSION;
+    const injectVersion = () => {
+        const el = document.getElementById('app-version');
+        if (el) el.textContent = 'v' + CONFIG.APP_VERSION;
+    };
+    injectVersion();
+    setTimeout(injectVersion, 500);
 
     // 2. 注册数据重载回调（解除 api.js ↔ ui.js 循环依赖）
     onDataReloaded(render);
