@@ -4,7 +4,7 @@
     "bookmarks": [
       {
         "id": "mibooocggo4bac346wo",
-        "url": "https://notion.so",
+        "url": "https://app.notion.com/library/recents",
         "icon": "https://manifest.im/icon/notion.so",
         "style": "full",
         "title": "Notion"
@@ -18,14 +18,14 @@
       },
       {
         "id": "mibooocgxukg2md4ees",
-        "url": "https://youtube.com",
-        "icon": "https://favicon.vemetric.com/youtube.com",
+        "url": "https://youtube.com/",
+        "icon": "https://manifest.im/icon/youtube.com",
         "style": "fit",
         "title": "Youtube"
       },
       {
         "id": "mibooocgnkd4wlcily",
-        "url": "https://www.bilibili.com",
+        "url": "https://www.bilibili.com/",
         "icon": "https://favicon.vemetric.com/www.bilibili.com",
         "style": "full",
         "title": "Bilibili"
@@ -39,7 +39,7 @@
       },
       {
         "id": "mibooocg3d08h37yjom",
-        "url": "https://www.subeasy.ai/workspace",
+        "url": "https://www.subeasy.ai/?invite_code=4sk0qh",
         "icon": "https://subeasy.ai/favicon.ico",
         "style": "white",
         "title": "Subeasy"
@@ -53,7 +53,7 @@
       },
       {
         "id": "mibooocgctd6k15mfsq",
-        "url": "https://Google.com",
+        "url": "https://google.com/",
         "icon": "https://cdn.brandfetch.io/google.com?c=1idVW8VN57Jat7AexnZ",
         "style": "white",
         "title": "Google"
@@ -61,9 +61,16 @@
       {
         "id": "mivpg1zworavb83cgq",
         "url": "https://nytimes.324893.xyz/",
-        "icon": "https://favicon.vemetric.com/cn.nytimes.com",
+        "icon": "https://favicon.vemetric.com/nytimes.324893.xyz",
         "style": "full",
         "title": "NY Times"
+      },
+      {
+        "id": "mjpz3y419iudcfdn3fa",
+        "url": "https://uc.324893.xyz/",
+        "icon": "https://favicon.vemetric.com/uc.324893.xyz",
+        "style": "full",
+        "title": "UC"
       },
       {
         "id": "mibooocg1p2kmlhqsbu",
@@ -82,7 +89,7 @@
       {
         "id": "miepy2ln1a4dj0jx0wtg",
         "url": "https://claude.ai/",
-        "icon": "https://favicon.vemetric.com/claude.ai",
+        "icon": "https://manifest.im/icon/claude.ai",
         "style": "fit",
         "title": "Claude"
       },
@@ -102,35 +109,21 @@
       },
       {
         "id": "mibooocgw6rzqbut0o9",
-        "url": "https://chatgpt.com",
+        "url": "https://chatgpt.com/",
         "icon": "https://manifest.im/icon/chatgpt.com",
         "style": "full",
         "title": "Chatgpt"
       },
       {
-        "id": "mibooocg577ak6khszh",
-        "url": "https://sora.chatgpt.com",
-        "icon": "https://manifest.im/icon/sora.chatgpt.com",
-        "style": "full",
-        "title": "Sora"
-      },
-      {
-        "id": "micsydpfc4fivqf8npg",
-        "url": "https://web.telegram.org/a/",
-        "icon": "https://img.logo.dev/web.telegram.org?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Telegram"
-      },
-      {
         "id": "mibooocgiovtru2rogh",
-        "url": "https://github.com",
+        "url": "https://github.com/liuyu-2003-arch",
         "icon": "https://manifest.im/icon/github.com",
         "style": "full",
         "title": "GitHub"
       },
       {
         "id": "mibooocgumwvwh70wn",
-        "url": "https://vercel.com",
+        "url": "https://vercel.com/",
         "icon": "https://manifest.im/icon/vercel.com",
         "style": "full",
         "title": "Vercel"
@@ -143,18 +136,88 @@
         "title": "Gmail"
       },
       {
-        "id": "mjis3hdv9fyvkscxxyg",
-        "url": "https://stitch.withgoogle.com/",
-        "icon": "https://favicon.vemetric.com/stitch.withgoogle.com",
-        "style": "full",
-        "title": "Stitch"
+        "id": "mibooocgttju5attj7a",
+        "url": "https://dash.cloudflare.com/",
+        "icon": "https://manifest.im/icon/www.cloudflare.com",
+        "style": "fit",
+        "title": "Cloudflare"
       },
       {
-        "id": "mjpz3y419iudcfdn3fa",
-        "url": "https://uc.324893.xyz/",
-        "icon": "https://favicon.vemetric.com/uc.324893.xyz",
+        "id": "mlcfgavqvxv8l58z31",
+        "url": "https://opal.google/app/1k9rVWM_m-h6MKN1MPm3yCcuh5wW2KZLA",
+        "icon": "https://api.dicebear.com/9.x/bottts/svg?seed=ondeuh",
         "style": "full",
-        "title": "UC"
+        "title": "Opal"
+      },
+      {
+        "id": "mibooocgvqiaku0c1ai",
+        "url": "https://tingwu.aliyun.com/home",
+        "icon": "https://favicon.vemetric.com/tingwu.aliyun.com",
+        "style": "fit",
+        "title": "Tingwu"
+      },
+      {
+        "id": "mm3otgc1a2cw1pbbbhs",
+        "url": "https://chatgpt.com/codex/settings/usage",
+        "icon": "https://cdn.brandfetch.io/chatgpt.com?c=1idVW8VN57Jat7AexnZ",
+        "style": "full",
+        "title": "Codex"
+      },
+      {
+        "id": "mnizcvg03s1e803erwy",
+        "url": "https://platform.xiaomimimo.com/console/plan-manage",
+        "icon": "https://manifest.im/icon/platform.xiaomimimo.com",
+        "style": "full",
+        "title": "MIMO"
+      },
+      {
+        "id": "moqnkcqi91gu08u0bb4",
+        "url": "https://pre.324893.xyz/",
+        "icon": "https://favicon.vemetric.com/pre.324893.xyz",
+        "style": "full",
+        "title": "Pre"
+      },
+      {
+        "id": "mrpos3uzr98r1bncad",
+        "url": "https://apply.jtw.beijing.gov.cn/apply/app/user/person/manage/01CCAn0Pnn1PCCCn2i8C821ACACi6Phe",
+        "icon": "https://manifest.im/icon/apply.jtw.beijing.gov.cn",
+        "style": "full",
+        "title": "Car"
+      },
+      {
+        "id": "ml6q7ihddc5kxzdcga",
+        "url": "https://openrouter.ai/settings/credits",
+        "icon": "https://manifest.im/icon/openrouter.ai",
+        "style": "full",
+        "title": "Openrouter"
+      },
+      {
+        "id": "moz4vha6lpyvstntvf",
+        "url": "https://sidhub.cc/",
+        "icon": "https://www.seedhub.cc/favicon.ico",
+        "style": "fit",
+        "title": "Seedhub"
+      },
+      {
+        "id": "ms01y8ye4gewrxuxojg",
+        "url": "https://www1.rarbg.tw/",
+        "icon": "https://manifest.im/icon/www1.rarbg.tw",
+        "style": "full",
+        "title": "RarBg"
+      },
+      {
+        "id": "mu1glksdsrzj8zym6r",
+        "url": "https://opencode.ai/console/wrk_01KJ1MSX2AMHGATKMTKPE82A36/go",
+        "icon": "https://manifest.im/icon/opencode.ai",
+        "style": "full",
+        "title": "Opencode"
+      },
+      {
+        "id": "mui5nei4mt719pqv8vl",
+        "url": "https://artificialanalysis.ai/zh",
+        "icon": "https://img.logo.dev/artificialanalysis.ai?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "fit",
+        "title": "Artificialanalysis"
       }
     ]
   },
@@ -164,7 +227,7 @@
       {
         "id": "miepvyzft0h6yv1eo6",
         "url": "https://weread.qq.com/",
-        "icon": "https://favicon.vemetric.com/weread.qq.com",
+        "icon": "https://manifest.im/icon/weread.qq.com",
         "style": "full",
         "title": "Weread"
       },
@@ -211,13 +274,6 @@
         "title": "Google Art"
       },
       {
-        "id": "mibooocgjwmrwo41bjf",
-        "url": "https://art.324893.xyz/",
-        "icon": "https://api.dicebear.com/9.x/shapes/svg?seed=temrrr",
-        "style": "full",
-        "title": "Daily Art"
-      },
-      {
         "id": "midbkac2i1z91czdrka",
         "url": "https://app.leonardo.ai/",
         "icon": "https://cdn.brandfetch.io/app.leonardo.ai?c=1idVW8VN57Jat7AexnZ",
@@ -261,7 +317,7 @@
       },
       {
         "id": "mier7s1fxwut51nfihe",
-        "url": "https://indeed.com",
+        "url": "https://indeed.com/",
         "icon": "https://img.logo.dev/indeed.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
         "style": "full",
         "title": "Indeed"
@@ -274,10 +330,10 @@
         "title": "NY Times"
       },
       {
-        "id": "misxml0kpp5xx8qqi3q",
+        "id": "mlvngm7xcfpt5z0fqk8",
         "url": "https://notebooklm.google.com/",
-        "icon": "https://img.logo.dev/notebooklm.google.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "white",
+        "icon": "https://api.dicebear.com/9.x/bottts/svg?seed=rauule",
+        "style": "full",
         "title": "Notebooklm"
       }
     ]
@@ -312,6 +368,13 @@
         "icon": "https://img.logo.dev/www.imdb.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
         "style": "full",
         "title": "Imdb"
+      },
+      {
+        "id": "mm79m513r52d6m1w4ak",
+        "url": "https://watch.plex.tv/zh/me",
+        "icon": "https://img.logo.dev/watch.plex.tv?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Plex"
       },
       {
         "id": "mibooocg9qj52goaju",
@@ -354,6 +417,27 @@
         "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=ervqsq",
         "style": "full",
         "title": "Magnet"
+      },
+      {
+        "id": "modqocrqok6qedcmvs",
+        "url": "https://t.me/s/ydypzyfx",
+        "icon": "https://favicon.vemetric.com/t.me",
+        "style": "fit",
+        "title": "T 139"
+      },
+      {
+        "id": "mq28byrstu4l5detdb",
+        "url": "https://www.kdocs.cn/l/cpgviKFaTZF3",
+        "icon": "https://img.logo.dev/www.kdocs.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Kdocs"
+      },
+      {
+        "id": "msbz0mgru0zsp9ffhdc",
+        "url": "https://subhd.me/",
+        "icon": "https://manifest.im/icon/subhd.me",
+        "style": "fit",
+        "title": "Subhd"
       }
     ]
   },
@@ -390,7 +474,7 @@
       },
       {
         "id": "midbpzg8nshztny6y9g",
-        "url": "https://pinterest.com",
+        "url": "https://pinterest.com/",
         "icon": "https://cdn.brandfetch.io/pinterest.com?c=1idVW8VN57Jat7AexnZ",
         "style": "fit",
         "title": "Pinterest"
@@ -415,6 +499,13 @@
         "icon": "https://img.logo.dev/www.snopes.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
         "style": "full",
         "title": "Snopes"
+      },
+      {
+        "id": "micsydpfc4fivqf8npg",
+        "url": "https://web.telegram.org/a/",
+        "icon": "https://img.logo.dev/web.telegram.org?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
+        "style": "full",
+        "title": "Telegram"
       }
     ]
   },
@@ -422,32 +513,11 @@
     "title": "Code",
     "bookmarks": [
       {
-        "id": "mibooocgttju5attj7a",
-        "url": "https://dash.cloudflare.com/",
-        "icon": "https://manifest.im/icon/www.cloudflare.com",
-        "style": "fit",
-        "title": "Cloudflare"
-      },
-      {
-        "id": "mibooocgll1d4ucyf9n",
-        "url": "https://us-west-1.run.claw.cloud/",
-        "icon": "https://img.logo.dev/us-west-1.run.claw.cloud?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "fit",
-        "title": "Us-west-1"
-      },
-      {
         "id": "midbjml0cwdmvbm878d",
         "url": "https://colab.research.google.com/github/alembics/disco-diffusion/blob/main/Disco_Diffusion.ipynb#scrollTo=PromptsTop",
         "icon": "https://favicon.vemetric.com/colab.research.google.com",
         "style": "fit",
         "title": "Colab"
-      },
-      {
-        "id": "miepzfavq34y5q5cvf",
-        "url": "https://studio.firebase.google.com/",
-        "icon": "https://favicon.vemetric.com/studio.firebase.google.com",
-        "style": "fit",
-        "title": "Studio"
       },
       {
         "id": "mif9j57y2dhvyfldk1q",
@@ -483,6 +553,20 @@
         "icon": "https://manifest.im/icon/www.spaceship.com",
         "style": "full",
         "title": "Spaceship"
+      },
+      {
+        "id": "mjis3hdv9fyvkscxxyg",
+        "url": "https://stitch.withgoogle.com/",
+        "icon": "https://favicon.vemetric.com/stitch.withgoogle.com",
+        "style": "full",
+        "title": "Stitch"
+      },
+      {
+        "id": "mrglsf3doo9pj6o8hmh",
+        "url": "https://huggingface.co/spaces",
+        "icon": "https://manifest.im/icon/huggingface.co",
+        "style": "full",
+        "title": "Huggingface"
       }
     ]
   },
@@ -504,27 +588,6 @@
         "title": "Cobalt"
       },
       {
-        "id": "mibooocgldbnk47twx",
-        "url": "https://whisper.324893.xyz/",
-        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=5ubfma",
-        "style": "full",
-        "title": "Whisper"
-      },
-      {
-        "id": "mibooocgt61tw8dhqj",
-        "url": "https://ffmpeg.324893.xyz/",
-        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=o4k7i",
-        "style": "full",
-        "title": "FFmpeg"
-      },
-      {
-        "id": "mibooocgvqiaku0c1ai",
-        "url": "https://tingwu.aliyun.com/home",
-        "icon": "https://favicon.vemetric.com/tingwu.aliyun.com",
-        "style": "fit",
-        "title": "Tingwu"
-      },
-      {
         "id": "midbiokxdv5uxsy1mn",
         "url": "https://meetings.feishu.cn/minutes/me",
         "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=c8z6",
@@ -533,7 +596,7 @@
       },
       {
         "id": "mibooocg1asoj080xgu",
-        "url": "https://aliyundrive.com",
+        "url": "https://aliyundrive.com/",
         "icon": "https://manifest.im/icon/aliyundrive.com",
         "style": "full",
         "title": "Aliyundrive"
@@ -554,7 +617,7 @@
       },
       {
         "id": "mibooocgomou5m0ra8c",
-        "url": "https://yun.139.com",
+        "url": "https://yun.139.com/",
         "icon": "https://manifest.im/icon/yun.139.com",
         "style": "full",
         "title": "Yun"
@@ -602,18 +665,18 @@
         "title": "JD"
       },
       {
-        "id": "mijnrfoaycoxcs7re7g",
-        "url": "https://www.giffgaff.com/orders/affiliate/jemch799_1731597513128",
-        "icon": "https://favicon.vemetric.com/www.giffgaff.com",
-        "style": "full",
-        "title": "Giffgaff"
-      },
-      {
         "id": "mijnz88qk9z1s6mwj2",
-        "url": "https://mail.qq.com",
+        "url": "https://mail.qq.com/",
         "icon": "https://favicon.vemetric.com/mail.qq.com",
         "style": "white",
         "title": "Mail"
+      },
+      {
+        "id": "msjo3bkmvvwbrfzjr",
+        "url": "https://tailscale.com/download/mac",
+        "icon": "https://manifest.im/icon/tailscale.com",
+        "style": "full",
+        "title": "Tailscale"
       }
     ]
   }

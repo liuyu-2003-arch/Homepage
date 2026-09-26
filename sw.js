@@ -1,4 +1,4 @@
-const CACHE_NAME = 'homepage-v1.7';
+const CACHE_NAME = 'homepage-v1.8';
 const APP_SCOPE = self.registration.scope;
 const STATIC_ASSETS = [
     '', 'index.html',
