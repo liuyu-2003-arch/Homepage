@@ -209,16 +209,7 @@ export function openModal(pageIndex = -1, bookmarkIndex = -1) {
 }
 
 export function closeModal() {
-    document.getElementById('modal').classList.add('hidden');
-
-    // 【修改点 2】关闭书签窗口时，如果在编辑模式，恢复底部按钮栏
-    if (state.isEditing) {
-        const controls = document.getElementById('edit-controls');
-        if (controls) controls.classList.remove('hidden');
-    }
-
-    // 关闭时恢复动画
-    startPillAnimation();
+    closeModalById('modal');
 }
 
 export function saveBookmark() {
@@ -460,17 +451,8 @@ export function openPageEditModal() {
 }
 
 export function closePageEditModal() {
-    document.getElementById('page-edit-modal').classList.add('hidden');
-
-    // 【修改点 4】关闭页面编辑窗口时，恢复底部编辑按钮栏
-    if (state.isEditing) {
-        const controls = document.getElementById('edit-controls');
-        if (controls) controls.classList.remove('hidden');
-    }
-
+    closeModalById('page-edit-modal');
     render();
-    // 关闭时恢复动画
-    startPillAnimation();
 }
 
 export function renderPageList() {
@@ -554,6 +536,10 @@ export function closeThemeControls() {
     document.getElementById('theme-controls').classList.add('hidden');
     // 关闭时恢复动画
     startPillAnimation();
+}
+
+export function closePrefModal() {
+    closeModalById('pref-modal');
 }
 
 export function quickChangeTheme(color, pattern) {
@@ -793,14 +779,30 @@ function closeTopModal() {
     for (const id of modalIds) {
         const el = document.getElementById(id);
         if (el && !el.classList.contains('hidden')) {
-            el.classList.add('hidden');
+            closeModalById(id);
             return;
         }
     }
     const menu = document.getElementById('user-dropdown');
     if (menu && menu.classList.contains('active')) {
         menu.classList.remove('active');
+        startPillAnimation();
     }
+}
+
+export function closeModalById(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('hidden');
+
+    // Restore edit toolbar if it was hidden by this modal
+    if (state.isEditing && (id === 'modal' || id === 'page-edit-modal')) {
+        const controls = document.getElementById('edit-controls');
+        if (controls) controls.classList.remove('hidden');
+    }
+
+    // Re-enable pill auto-hide animation
+    startPillAnimation();
 }
 
 function triggerKeyboardBounce(offset) {

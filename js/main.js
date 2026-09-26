@@ -6,7 +6,7 @@ import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
-    openPrefModal, switchAvatarTab, selectNewAvatar, createAvatarSelector,
+    openPrefModal, closePrefModal, switchAvatarTab, selectNewAvatar, createAvatarSelector,
     autoFillInfo, updatePreview, selectStyle, selectPage, updatePrefNamePreview,
     handleAvatarUrlInput
 } from './ui.js';
@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.openThemeControls = openThemeControls;
     window.closeThemeControls = closeThemeControls;
     window.openPrefModal = openPrefModal;
+    window.closePrefModal = closePrefModal;
     window.switchAvatarTab = switchAvatarTab;
     window.handleAvatarUrlInput = handleAvatarUrlInput;
     window.selectNewAvatar = selectNewAvatar;
@@ -131,6 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     window.closeHelpModal = () => {
         document.getElementById('help-modal').classList.add('hidden');
+        startPillAnimation();
     };
     window.changeLanguage = async (lang) => {
         await i18n.loadTranslations(lang);
@@ -145,6 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     window.closeAuthModal = () => {
         document.getElementById('auth-modal').classList.add('hidden');
+        startPillAnimation();
     };
     window.switchToSignUpView = () => {
         document.getElementById('auth-title').textContent = t('btn_register');
