@@ -6,8 +6,7 @@ import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
-    openPrefModal, closePrefModal, switchAvatarTab, selectNewAvatar, createAvatarSelector,
-    autoFillInfo, updatePreview, selectStyle, selectPage, updatePrefNamePreview,
+    autoFillInfo, updatePreview, selectStyle, selectPage,
     handleAvatarUrlInput, debouncedSaveData
 } from './ui.js';
 import { t, showToast, startPillAnimation, openExternal } from './utils.js';
@@ -19,7 +18,6 @@ async function loadTemplates() {
         { id: 'user-dropdown-placeholder', url: 'templates/user_dropdown.html' },
         { id: 'modal-placeholder', url: 'templates/bookmark_modal.html' },
         { id: 'page-edit-modal-placeholder', url: 'templates/page_edit_modal.html' },
-        { id: 'pref-modal-placeholder', url: 'templates/pref_modal.html' },
         { id: 'auth-modal-placeholder', url: 'templates/auth_modal.html' },
         { id: 'help-modal-placeholder', url: 'templates/help_modal.html' },
         { id: 'confirm-modal-placeholder', url: 'templates/confirm_modal.html' }
@@ -115,12 +113,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.closePageEditModal = closePageEditModal;
     window.openThemeControls = openThemeControls;
     window.closeThemeControls = closeThemeControls;
-    window.openPrefModal = openPrefModal;
-    window.closePrefModal = closePrefModal;
-    window.switchAvatarTab = switchAvatarTab;
-    window.handleAvatarUrlInput = handleAvatarUrlInput;
-    window.selectNewAvatar = selectNewAvatar;
-    window.updatePrefNamePreview = updatePrefNamePreview;
     window.saveBookmark = saveBookmark;
     window.deleteBookmark = deleteBookmark;
     window.autoFillInfo = autoFillInfo;
