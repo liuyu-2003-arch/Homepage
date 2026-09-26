@@ -92,5 +92,6 @@
   "btn_delete": "Delete",
   "msg_please_login": "Please login first",
   "msg_invalid_url": "Please enter a valid URL",
-  "msg_navigating": "Navigating to {provider}..."
+  "msg_navigating": "Navigating to {provider}...",
+  "untitled_page": "Untitled"
 }

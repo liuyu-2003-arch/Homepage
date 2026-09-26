@@ -85,5 +85,6 @@
   "help_got_it": "Got it!",
   "msg_please_login": "먼저 로그인하세요",
   "msg_invalid_url": "올바른 URL을 입력하세요",
-  "msg_navigating": "{provider}로 이동 중..."
+  "msg_navigating": "{provider}로 이동 중...",
+  "untitled_page": "제목 없음"
 }

@@ -85,5 +85,6 @@
   "help_got_it": "Got it!",
   "msg_please_login": "Veuillez d'abord vous connecter",
   "msg_invalid_url": "Veuillez entrer une URL valide",
-  "msg_navigating": "Redirection vers {provider}..."
+  "msg_navigating": "Redirection vers {provider}...",
+  "untitled_page": "Sans titre"
 }

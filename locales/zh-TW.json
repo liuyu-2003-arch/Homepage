@@ -88,5 +88,6 @@
   "btn_delete": "刪除",
   "msg_please_login": "請先登入",
   "msg_invalid_url": "請輸入有效的網址",
-  "msg_navigating": "正在跳轉到 {provider}..."
+  "msg_navigating": "正在跳轉到 {provider}...",
+  "untitled_page": "未命名"
 }

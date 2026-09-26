@@ -473,7 +473,7 @@ export function renderPageList() {
         input.className = 'page-title-input';
         input.value = page.title;
         input.onblur = () => {
-            state.pages[index].title = input.value;
+            state.pages[index].title = input.value.trim() || t('untitled_page') || 'Untitled';
             saveData();
         };
         li.appendChild(input);
@@ -1017,7 +1017,7 @@ function initSortable() {
                         if (bookmark && newPages[originalPageIndex]) newPages[originalPageIndex].bookmarks.push(bookmark);
                     });
                 });
-                state.pages = newPages.filter(p => p.title);
+                state.pages = newPages.filter(p => p && Array.isArray(p.bookmarks));
 
                 updateSyncStatus('saving');
                 debouncedSaveData();

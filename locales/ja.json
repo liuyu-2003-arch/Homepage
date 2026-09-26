@@ -85,5 +85,6 @@
   "help_got_it": "Got it!",
   "msg_please_login": "先にログインしてください",
   "msg_invalid_url": "有効なURLを入力してください",
-  "msg_navigating": "{provider} に移動中..."
+  "msg_navigating": "{provider} に移動中...",
+  "untitled_page": "無題"
 }

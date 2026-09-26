@@ -85,5 +85,6 @@
   "help_got_it": "Got it!",
   "msg_please_login": "يرجى تسجيل الدخول أولاً",
   "msg_invalid_url": "يرجى إدخال رابط صالح",
-  "msg_navigating": "جارٍ الانتقال إلى {provider}..."
+  "msg_navigating": "جارٍ الانتقال إلى {provider}...",
+  "untitled_page": "بدون عنوان"
 }

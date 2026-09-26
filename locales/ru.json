@@ -85,5 +85,6 @@
   "help_got_it": "Got it!",
   "msg_please_login": "Сначала войдите в систему",
   "msg_invalid_url": "Пожалуйста, введите корректный URL",
-  "msg_navigating": "Переход к {provider}..."
+  "msg_navigating": "Переход к {provider}...",
+  "untitled_page": "Без названия"
 }
