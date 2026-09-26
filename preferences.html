@@ -4,280 +4,240 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Preferences - My Homepage</title>
-    <meta name="app-version" content="2.7.1">
+    <meta name="app-version" content="2.7.2">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007AFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/%3E%3C/svg%3E">
-    <link rel="preconnect" href="https://ossrsfyqbrzeauzksvpv.supabase.co">
+    <link rel="preconnect" href="https://api.dicebear.com">
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <script defer src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"
             integrity="sha384-0w2KAL2YHP6wKOkUDzkCDGgVvfmHnj02DHeQ6XcHOgTfFsGyonKOpShMH1x6nk9o"
             crossorigin="anonymous"></script>
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            margin: 0;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: linear-gradient(135deg, #e4d0e5 0%, #c9b8d4 50%, #a8b5d4 100%);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            overflow-x: hidden;
+            background: linear-gradient(135deg, #e4d0e5 0%, #d4c4de 40%, #b8c4e0 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
+            color: #333;
             visibility: visible !important;
+            overflow-y: auto;
         }
-        .pref-page-wrapper {
-            width: 100%;
-            max-width: 520px;
-            padding: 20px 20px 40px;
-            box-sizing: border-box;
+        .page {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 24px 20px 48px;
         }
-        .pref-header {
+
+        /* Header */
+        .header {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 28px;
+            gap: 14px;
+            margin-bottom: 24px;
         }
         .back-btn {
-            width: 40px;
-            height: 40px;
+            width: 42px; height: 42px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.5);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.5);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #555;
-            transition: background 0.2s;
-        }
-        .back-btn:hover { background: rgba(255,255,255,0.7); }
-        .pref-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #333;
-        }
-        .pref-card {
-            background: rgba(255,255,255,0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 28px 24px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-            border: 1px solid rgba(255,255,255,0.5);
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
-        }
-        .pref-preview-container {
-            display: flex;
-            justify-content: center;
-        }
-        .pref-pill {
-            display: flex;
-            align-items: center;
-            gap: 10px;
             background: rgba(255,255,255,0.6);
-            border-radius: 30px;
-            padding: 6px 20px 6px 6px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255,255,255,0.6);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        .pref-pill-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            overflow: hidden;
-            background: rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #555;
+            transition: all 0.2s;
             flex-shrink: 0;
         }
-        .pref-pill-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .back-btn:hover { background: rgba(255,255,255,0.85); transform: scale(1.05); }
+        .header h1 { font-size: 22px; font-weight: 700; }
+
+        /* Card */
+        .card {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 22px;
+            padding: 32px 28px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.5);
+            display: flex; flex-direction: column; gap: 24px;
         }
-        .pref-pill-text {
-            font-size: 16px;
-            font-weight: 600;
-            color: #444;
-            white-space: nowrap;
+
+        /* Avatar preview */
+        .preview {
+            display: flex; justify-content: center;
         }
-        .avatar-tabs {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
+        .pill {
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 40px; padding: 8px 24px 8px 8px;
+            border: 1px solid rgba(255,255,255,0.7);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
         }
-        .avatar-tab-item {
-            padding: 8px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            color: #666;
-            background: rgba(0,0,0,0.04);
-            transition: all 0.2s;
+        .pill-avatar {
+            width: 48px; height: 48px;
+            border-radius: 50%; overflow: hidden;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            flex-shrink: 0;
         }
-        .avatar-tab-item.active {
-            background: #007AFF;
-            color: white;
+        .pill-avatar img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
         }
-        .avatar-panel { min-height: 180px; }
-        .avatar-panel.hidden { display: none; }
-        .avatar-grid-scroll {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            max-height: 240px;
+        .pill-name {
+            font-size: 17px; font-weight: 600; color: #333;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex; gap: 10px;
+        }
+        .tab {
+            padding: 10px 22px; border-radius: 24px;
+            cursor: pointer; font-size: 13px; font-weight: 600;
+            color: #666; background: rgba(0,0,0,0.05);
+            transition: all 0.2s; border: none;
+            user-select: none;
+        }
+        .tab.active {
+            background: #007AFF; color: #fff;
+            box-shadow: 0 4px 12px rgba(0,122,255,0.3);
+        }
+
+        /* Avatar grid */
+        .grid-wrap {
             overflow-y: auto;
-            padding: 8px;
+            max-height: 200px;
+            border-radius: 16px;
+            background: rgba(0,0,0,0.03);
+            padding: 12px;
         }
-        .avatar-option {
-            width: 52px;
-            height: 52px;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+            gap: 10px;
+        }
+        .grid-item {
+            aspect-ratio: 1;
             border-radius: 12px;
             cursor: pointer;
             overflow: hidden;
             border: 3px solid transparent;
-            transition: border-color 0.2s, transform 0.15s;
-            background: #f0f0f0;
+            transition: all 0.2s;
+            background: #e8e8e8;
         }
-        .avatar-option:hover { transform: scale(1.08); }
-        .avatar-option.selected { border-color: #007AFF; }
-        .avatar-option img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .grid-item:hover { transform: scale(1.1); border-color: rgba(0,122,255,0.4); }
+        .grid-item.selected { border-color: #007AFF; box-shadow: 0 2px 10px rgba(0,122,255,0.3); }
+        .grid-item img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
         }
-        .form-label {
-            display: block;
-            font-size: 11px;
-            color: #767676;
-            text-transform: uppercase;
-            font-weight: 700;
+
+        /* URL panel */
+        .url-panel { display: none; }
+        .url-panel.active { display: block; }
+        .url-panel p {
+            font-size: 13px; color: #666; margin-bottom: 12px; text-align: center;
+        }
+
+        /* Form */
+        .field label {
+            display: block; font-size: 11px; font-weight: 700;
+            color: #767676; text-transform: uppercase; letter-spacing: 0.5px;
             margin-bottom: 8px;
         }
-        .form-input {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid #e0e0e0;
-            background: #f9f9f9;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-            box-sizing: border-box;
+        .field input {
+            width: 100%; padding: 13px 16px;
+            border-radius: 14px; border: 1.5px solid #e0e0e0;
+            background: rgba(255,255,255,0.8);
+            font-size: 15px; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .form-input:focus { border-color: #007AFF; }
+        .field input:focus {
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
+        }
         .phone-row {
-            display: flex;
-            gap: 10px;
+            display: flex; gap: 10px;
         }
-        .phone-code {
-            width: 110px;
-            border-radius: 12px;
-            border: 1px solid #e0e0e0;
-            background: #f9f9f9;
-            padding: 12px 8px;
-            font-size: 14px;
-            outline: none;
+        .phone-row select {
+            width: 120px; padding: 13px 10px;
+            border-radius: 14px; border: 1.5px solid #e0e0e0;
+            background: rgba(255,255,255,0.8);
+            font-size: 15px; outline: none; cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .phone-row select:focus { border-color: #007AFF; }
+        .phone-row input { flex: 1; min-width: 0; }
+
+        /* Actions */
+        .actions {
+            display: flex; gap: 12px; margin-top: 4px;
+        }
+        .actions button {
+            flex: 1; padding: 15px;
+            border-radius: 16px; border: none;
+            font-size: 16px; font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s;
         }
-        .phone-number {
-            flex: 1;
-            min-width: 0;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid #e0e0e0;
-            background: #f9f9f9;
-            font-size: 14px;
-            outline: none;
+        .actions button:active { transform: scale(0.96); }
+        .btn-cancel {
+            background: rgba(0,0,0,0.06); color: #555;
         }
-        .phone-number:focus, .phone-code:focus { border-color: #007AFF; }
-        .pref-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-        }
-        .pref-actions button {
-            flex: 1;
-            padding: 13px;
-            border-radius: 14px;
-            border: none;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s, transform 0.15s;
-        }
-        .pref-actions button:active { transform: scale(0.97); }
-        .btn-back {
-            background: rgba(0,0,0,0.06);
-            color: #555;
-        }
+        .btn-cancel:hover { background: rgba(0,0,0,0.1); }
         .btn-save {
-            background: #007AFF;
-            color: white;
+            background: #007AFF; color: #fff;
+            box-shadow: 0 4px 16px rgba(0,122,255,0.3);
         }
-        .btn-save:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .btn-save:hover { background: #0066d6; }
+        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
         @media (max-width: 480px) {
-            .pref-page-wrapper { padding: 16px 16px 32px; }
-            .pref-card { padding: 22px 18px; }
+            .page { padding: 16px 14px 36px; }
+            .card { padding: 24px 20px; gap: 20px; }
+            .header h1 { font-size: 19px; }
         }
     </style>
 </head>
 <body>
-    <div class="pref-page-wrapper">
-        <div class="pref-header">
-            <button class="back-btn" onclick="location.href='index.html'" aria-label="Back">←</button>
-            <h1 class="pref-title" data-i18n="modal_pref_title">Account Preferences</h1>
+    <div class="page">
+        <div class="header">
+            <button class="back-btn" onclick="location.href='index.html'" aria-label="Back">&larr;</button>
+            <h1 data-i18n="modal_pref_title">Account Preferences</h1>
         </div>
 
-        <div class="pref-card">
-            <!-- Preview -->
-            <div class="pref-preview-container">
-                <div class="pref-pill">
-                    <div class="pref-pill-icon">
-                        <img id="pref-current-img" alt="Current Avatar">
+        <div class="card">
+            <div class="preview">
+                <div class="pill">
+                    <div class="pill-avatar">
+                        <img id="pref-current-img" alt="">
                     </div>
-                    <span id="pref-preview-name" class="pref-pill-text">Display Name</span>
+                    <span id="pref-preview-name" class="pill-name">Display Name</span>
                 </div>
             </div>
 
-            <!-- Avatar tabs -->
-            <div class="avatar-tabs">
-                <div class="avatar-tab-item active" data-tab="emoji" onclick="switchAvatarTab('emoji')" data-i18n="tab_emoji">Icons</div>
-                <div class="avatar-tab-item" data-tab="upload" onclick="switchAvatarTab('upload')" data-i18n="tab_url">URL</div>
+            <div class="tabs">
+                <button class="tab active" data-tab="emoji" onclick="switchAvatarTab('emoji')" data-i18n="tab_emoji">Icons</button>
+                <button class="tab" data-tab="upload" onclick="switchAvatarTab('upload')" data-i18n="tab_url">URL</button>
             </div>
 
-            <!-- Avatar grid -->
-            <div id="avatar-panel-emoji" class="avatar-panel">
-                <div id="pref-avatar-grid" class="avatar-grid-scroll"></div>
+            <div id="panel-emoji" class="grid-wrap">
+                <div id="pref-avatar-grid" class="grid"></div>
             </div>
 
-            <!-- URL input -->
-            <div id="avatar-panel-upload" class="avatar-panel hidden">
-                <p style="font-size: 13px; color: #666; margin: 0 0 12px; text-align: center;" data-i18n="msg_input_url">Paste Image URL</p>
-                <input type="text"
-                       id="avatar-url-input"
-                       class="form-input"
-                       placeholder="https://example.com/avatar.png"
-                       oninput="handleAvatarUrlInput(this.value)">
+            <div id="panel-upload" class="url-panel">
+                <p data-i18n="msg_input_url">Paste Image URL</p>
+                <div class="field">
+                    <input type="text" id="avatar-url-input" placeholder="https://example.com/avatar.png" oninput="handleAvatarUrlInput(this.value)">
+                </div>
             </div>
 
-            <!-- Display Name -->
-            <div>
-                <label class="form-label" for="pref-name" data-i18n="label_display_name">Display Name</label>
-                <input type="text" id="pref-name" class="form-input" placeholder="Display Name" oninput="updatePrefNamePreview(this.value)">
+            <div class="field">
+                <label for="pref-name" data-i18n="label_display_name">Display Name</label>
+                <input type="text" id="pref-name" placeholder="Display Name" oninput="updatePrefNamePreview(this.value)">
             </div>
 
-            <!-- Phone -->
-            <div>
-                <label class="form-label" data-i18n="label_phone">Phone</label>
+            <div class="field">
+                <label data-i18n="label_phone">Phone</label>
                 <div class="phone-row">
-                    <select id="pref-phone-code" class="phone-code">
+                    <select id="pref-phone-code">
                         <option value="+86">🇨🇳 +86</option>
                         <option value="+1">🇺🇸 +1</option>
                         <option value="+852">🇭🇰 +852</option>
@@ -290,17 +250,13 @@
                         <option value="+7">🇷🇺 +7</option>
                         <option value="+61">🇦🇺 +61</option>
                     </select>
-                    <input type="tel"
-                           id="pref-phone-number"
-                           class="phone-number"
-                           placeholder="Number"
+                    <input type="tel" id="pref-phone-number" placeholder="Number"
                            oninput="this.value = this.value.replace(/\D/g, '')">
                 </div>
             </div>
 
-            <!-- Actions -->
-            <div class="pref-actions">
-                <button class="btn-back" onclick="location.href='index.html'" data-i18n="btn_cancel">Cancel</button>
+            <div class="actions">
+                <button class="btn-cancel" onclick="location.href='index.html'" data-i18n="btn_cancel">Cancel</button>
                 <button class="btn-save" id="btn-save" onclick="savePreferences()" data-i18n="btn_save">Save Changes</button>
             </div>
         </div>
