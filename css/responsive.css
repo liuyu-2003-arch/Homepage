@@ -47,7 +47,6 @@
     }
 
     /* 5. 确保“编辑书签”按钮在菜单中显示 */
-    .user-menu .menu-item[onclick*="handleMenuEdit"] { display: flex !important; }
 
     /* 6. 底部控件适配 (修复：默认隐藏，点击后显示) */
 
@@ -65,7 +64,7 @@
 
     /* 确保隐藏类优先级更高 */
     #edit-controls.edit-controls.hidden {
-        display: none !important;
+        display: none;
     }
 
     /* 针对手机端调整按钮样式 */
@@ -82,7 +81,7 @@
         flex-wrap: wrap; justify-content: center;
         bottom: 30px; z-index: 1001;
     }
-    #theme-controls.edit-controls.hidden { display: none !important; }
+    #theme-controls.edit-controls.hidden { display: none; }
     #theme-controls .control-divider { display: none; }
 
     /* 其他适配 */
@@ -94,46 +93,37 @@
 
     /* 确保父容器 flex 居中生效 */
     .modal {
-        align-items: center !important;
+        align-items: center;
         padding-bottom: 5%; /* 稍微向上提 */
     }
 
     .modal-content {
-        min-width: unset !important;
+        min-width: unset;
         width: 90%;
         max-width: 350px;
 
         /* 修改：减小内边距，腾出空间 */
-        padding: 20px 15px !important;
-        gap: 12px !important; /* 减小间距 */
+        padding: 20px 15px;
+        gap: 12px; /* 减小间距 */
 
         /* 核心修复：高度自适应，去掉强制定位 */
-        height: auto !important;
-        position: relative !important;
-        top: auto !important;
-        transform: none !important;
-        margin: 0 auto !important;
+        height: auto;
+        position: relative;
+        top: auto;
+        transform: none;
+        margin: 0 auto;
 
-        justify-content: flex-start !important;
+        justify-content: flex-start;
 
         /* 防止内容过多溢出 */
         max-height: 90vh;
         overflow-y: auto;
 
-        border-radius: 20px !important;
-    }
-
-    .input-wrapper {
-        display: block !important;
+        border-radius: 20px;
     }
 
     .input-row {
-        display: block !important;
-        justify-content: flex-start !important; align-items: center !important; gap: 10px !important;
-    }
-    .input-label {
-        width: auto !important; min-width: 40px; flex-shrink: 0;
-        text-align: left !important; padding-right: 0;
+        display: block;
     }
 
     /* 修改：减小输入框高度 */
@@ -141,7 +131,7 @@
         flex: 1 !important;
         /* === 修改点：将 auto 改为 100% 以确保右侧对齐 === */
         width: 100% !important;
-        height: 40px !important; /* 从 52px 减小到 40px */
+        height: 40px; /* 从 52px 减小到 40px */
         font-size: 14px !important; padding: 0 10px;
         margin-bottom: 0 !important;
     }
@@ -150,10 +140,10 @@
 
     /* 1. 减小预览区域上下间距 */
     .preview-section {
-        padding-bottom: 10px !important;
+        padding-bottom: 10px;
         border-bottom: 1px solid #eee;
-        border-right: none !important; /* 手机端去掉右边框 */
-        padding-right: 0 !important;
+        border-right: none; /* 手机端去掉右边框 */
+        padding-right: 0;
     }
 
     /* 2. 核心：把预览 Logo 改小 */
