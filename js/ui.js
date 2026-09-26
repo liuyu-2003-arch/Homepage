@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { saveData } from './api.js';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation } from './utils.js';
+import { CONFIG } from './config.js';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal } from './utils.js';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000);
 let autoFillTimer = null;
@@ -48,6 +49,8 @@ export function render() {
     state.sortableInstances.forEach(instance => instance.destroy());
     state.sortableInstances = [];
 
+    const fragment = document.createDocumentFragment();
+
     state.visualPages.forEach((vPage, visualPageIndex) => {
         const pageEl = document.createElement('div');
         pageEl.className = 'bookmark-page';
@@ -77,7 +80,7 @@ export function render() {
                 if (state.isEditing) {
                     if (!e.target.classList.contains('delete-btn')) openModal(originalPageIndex, originalBookmarkIndex);
                 } else {
-                    if (!state.hasDragged) window.open(item.url, '_blank');
+                    if (!state.hasDragged) openExternal(item.url);
                 }
             });
 
@@ -120,9 +123,11 @@ export function render() {
             content.appendChild(div);
         });
         pageEl.appendChild(content);
-        swiperWrapper.appendChild(pageEl);
+        fragment.appendChild(pageEl);
         if(oldScrollTops[visualPageIndex]) pageEl.scrollTop = oldScrollTops[visualPageIndex];
     });
+
+    swiperWrapper.appendChild(fragment);
 
     if (state.currentPage >= state.visualPages.length) state.currentPage = Math.max(0, state.visualPages.length - 1);
     updateSwiperPosition(false);
@@ -132,8 +137,8 @@ export function render() {
 
 function createVisualPages() {
     state.visualPages = [];
-    const isMobile = window.innerWidth < 768;
-    const chunkSize = isMobile ? 20 : 32;
+    const isMobile = window.innerWidth < CONFIG.MOBILE_MAX_WIDTH;
+    const chunkSize = isMobile ? CONFIG.PAGE_SIZE_MOBILE : CONFIG.PAGE_SIZE_DESKTOP;
 
     if (!state.pages || state.pages.length === 0) {
         state.pages = [{ title: "Home", bookmarks: [] }];
@@ -220,13 +225,16 @@ export function saveBookmark() {
     const newPageIndex = pageEl ? parseInt(pageEl.dataset.index) : 0;
 
     if (!title || !url) return showToast(t('msg_title_url_req'), "error");
-    if (!url.startsWith('http')) url = 'https://' + url;
+    const safeHref = safeUrl(url);
+    if (!safeHref) return showToast(t('msg_invalid_url'), "error");
+    url = safeHref;
+    const safeIcon = safeUrl(icon);
 
     const { pageIndex, bookmarkIndex } = state.currentEditInfo;
 
     if (pageIndex >= 0 && bookmarkIndex >= 0) {
         const itemToUpdate = state.pages[pageIndex].bookmarks[bookmarkIndex];
-        const newItem = { ...itemToUpdate, title, url, icon, style };
+        const newItem = { ...itemToUpdate, title, url, icon: safeIcon, style };
 
         if (pageIndex !== newPageIndex) {
             state.pages[pageIndex].bookmarks.splice(bookmarkIndex, 1);
@@ -235,7 +243,7 @@ export function saveBookmark() {
             state.pages[pageIndex].bookmarks[bookmarkIndex] = newItem;
         }
     } else {
-        const newItem = { id: generateUniqueId(), title, url, icon, style };
+        const newItem = { id: generateUniqueId(), title, url, icon: safeIcon, style };
         if (!state.pages[newPageIndex]) state.pages[newPageIndex] = { title: "New Page", bookmarks: [] };
         state.pages[newPageIndex].bookmarks.push(newItem);
         state.currentPage = newPageIndex;
@@ -269,20 +277,21 @@ export function autoFillInfo() {
         generateIconCandidates(urlVal);
 
         if (urlVal && urlVal.includes('.') && urlVal.length > 4) {
-            let safeUrl = urlVal;
-            if (!safeUrl.startsWith('http')) safeUrl = 'https://' + safeUrl;
-            try {
-                const urlObj = new URL(safeUrl);
-                let domain = urlObj.hostname;
-                if (domain.endsWith('.')) domain = domain.slice(0, -1);
+            const normalizedUrl = safeUrl(urlVal);
+            if (normalizedUrl) {
+                try {
+                    const urlObj = new URL(normalizedUrl);
+                    let domain = urlObj.hostname;
+                    if (domain.endsWith('.')) domain = domain.slice(0, -1);
 
-                if (!iconInput.value) iconInput.value = `https://manifest.im/icon/${domain}`;
-                if (!titleInput.value) {
-                    let domainName = domain.replace('www.', '').split('.')[0];
-                    if(domainName) titleInput.value = domainName.charAt(0).toUpperCase() + domainName.slice(1);
-                }
-                updatePreview();
-            } catch (e) {}
+                    if (!iconInput.value) iconInput.value = `https://manifest.im/icon/${domain}`;
+                    if (!titleInput.value) {
+                        let domainName = domain.replace('www.', '').split('.')[0];
+                        if(domainName) titleInput.value = domainName.charAt(0).toUpperCase() + domainName.slice(1);
+                    }
+                    updatePreview();
+                } catch (e) {}
+            }
         }
     }, 500);
 }
@@ -295,12 +304,15 @@ export function generateIconCandidates(urlVal) {
         return;
     }
 
-    let safeUrl = urlVal;
-    if (!safeUrl.startsWith('http')) safeUrl = 'https://' + safeUrl;
+    const normalizedUrl = safeUrl(urlVal);
+    if (!normalizedUrl) {
+        renderRandomButtons(list);
+        return;
+    }
     let domain = "", protocol = "https:";
 
     try {
-        const urlObj = new URL(safeUrl);
+        const urlObj = new URL(normalizedUrl);
         domain = urlObj.hostname;
         protocol = urlObj.protocol;
         if (domain.endsWith('.')) domain = domain.slice(0, -1);
@@ -314,8 +326,8 @@ export function generateIconCandidates(urlVal) {
     const sources = [
         { name: 'Manifest', url: `https://manifest.im/icon/${domain}` },
         { name: 'Vemetric', url: `https://favicon.vemetric.com/${domain}` },
-        { name: 'Logo.dev', url: `https://img.logo.dev/${domain}?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png` },
-        { name: 'Brandfetch', url: `https://cdn.brandfetch.io/${domain}?c=1idVW8VN57Jat7AexnZ` },
+        { name: 'Logo.dev', url: `https://img.logo.dev/${domain}?token=${CONFIG.LOGO_DEV_TOKEN}&size=100&format=png` },
+        { name: 'Brandfetch', url: `https://cdn.brandfetch.io/${domain}?c=${CONFIG.BRANDFETCH_CID}` },
         { name: 'Direct', url: `${protocol}//${domain}/favicon.ico` }
     ];
 
@@ -487,8 +499,8 @@ export function renderPageList() {
         list.appendChild(li);
     });
 
-    if (state.sortableInstances.pageList) state.sortableInstances.pageList.destroy();
-    state.sortableInstances.pageList = new Sortable(list, {
+    if (state.pageListSortable) state.pageListSortable.destroy();
+    state.pageListSortable = new Sortable(list, {
         animation: 150,
         handle: '.drag-handle',
         onEnd: (evt) => {
@@ -573,7 +585,7 @@ export function changeTheme(color, element, pattern) {
 // --- 偏好设置与头像 ---
 export function openPrefModal() {
     if (!state.currentUser) {
-        showToast(t("msg_login_success") ? "Please login first" : "请先登录", "error");
+        showToast(t("msg_please_login"), "error");
         return;
     }
     const meta = state.currentUser.user_metadata || {};
@@ -634,8 +646,7 @@ export function openPrefModal() {
 
 export function switchAvatarTab(tabName) {
     document.querySelectorAll('.avatar-tab-item').forEach(el => {
-        el.classList.remove('active');
-        if(el.getAttribute('onclick').includes(tabName)) el.classList.add('active');
+        el.classList.toggle('active', el.dataset.tab === tabName);
     });
     document.getElementById('avatar-panel-emoji').classList.add('hidden');
     document.getElementById('avatar-panel-upload').classList.add('hidden');
@@ -655,25 +666,6 @@ export function handleAvatarUrlInput(url) {
 
     // 3. 取消所有 emoji 的选中状态（因为用户选择了自定义 URL）
     document.querySelectorAll('.emoji-item').forEach(item => item.classList.remove('selected'));
-}
-
-// (原有的 handleAvatarFile 保留但不使用，以兼容旧逻辑或做备份)
-export function handleAvatarFile(input) {
-    if (input.files && input.files[0]) {
-        const file = input.files[0];
-        if (file.size > 2 * 1024 * 1024) {
-            showToast(t("msg_upload_hint"), "error");
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const base64Url = e.target.result;
-            state.prefAvatarUrl = base64Url;
-            document.getElementById('pref-current-img').src = base64Url;
-            document.querySelectorAll('.emoji-item').forEach(item => item.classList.remove('selected'));
-        }
-        reader.readAsDataURL(file);
-    }
 }
 
 function renderAvatarGrid(currentUrl) {
@@ -761,6 +753,10 @@ export function initSwiper() {
     swiper.addEventListener('wheel', handleWheel, { passive: false });
 
     document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeTopModal();
+            return;
+        }
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
         if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
 
@@ -783,6 +779,21 @@ export function initSwiper() {
             }
         }
     });
+}
+
+function closeTopModal() {
+    const modalIds = ['confirm-modal', 'auth-modal', 'pref-modal', 'page-edit-modal', 'modal', 'help-modal'];
+    for (const id of modalIds) {
+        const el = document.getElementById(id);
+        if (el && !el.classList.contains('hidden')) {
+            el.classList.add('hidden');
+            return;
+        }
+    }
+    const menu = document.getElementById('user-dropdown');
+    if (menu && menu.classList.contains('active')) {
+        menu.classList.remove('active');
+    }
 }
 
 function triggerKeyboardBounce(offset) {
@@ -880,8 +891,7 @@ function dragEnd(e) {
             // 执行跳转或打开编辑
             if (!state.isEditing) {
                 const url = item.dataset.url;
-                // --- 修改：在新窗口打开链接 ---
-                if (url) window.open(url, '_blank');
+                if (url) openExternal(url);
             }
             // 编辑模式下的点击由 Sortable 或其他逻辑处理，或者如果需要也可在此添加
         }

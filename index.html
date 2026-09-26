@@ -2,20 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Homepage (Dev) - Test Branch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Homepage - 极简起始页</title>
+    <meta name="description" content="仿 iOS 毛玻璃风格的浏览器起始页，支持多页书签、云端同步、多语言。">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="My Homepage">
+    <meta property="og:description" content="仿 iOS 毛玻璃风格的浏览器起始页，支持多页书签、云端同步、多语言。">
+    <meta property="og:image" content="preview.jpg">
+    <meta property="og:type" content="website">
 
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007AFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="https://324893.xyz/icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="manifest" href="manifest.webmanifest">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e4d0e5">
     <meta name="apple-mobile-web-app-title" content="My Homepage">
+    <meta name="app-version" content="2.5.0">
 
-    <!-- DNS Prefetch for external resources -->
-    <link rel="dns-prefetch" href="//ossrsfyqbrzeauzksvpv.supabase.co">
-    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <!-- Preconnect for external resources -->
+    <link rel="preconnect" href="https://ossrsfyqbrzeauzksvpv.supabase.co">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel="dns-prefetch" href="//api.dicebear.com">
     <link rel="dns-prefetch" href="//manifest.im">
     <link rel="dns-prefetch" href="//favicon.vemetric.com">
@@ -29,9 +39,12 @@
     <link rel="stylesheet" href="css/user.css">
     <link rel="stylesheet" href="css/responsive.css">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
-
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"
+            integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM"
+            crossorigin="anonymous"></script>
+    <script defer src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"
+            integrity="sha384-0w2KAL2YHP6wKOkUDzkCDGgVvfmHnj02DHeQ6XcHOgTfFsGyonKOpShMH1x6nk9o"
+            crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="background-layer"></div>

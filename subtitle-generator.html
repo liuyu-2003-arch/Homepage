@@ -323,7 +323,14 @@ function log(text, type = 'dim') {
   const t = String(Math.floor((Date.now() - startTime) / 1000)).padStart(3, ' ') + 's';
   const line = document.createElement('div');
   line.className = 'log-line';
-  line.innerHTML = `<span class="log-time">${t}</span><span class="log-${type}">${text}</span>`;
+  const timeSpan = document.createElement('span');
+  timeSpan.className = 'log-time';
+  timeSpan.textContent = t;
+  const textSpan = document.createElement('span');
+  textSpan.className = 'log-' + type;
+  textSpan.textContent = text;
+  line.appendChild(timeSpan);
+  line.appendChild(textSpan);
   body.appendChild(line);
   body.scrollTop = body.scrollHeight;
 }
@@ -635,10 +642,12 @@ function act(idx){
 }
 function jump(i){ct=S[i].s;act(i);upd();}
 function upd(){const p=(ct/DUR)*100;document.getElementById('pf').style.width=p+'%';document.getElementById('tL').textContent=fmtF(ct);document.getElementById('sTm').textContent=fmtF(ct);document.getElementById('sPct').textContent=Math.round(p)+'%';}
-function seek(e){const r=document.getElementById('pb').getBoundingClientRect();ct=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*DUR;act(fi(ct));upd();play=true;lT=null;}
-function frame(ts){if(play){if(lT!==null){ct+=(ts-lT)/1000;if(ct>DUR){ct=DUR;play=false;}act(fi(ct));upd();}lT=ts;}else lT=null;requestAnimationFrame(frame);}
-requestAnimationFrame(frame);
-document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.code==='Space'){e.preventDefault();play=!play;if(play)lT=null;}if(e.code==='ArrowRight'){ct=Math.min(DUR,ct+10);act(fi(ct));upd();}if(e.code==='ArrowLeft'){ct=Math.max(0,ct-10);act(fi(ct));upd();}});
+function seek(e){const r=document.getElementById('pb').getBoundingClientRect();ct=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*DUR;act(fi(ct));upd();play=true;startFrame();}
+let rafId = null;
+function frame(ts){if(play){if(lT!==null){ct+=(ts-lT)/1000;if(ct>DUR){ct=DUR;play=false;}act(fi(ct));upd();}lT=ts;rafId=requestAnimationFrame(frame);}else{lT=null;rafId=null;}}
+function startFrame(){if(rafId===null){lT=null;rafId=requestAnimationFrame(frame);}}
+startFrame();
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.code==='Space'){e.preventDefault();play=!play;if(play)startFrame();}if(e.code==='ArrowRight'){ct=Math.min(DUR,ct+10);act(fi(ct));upd();}if(e.code==='ArrowLeft'){ct=Math.max(0,ct-10);act(fi(ct));upd();}});
 function tA(){aF=!aF;document.getElementById('btnA').classList.toggle('on',aF);}
 function tC(){cpt=!cpt;document.getElementById('btnC').classList.toggle('on',cpt);document.querySelectorAll('.si').forEach(l=>{l.style.paddingTop=cpt?'4px':'';l.style.paddingBottom=cpt?'4px':'';l.style.marginBottom=cpt?'0':'';});document.querySelectorAll('.sx').forEach(t=>{t.style.fontSize=cpt?'12.5px':'';});}
 function doQ(){const q=document.getElementById('q').value.trim();let cnt=0;document.querySelectorAll('.si').forEach((line,i)=>{const tx=line.querySelector('.sx');if(q&&S[i].t.includes(q)){line.classList.add('sm');const ps=S[i].t.split(q);tx.innerHTML='';ps.forEach((p,pi)=>{tx.appendChild(document.createTextNode(p));if(pi<ps.length-1){const mk=document.createElement('mark');mk.textContent=q;tx.appendChild(mk);}});cnt++;}else{line.classList.remove('sm');tx.textContent=S[i].t;}});const row=document.getElementById('sqR');if(q){row.style.display='flex';document.getElementById('sqC').textContent=cnt+' 处';const f=document.querySelector('.sm');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});}else row.style.display='none';}

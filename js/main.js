@@ -1,4 +1,4 @@
-import { initSupabase, loadData, saveData, exportConfig, importConfig, handleImport } from './api.js';
+import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js';
 import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences } from './auth.js';
 import { i18n } from './i18n.js';
 import { logger } from './logger.js';
@@ -6,12 +6,13 @@ import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
-    openPrefModal, switchAvatarTab, handleAvatarFile, selectNewAvatar, createAvatarSelector,
+    openPrefModal, switchAvatarTab, selectNewAvatar, createAvatarSelector,
     autoFillInfo, updatePreview, selectStyle, selectPage, updatePrefNamePreview,
     handleAvatarUrlInput
 } from './ui.js';
-import { t, showToast, startPillAnimation } from './utils.js';
-import { state } from './state.js';
+import { t, showToast, startPillAnimation, openExternal } from './utils.js';
+import { state, onDataReloaded } from './state.js';
+import { CONFIG } from './config.js';
 
 async function loadTemplates() {
     const templates = [
@@ -24,7 +25,7 @@ async function loadTemplates() {
         { id: 'confirm-modal-placeholder', url: 'templates/confirm_modal.html' }
     ];
 
-    for (const template of templates) {
+    await Promise.all(templates.map(async (template) => {
         try {
             const response = await fetch(template.url);
             const html = await response.text();
@@ -35,7 +36,7 @@ async function loadTemplates() {
         } catch (error) {
             logger.error(`Failed to load template: ${template.url}`, error);
         }
-    }
+    }));
 }
 
 
@@ -47,12 +48,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
     initSwiper();
 
-    // 2. 注册页面的头像选择器
-    createAvatarSelector('avatar-selector', (url) => {
-        state.selectedAvatarUrl = url;
-    });
-    const authContainer = document.getElementById('avatar-selector');
-    if (authContainer && authContainer.firstChild) authContainer.firstChild.click();
+    // 显示版本号
+    const versionEl = document.getElementById('app-version');
+    if (versionEl) versionEl.textContent = 'v' + CONFIG.APP_VERSION;
+
+    // 2. 注册数据重载回调（解除 api.js ↔ ui.js 循环依赖）
+    onDataReloaded(render);
 
     // 3. 初始化 Supabase
     const sb = initSupabase();
@@ -73,21 +74,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = `mailto:jemchmi@gmail.com?subject=${subject}&body=${body}`;
     };
 
-    // 【新增】绑定捐赠按钮 (已更新链接)
     window.handleDonate = () => {
-        const donateUrl = 'https://buymeacoffee.com/324893';
-        window.open(donateUrl, '_blank');
+        openExternal('https://buymeacoffee.com/324893');
     };
 
-    // --- 新增：鼠标悬停触发动画重置 ---
+    // --- 鼠标悬停触发动画重置 ---
     const userTriggerArea = document.querySelector('.user-trigger-area');
     if (userTriggerArea) {
         userTriggerArea.addEventListener('mouseenter', startPillAnimation);
-        userTriggerArea.addEventListener('mousemove', startPillAnimation); // 持续移动也重置
+        userTriggerArea.addEventListener('mousemove', startPillAnimation);
     }
 
     // ============================================================
-    // 🔥 核心修复：挂载所有交互函数到 window
+    // 挂载所有交互函数到 window（供模板 inline onclick 使用）
     // ============================================================
     window.handleLogin = handleLogin;
     window.handleRegister = handleRegister;
@@ -137,15 +136,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('user-dropdown').classList.toggle('active');
         } else {
             document.getElementById('auth-modal').classList.remove('hidden');
-            window.switchToLoginView(); // Default to login view
+            window.switchToLoginView();
         }
     };
     window.closeAuthModal = () => {
         document.getElementById('auth-modal').classList.add('hidden');
     };
     window.switchToSignUpView = () => {
-        document.getElementById('auth-title').textContent = 'Sign up';
-        // document.getElementById('signup-specifics').classList.remove('hidden'); // REMOVED
+        document.getElementById('auth-title').textContent = t('btn_register');
         document.getElementById('login-actions').classList.add('hidden');
         document.getElementById('register-actions').classList.remove('hidden');
         document.getElementById('social-login-container').classList.remove('hidden');
@@ -153,8 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('register-footer').classList.remove('hidden');
     };
     window.switchToLoginView = () => {
-        document.getElementById('auth-title').textContent = 'Sign in';
-        // document.getElementById('signup-specifics').classList.add('hidden'); // REMOVED
+        document.getElementById('auth-title').textContent = t('btn_login');
         document.getElementById('login-actions').classList.remove('hidden');
         document.getElementById('register-actions').classList.add('hidden');
         document.getElementById('social-login-container').classList.remove('hidden');
@@ -169,16 +166,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         resizeTimer = setTimeout(render, 150);
     });
 
-    // --- 核心修复：更新点击监听器 ---
+    // --- 关闭用户下拉菜单 ---
     document.addEventListener('click', (e) => {
         const menu = document.getElementById('user-dropdown');
         const pill = document.getElementById('user-pill');
 
         if (menu && menu.classList.contains('active')) {
-            // 检查点击目标是否在菜单或按钮外部
             if (!menu.contains(e.target) && (!pill || !pill.contains(e.target))) {
                 menu.classList.remove('active');
-                // 菜单关闭后，重新开始动画计时
                 startPillAnimation();
             }
         }

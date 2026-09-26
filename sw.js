@@ -1,4 +1,4 @@
-const CACHE_NAME = 'homepage-v1.6';
+const CACHE_NAME = 'homepage-v1.7';
 const APP_SCOPE = self.registration.scope;
 const STATIC_ASSETS = [
     '', 'index.html',
@@ -6,15 +6,17 @@ const STATIC_ASSETS = [
     'js/main.js', 'js/ui.js', 'js/api.js', 'js/auth.js', 'js/state.js', 'js/utils.js', 'js/i18n.js', 'js/config.js', 'js/logger.js',
     'templates/user_dropdown.html', 'templates/bookmark_modal.html', 'templates/page_edit_modal.html',
     'templates/pref_modal.html', 'templates/auth_modal.html', 'templates/help_modal.html', 'templates/confirm_modal.html',
-    'homepage_config.json'
+    'homepage_config.json', 'manifest.webmanifest', 'icon.png'
 ].map((path) => new URL(path, APP_SCOPE).href);
 const STATIC_ASSET_URLS = new Set(STATIC_ASSETS);
 
-// Install: pre-cache core assets
+// Install: pre-cache core assets (resilient — one failure won't abort the install)
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(STATIC_ASSETS);
+            return Promise.allSettled(
+                STATIC_ASSETS.map((url) => cache.add(url).catch(() => {}))
+            );
         }).then(() => self.skipWaiting())
     );
 });
@@ -36,8 +38,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // Never cache third-party icons, avatars, or API requests. They are dynamic
-    // and would otherwise grow the cache without limit.
+    // Never cache third-party icons, avatars, or API requests.
     if (event.request.method !== 'GET' || url.origin !== self.location.origin) {
         return;
     }
@@ -52,7 +53,9 @@ self.addEventListener('fetch', (event) => {
                 .then((response) => {
                     if (response && response.status === 200) {
                         const clone = response.clone();
-                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+                        caches.open(CACHE_NAME)
+                            .then((cache) => cache.put(event.request, clone))
+                            .catch(() => {});
                     }
                     return response;
                 })
@@ -68,7 +71,9 @@ self.addEventListener('fetch', (event) => {
                 .then((response) => {
                     if (response && response.status === 200) {
                         const clone = response.clone();
-                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+                        caches.open(CACHE_NAME)
+                            .then((cache) => cache.put(event.request, clone))
+                            .catch(() => {});
                     }
                     return response;
                 })

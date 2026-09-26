@@ -11,9 +11,8 @@ export const logger = {
         this._debug = false;
     },
     error(...args) {
-        if (this.isDebug()) {
-            console.error('[Homepage]', ...args);
-        }
+        // Errors must always surface - never gated behind the debug switch.
+        console.error('[Homepage]', ...args);
     },
     warn(...args) {
         if (this.isDebug()) {

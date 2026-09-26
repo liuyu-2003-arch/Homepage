@@ -1,0 +1,16 @@
+{
+  "name": "My Homepage",
+  "short_name": "Homepage",
+  "description": "仿 iOS 毛玻璃风格的浏览器起始页",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#e4d0e5",
+  "theme_color": "#e4d0e5",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

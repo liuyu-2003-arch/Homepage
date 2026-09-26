@@ -13,6 +13,28 @@ export function generateUniqueId() {
     return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
 
+// --- URL safety: prevent javascript:/data: XSS via imported config or user input ---
+const SAFE_PROTOCOLS = ['http:', 'https:'];
+
+export function safeUrl(raw, fallback = '') {
+    if (typeof raw !== 'string') return fallback;
+    const trimmed = raw.trim();
+    if (!trimmed) return fallback;
+    try {
+        const normalized = /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed) ? trimmed : 'https://' + trimmed;
+        const u = new URL(normalized);
+        return SAFE_PROTOCOLS.includes(u.protocol) ? u.href : fallback;
+    } catch {
+        return fallback;
+    }
+}
+
+export function openExternal(url) {
+    const safe = safeUrl(url);
+    if (!safe) return;
+    window.open(safe, '_blank', 'noopener,noreferrer');
+}
+
 export function showToast(message, type = 'normal') {
     const container = document.getElementById('toast-container');
     if (!container) {

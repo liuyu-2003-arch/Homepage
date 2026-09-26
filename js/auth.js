@@ -1,6 +1,7 @@
 import { getSupabase, loadData } from './api.js';
 import { state } from './state.js';
-import { showToast, t, startPillAnimation } from './utils.js'; // 引入 startPillAnimation
+import { showToast, t, startPillAnimation } from './utils.js';
+import { CONFIG } from './config.js';
 
 export async function initAuth() {
     const sb = getSupabase();
@@ -117,7 +118,7 @@ export async function handleLogin() {
     const password = document.getElementById('auth-password').value;
 
     if (!email || !password) {
-        showToast(t("msg_input_required"), "error");
+        showToast(t("msg_input_req"), "error");
         return;
     }
 
@@ -139,7 +140,7 @@ export async function handleRegister() {
     const avatarUrl = `https://api.dicebear.com/9.x/notionists/svg?seed=${Math.random().toString(36).substring(2)}`;
 
     if (!email || !password) {
-        showToast(t("msg_input_required"), "error");
+        showToast(t("msg_input_req"), "error");
         return;
     }
 
@@ -174,7 +175,7 @@ export async function handleLogout() {
 export async function handleOAuthLogin(provider) {
     const sb = getSupabase();
     if (!sb) return showToast(t("msg_sdk_error"), "error");
-    showToast(`Navigating to ${provider}...`, "normal");
+    showToast(t("msg_navigating").replace('{provider}', provider), "normal");
     try {
         const { error } = await sb.auth.signInWithOAuth({
             provider: provider,
@@ -190,7 +191,7 @@ export async function savePreferences() {
     const sb = getSupabase();
     if (!sb || !state.currentUser) return;
 
-    if (state.prefAvatarUrl && state.prefAvatarUrl.length > 3000000) {
+    if (state.prefAvatarUrl && state.prefAvatarUrl.length > CONFIG.MAX_AVATAR_URL_LENGTH) {
         showToast(t("msg_img_too_large"), "error");
         return;
     }
@@ -220,7 +221,7 @@ export async function savePreferences() {
 
     const btn = document.querySelector('#pref-modal .primary');
     if(btn) {
-        btn.textContent = 'Saving...';
+        btn.textContent = t('msg_saving');
         btn.disabled = true;
     }
 

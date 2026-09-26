@@ -1,7 +1,6 @@
 import { CONFIG } from './config.js';
-import { state } from './state.js';
-import { generateUniqueId, updateSyncStatus, showToast, t } from './utils.js';
-import { render } from './ui.js';
+import { state, emit } from './state.js';
+import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js';
 import { logger } from './logger.js';
 
 let supabaseClient = null;
@@ -10,7 +9,6 @@ let latestSaveVersion = 0;
 
 const LEGACY_STORAGE_KEY = 'pagedData';
 const GUEST_STORAGE_KEY = 'pagedData:guest';
-const MAX_IMPORT_SIZE = 2 * 1024 * 1024;
 
 function getStorageKey(userId = state.currentUser?.id) {
     return userId ? `pagedData:user:${userId}` : GUEST_STORAGE_KEY;
@@ -59,7 +57,7 @@ export async function loadData() {
     const storedData = readCachedPages(cacheKey);
     if (Array.isArray(storedData)) {
         state.pages = ensureBookmarkIds(migrateData(storedData));
-        render();
+        emit('dataReloaded');
         document.body.style.visibility = 'visible';
     } else {
         try {
@@ -68,7 +66,7 @@ export async function loadData() {
                 const data = await response.json();
                 state.pages = migrateData(data);
                 state.pages = ensureBookmarkIds(state.pages);
-                render();
+                emit('dataReloaded');
             }
         } catch (e) { logger.error(e); }
     }
@@ -82,9 +80,9 @@ export async function loadData() {
                 .maybeSingle();
 
             if (data && data.config_data) {
-                state.pages = ensureBookmarkIds(data.config_data);
+                state.pages = ensureBookmarkIds(sanitizePages(data.config_data));
                 writeCachedPages(getStorageKey(state.currentUser.id), state.pages);
-                render();
+                emit('dataReloaded');
             }
         } catch (e) { logger.error("Cloud load error", e); }
     }
@@ -143,7 +141,7 @@ export function importConfig() {
 export function handleImport(event) {
     const file = event.target.files[0];
     if (!file) return;
-    if (file.size > MAX_IMPORT_SIZE) {
+    if (file.size > CONFIG.MAX_IMPORT_SIZE) {
         showToast(t('msg_import_fail'), 'error');
         event.target.value = '';
         return;
@@ -152,10 +150,9 @@ export function handleImport(event) {
     reader.onload = function(e) {
         try {
             let importedData = JSON.parse(e.target.result);
-            state.pages = migrateData(importedData);
-            state.pages = ensureBookmarkIds(state.pages);
+            state.pages = ensureBookmarkIds(sanitizePages(migrateData(importedData)));
             saveData();
-            render();
+            emit('dataReloaded');
             showToast(t('msg_import_success'), "success");
         } catch (err) {
             showToast(t('msg_import_fail'), "error");
@@ -167,6 +164,18 @@ export function handleImport(event) {
 }
 
 // Helper functions
+function sanitizePages(pages) {
+    if (!Array.isArray(pages)) return [];
+    pages.forEach(page => {
+        if (!Array.isArray(page.bookmarks)) return;
+        page.bookmarks.forEach(b => {
+            b.url = safeUrl(b.url, '#');
+            b.icon = safeUrl(b.icon, '');
+        });
+    });
+    return pages;
+}
+
 function ensureBookmarkIds(pages) {
     if (!Array.isArray(pages)) return [];
     pages.forEach(page => {

@@ -20,6 +20,17 @@
     cursor: pointer;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     gap: 8px;
+    /* Smooth animation for shrink/hide */
+    transition:
+        gap 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        padding 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        border-radius 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.4s ease;
+    will-change: gap, padding, transform, opacity;
+    overflow: hidden;
 }
 
 .user-pill:hover {
@@ -58,6 +69,13 @@
     color: #444;
     white-space: nowrap;
     padding-right: 2px;
+    /* Shrink animation: fade text first, then collapse width */
+    transition:
+        max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.2s ease,
+        margin 0.3s ease;
+    max-width: 200px;
+    opacity: 1;
 }
 
 /* Dark Mode Glass Pill */
@@ -105,16 +123,8 @@ body.dark-mode .user-pill-icon {
 }
 .menu-item:hover { background: rgba(0,0,0,0.04); }
 .menu-icon { font-size: 16px; width: 20px; text-align: center; color: #787774; }
-.menu-label { font-size: 11px; color: #999; font-weight: 600; padding: 8px 16px 4px; text-transform: uppercase; }
 
 .social-login-section { margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-.social-icons { display: flex; gap: 25px; justify-content: center; }
-.social-btn {
-    width: 48px; height: 48px; border-radius: 50%; border: 1px solid #e0e0e0; background: white;
-    cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-.social-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #d0d0d0; }
-.social-btn svg { width: 24px; height: 24px; }
 .auth-divider { width: 100%; display: flex; align-items: center; justify-content: center; margin: 10px 0 20px 0; color: #999; font-size: 12px; }
 .auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: #eee; margin: 0 10px; }
 
@@ -133,39 +143,9 @@ body.dark-mode .user-pill-icon {
 .avatar-option:hover { transform: scale(1.1); }
 .avatar-option.selected { border-color: #007AFF; box-shadow: 0 0 0 2px rgba(0,122,255,0.3); }
 
-/* --- 右上角胶囊动画扩展 (优化版) --- */
+/* --- Pill shrink/hide animation states --- */
 
-/* 1. 基础过渡属性增强 */
-.user-pill {
-    /* 移除 all，精确指定属性以提升性能 */
-    /* 使用无回弹的标准平滑曲线 (0.4, 0, 0.2, 1) */
-    transition:
-        gap 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-        padding 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-        border-radius 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-        background-color 0.3s ease,
-        border-color 0.3s ease,
-        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-        opacity 0.4s ease;
-
-    /* 开启硬件加速提示，进一步减少卡顿 */
-    will-change: gap, padding, transform, opacity;
-    overflow: hidden; /* 确保收缩时内容不溢出 */
-}
-
-.user-pill-text {
-    /* 文字收缩动画：透明度变快 (0.2s)，让文字先消失，再收缩宽度，视觉更丝滑 */
-    transition:
-        max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-        opacity 0.2s ease,
-        margin 0.3s ease;
-
-    max-width: 200px; /* 初始最大宽度 */
-    opacity: 1;
-    white-space: nowrap; /* 强制不换行，防止收缩时文字跳行 */
-}
-
-/* 2. 第一阶段：收缩成圆形 Logo (10秒后) */
+/* 1. Shrink to circle after 10s idle */
 .user-pill.shrunk {
     gap: 0 !important;       /* 移除图标和文字的间距 */
     padding: 4px !important; /* 调整内边距为均匀，使其变为正圆 */
