@@ -3,7 +3,7 @@ import { saveData } from './api.js';
 import { CONFIG } from './config.js';
 import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal } from './utils.js';
 
-export const debouncedSaveData = debounce(() => saveData(), 1000);
+export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
 
 // --- Custom Confirm Modal (replaces browser confirm) ---

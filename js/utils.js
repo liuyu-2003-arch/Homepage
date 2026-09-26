@@ -1,12 +1,29 @@
 import { i18n } from './i18n.js';
 
-export function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-        const context = this;
+export function debounce(func, wait, { maxWait } = {}) {
+    let timeout, maxTimeout, lastArgs, lastThis;
+    const invoke = () => {
         clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(context, args), wait);
+        clearTimeout(maxTimeout);
+        timeout = maxTimeout = null;
+        func.apply(lastThis, lastArgs);
     };
+    return Object.assign(function(...args) {
+        lastThis = this;
+        lastArgs = args;
+        clearTimeout(timeout);
+        timeout = setTimeout(invoke, wait);
+        if (maxWait && !maxTimeout) maxTimeout = setTimeout(invoke, maxWait);
+    }, {
+        cancel: () => {
+            clearTimeout(timeout);
+            clearTimeout(maxTimeout);
+            timeout = maxTimeout = null;
+        },
+        flush: () => {
+            if (timeout) invoke();
+        }
+    });
 }
 
 export function generateUniqueId() {

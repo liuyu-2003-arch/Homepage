@@ -8,7 +8,7 @@ import {
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     openPrefModal, closePrefModal, switchAvatarTab, selectNewAvatar, createAvatarSelector,
     autoFillInfo, updatePreview, selectStyle, selectPage, updatePrefNamePreview,
-    handleAvatarUrlInput
+    handleAvatarUrlInput, debouncedSaveData
 } from './ui.js';
 import { t, showToast, startPillAnimation, openExternal } from './utils.js';
 import { state, onDataReloaded } from './state.js';
@@ -178,6 +178,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('register-footer').classList.add('hidden');
     };
 
+
+    // --- 数据保存兜底：关页/切后台时立即 flush ---
+    window.addEventListener('pagehide', () => debouncedSaveData.flush());
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) debouncedSaveData.flush();
+    });
 
     let resizeTimer;
     window.addEventListener('resize', () => {
