@@ -26,7 +26,7 @@ function readCachedPages(key) {
 
 function writeCachedPages(key, pages) {
     try {
-        localStorage.setItem(key, JSON.stringify(pages));
+        localStorage.setItem(key, typeof pages === 'string' ? pages : JSON.stringify(pages));
     } catch (error) {
         logger.error('Failed to cache bookmarks locally', error);
         showToast(t('msg_save_fail'), 'error');
@@ -86,8 +86,9 @@ export async function loadData() {
 
 export async function saveData() {
     const userId = state.currentUser?.id;
-    const pagesSnapshot = JSON.parse(JSON.stringify(state.pages));
-    writeCachedPages(getStorageKey(userId), pagesSnapshot);
+    const snapshotStr = JSON.stringify(state.pages);
+    const pagesSnapshot = JSON.parse(snapshotStr);
+    writeCachedPages(getStorageKey(userId), snapshotStr);
 
     if (!userId || !supabaseClient) return;
 

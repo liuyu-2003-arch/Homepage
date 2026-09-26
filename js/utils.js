@@ -107,6 +107,10 @@ export function startPillAnimation() {
     const pill = document.getElementById('user-pill');
     if (!pill) return;
 
+    // Early return: pill is already expanded and timers are armed
+    const isIdle = !pill.classList.contains('shrunk') && !pill.classList.contains('hidden-anim');
+    if (isIdle && shrinkTimer && hideTimer) return;
+
     // 1. 立即重置状态：显示并展开
     pill.classList.remove('shrunk', 'hidden-anim');
     if (shrinkTimer) clearTimeout(shrinkTimer);

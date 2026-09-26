@@ -98,7 +98,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userTriggerArea = document.querySelector('.user-trigger-area');
     if (userTriggerArea) {
         userTriggerArea.addEventListener('mouseenter', startPillAnimation);
-        userTriggerArea.addEventListener('mousemove', startPillAnimation);
     }
 
     // ============================================================
@@ -186,9 +185,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     let resizeTimer;
+    let lastIsMobile = window.innerWidth < CONFIG.MOBILE_MAX_WIDTH;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(render, 150);
+        resizeTimer = setTimeout(() => {
+            const isMobile = window.innerWidth < CONFIG.MOBILE_MAX_WIDTH;
+            if (isMobile !== lastIsMobile) {
+                lastIsMobile = isMobile;
+                render();
+            }
+        }, 150);
     });
 
     // --- 关闭用户下拉菜单 ---

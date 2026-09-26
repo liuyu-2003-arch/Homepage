@@ -23,6 +23,8 @@ export const state = {
 
 // Simple event bus — breaks circular dependency between api.js and ui.js
 const listeners = new Map();
+let pendingEvents = new Set();
+let flushScheduled = false;
 
 export function onDataReloaded(fn) {
     if (!listeners.has('dataReloaded')) listeners.set('dataReloaded', []);
@@ -30,5 +32,13 @@ export function onDataReloaded(fn) {
 }
 
 export function emit(event) {
-    (listeners.get(event) || []).forEach(fn => fn());
+    pendingEvents.add(event);
+    if (flushScheduled) return;
+    flushScheduled = true;
+    queueMicrotask(() => {
+        flushScheduled = false;
+        const events = [...pendingEvents];
+        pendingEvents.clear();
+        events.forEach(ev => (listeners.get(ev) || []).forEach(fn => fn()));
+    });
 }
