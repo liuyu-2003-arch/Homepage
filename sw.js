@@ -5,7 +5,7 @@ const STATIC_ASSETS = [
     'css/base.css', 'css/bookmark.css', 'css/modal.css', 'css/controls.css', 'css/user.css', 'css/responsive.css',
     'js/main.js', 'js/ui.js', 'js/api.js', 'js/auth.js', 'js/state.js', 'js/utils.js', 'js/i18n.js', 'js/config.js', 'js/logger.js', 'js/preferences.js',
     'templates/user_dropdown.html', 'templates/bookmark_modal.html', 'templates/page_edit_modal.html',
-    'templates/pref_modal.html', 'templates/auth_modal.html', 'templates/help_modal.html', 'templates/confirm_modal.html',
+    'templates/auth_modal.html', 'templates/help_modal.html', 'templates/confirm_modal.html',
     'homepage_config.json', 'manifest.webmanifest', 'icon.png'
 ].map((path) => new URL(path, APP_SCOPE).href);
 const STATIC_ASSET_URLS = new Set(STATIC_ASSETS);

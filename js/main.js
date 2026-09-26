@@ -1,13 +1,12 @@
 import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin, savePreferences } from './auth.js';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js';
 import { i18n } from './i18n.js';
 import { logger } from './logger.js';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
-    autoFillInfo, updatePreview, selectStyle, selectPage,
-    handleAvatarUrlInput, debouncedSaveData
+    autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
 } from './ui.js';
 import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js';
 import { state, onDataReloaded } from './state.js';
@@ -105,7 +104,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.handleRegister = handleRegister;
     window.handleLogout = handleLogout;
     window.handleOAuthLogin = handleOAuthLogin;
-    window.savePreferences = savePreferences;
     window.openModal = openModal;
     window.closeModal = closeModal;
     window.toggleEditMode = toggleEditMode;

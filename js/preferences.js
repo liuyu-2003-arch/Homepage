@@ -5,7 +5,7 @@ import { i18n } from './i18n.js';
 import { logger } from './logger.js';
 
 let supabaseClient = null;
-window.window.prefAvatarUrl = window.window.prefAvatarUrl || '';
+window.prefAvatarUrl = window.prefAvatarUrl || '';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await i18n.loadTranslations(i18n.currentLang);
