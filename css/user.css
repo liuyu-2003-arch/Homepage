@@ -147,9 +147,9 @@ body.dark-mode .user-pill-icon {
 
 /* 1. Shrink to circle after 10s idle */
 .user-pill.shrunk {
-    gap: 0 !important;       /* 移除图标和文字的间距 */
-    padding: 4px !important; /* 调整内边距为均匀，使其变为正圆 */
-    border-radius: 50% !important; /* 强制变圆 */
+    gap: 0;       /* 移除图标和文字的间距 */
+    padding: 4px; /* 调整内边距为均匀，使其变为正圆 */
+    border-radius: 50%; /* 强制变圆 */
     background: rgba(255, 255, 255, 0.25); /* 稍微变透明一点 */
     border-color: rgba(255, 255, 255, 0.1);
 }
@@ -170,18 +170,18 @@ body.dark-mode .user-pill-icon {
 /* 4. 交互优化：鼠标悬停时临时恢复显示 */
 /* 只要鼠标移入右上角区域，强制恢复所有样式 */
 .user-trigger-area:hover .user-pill {
-    opacity: 1 !important;
-    transform: translateX(0) !important;
-    pointer-events: auto !important;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
 }
 
 /* 悬停时展开胶囊 (覆盖 shrunk 状态) */
 .user-trigger-area:hover .user-pill.shrunk {
-    border-radius: 30px !important;
-    padding: 4px 14px 4px 4px !important;
-    gap: 8px !important;
-    background: rgba(255, 255, 255, 0.4) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
+    border-radius: 30px;
+    padding: 4px 14px 4px 4px;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .user-trigger-area:hover .user-pill.shrunk .user-pill-text {

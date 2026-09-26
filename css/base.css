@@ -19,7 +19,7 @@ body {
 }
 
 body.dark-mode {
-    color: #fff !important;
+    color: #fff;
 }
 body.dark-mode .page-title,
 body.dark-mode .bookmark-title {
@@ -47,7 +47,7 @@ body.dark-mode #user-icon-svg {
         radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.5) 0px, transparent 50%),
         radial-gradient(at 100% 0%, rgba(255, 255, 255, 0.4) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(255, 255, 255, 0.3) 0px, transparent 50%),
-        linear-gradient(120deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.4) 100%) !important;
+        linear-gradient(120deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.4) 100%);
     background-size: cover !important;
 }
 
@@ -55,14 +55,14 @@ body.dark-mode #user-icon-svg {
     background-image:
         linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-        radial-gradient(circle at center, rgba(255,255,255,0.6) 0%, transparent 70%) !important;
+        radial-gradient(circle at center, rgba(255,255,255,0.6) 0%, transparent 70%);
     background-size: 40px 40px, 40px 40px, 100% 100% !important;
 }
 
 .background-layer.bg-pattern-lines-d {
     background-image:
         linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 100%),
-        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.03) 0, rgba(0, 0, 0, 0.03) 1px, transparent 0, transparent 15px) !important;
+        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.03) 0, rgba(0, 0, 0, 0.03) 1px, transparent 0, transparent 15px);
     background-size: cover, auto !important;
 }
 

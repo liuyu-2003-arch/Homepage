@@ -50,7 +50,7 @@
 
     /* 6. 底部控件适配 (修复：默认隐藏，点击后显示) */
 
-    /* 移除之前的 !important，让 .hidden 类生效 */
+    /* 移除之前的，让 .hidden 类生效 */
     #edit-controls.edit-controls {
         display: flex;            /* 使用 flex 布局，但权重要允许 .hidden 覆盖 */
         width: 92%;               /* 宽度适配 */
@@ -128,12 +128,12 @@
 
     /* 修改：减小输入框高度 */
     .modal-content input {
-        flex: 1 !important;
+        flex: 1;
         /* === 修改点：将 auto 改为 100% 以确保右侧对齐 === */
-        width: 100% !important;
+        width: 100%;
         height: 40px; /* 从 52px 减小到 40px */
-        font-size: 14px !important; padding: 0 10px;
-        margin-bottom: 0 !important;
+        font-size: 14px; padding: 0 10px;
+        margin-bottom: 0;
     }
 
     /* === 新增：修复弹窗溢出 & Logo 缩小 === */
@@ -148,33 +148,33 @@
 
     /* 2. 核心：把预览 Logo 改小 */
     #preview-card {
-        width: 60px !important; /* 原来可能很大，强制改小 */
+        width: 60px; /* 原来可能很大，强制改小 */
     }
     #preview-card .icon-box {
-        width: 60px !important;
-        height: 60px !important;
-        border-radius: 14px !important;
+        width: 60px;
+        height: 60px;
+        border-radius: 14px;
     }
     #preview-card .text-icon {
-        font-size: 24px !important;
+        font-size: 24px;
     }
     #preview-card .bookmark-title {
-        font-size: 12px !important;
+        font-size: 12px;
     }
 
     /* 3. 减小候选图标尺寸 */
     .candidate-item {
-        width: 36px !important;
-        height: 36px !important;
-        border-radius: 8px !important;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
     }
     .candidate-grid {
-        gap: 6px !important;
+        gap: 6px;
     }
 
     .modal-top-split {
-        flex-direction: column !important; /* 强制垂直排列 */
-        gap: 10px !important;
-        padding: 10px !important;
+        flex-direction: column; /* 强制垂直排列 */
+        gap: 10px;
+        padding: 10px;
     }
 }
