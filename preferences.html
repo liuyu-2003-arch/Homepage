@@ -244,54 +244,5 @@
     </div>
 
     <script type="module" src="js/preferences.js"></script>
-    <script>
-    // Tab switching (works without module)
-    window.switchAvatarTab = function(tabName) {
-        document.querySelectorAll('.tab').forEach(function(el) {
-            el.classList.toggle('active', el.dataset.tab === tabName);
-        });
-        document.getElementById('panel-emoji').style.display = tabName === 'emoji' ? 'block' : 'none';
-        document.getElementById('panel-upload').style.display = tabName === 'upload' ? 'block' : 'none';
-    };
-
-    // Render avatar grid with dicebear images (no flash of simple avatars)
-    (function() {
-        var container = document.getElementById('pref-avatar-grid');
-        if (!container) return;
-        var styles = ['shapes','identicon','bottts','avataaars','fun-emoji','notionists','thumbs','adventurer','big-ears','big-smile','croodles','lorelei'];
-        for (var i = 0; i < 36; i++) {
-            var style = styles[i % styles.length];
-            var seed = style + '-' + (i + 1);
-            var url = 'https://api.dicebear.com/9.x/' + style + '/svg?seed=' + seed;
-            var d = document.createElement('div');
-            d.className = 'grid-item';
-            d.style.background = '#e8e8e8';
-            var img = document.createElement('img');
-            img.referrerPolicy = 'no-referrer';
-            img.loading = 'eager';
-            img.alt = style;
-            img.src = url;
-            img.style.width = '100%';
-            img.style.height = '100%';
-            img.style.objectFit = 'cover';
-            img.style.display = 'block';
-            d.appendChild(img);
-            (function(el, imgUrl) {
-                el.addEventListener('click', function() {
-                    document.querySelectorAll('.grid-item').forEach(function(x) { x.classList.remove('selected'); });
-                    el.classList.add('selected');
-                    var pi = document.getElementById('pref-current-img');
-                    if (pi) {
-                        pi.style.display = 'block';
-                        pi.src = imgUrl;
-                        pi.parentElement.style.background = '';
-                    }
-                    window.prefAvatarUrl = imgUrl;
-                });
-            })(d, url);
-            container.appendChild(d);
-        }
-    })();
-    </script>
 </body>
 </html>

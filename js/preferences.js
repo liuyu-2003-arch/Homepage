@@ -7,6 +7,9 @@ import { logger } from './logger.js';
 let supabaseClient = null;
 window.prefAvatarUrl = window.prefAvatarUrl || '';
 
+// Render avatar grid immediately (module runs after DOM parsing)
+renderAvatarGrid();
+
 document.addEventListener('DOMContentLoaded', async () => {
     await i18n.loadTranslations(i18n.currentLang);
 
@@ -108,86 +111,36 @@ function selectAvatar(el, url, c1, c2) {
     }
 }
 
-function renderAvatarGrid(currentUrl) {
+function renderAvatarGrid() {
     const container = document.getElementById('pref-avatar-grid');
     if (!container) return;
     container.innerHTML = '';
-
-    const colors = [
-        ['#FF6B6B','#EE5A24','#54A0FF','#5F27CD','#00D2D3','#01A3A4'],
-        ['#FF9FF3','#F368E0','#FECA57','#FF9F43','#1DD1A1','#10AC84'],
-        ['#A29BFE','#6C5CE7','#FD79A8','#E84393','#FDCB6E','#F39C12'],
-        ['#74B9FF','#0984E3','#81ECEC','#00CEC9','#FAB1A0','#E17055'],
-        ['#55E6C1','#1ABC9C','#C44569','#C0392B','#786FA6','#574B90'],
-        ['#F8A5C2','#E84393','#63CDDA','#22A6B3','#E66767','#C0392B']
-    ];
-    const symbols = ['circle','square','triangle','diamond','ring','cross'];
-    const n = 30;
-
-    for (let i = 0; i < n; i++) {
-        const c1 = colors[Math.floor(i / 5)][i % 5];
-        const c2 = colors[Math.floor(i / 5)][(i % 5 + 1) % 5];
-        const sym = symbols[i % symbols.length];
-
-        const div = document.createElement('div');
-        div.className = 'grid-item';
-        div.title = 'Avatar ' + (i + 1);
-        div.style.background = `linear-gradient(135deg, ${c1}, ${c2})`;
-
-        // Add symbol overlay
-        const overlay = document.createElement('div');
-        overlay.style.cssText = 'width:100%;height:100%;display:flex;align-items:center;justify-content:center;';
-        const svgNS = 'http://www.w3.org/2000/svg';
-        const svg = document.createElementNS(svgNS, 'svg');
-        svg.setAttribute('viewBox', '0 0 64 64');
-        svg.setAttribute('width', '60%');
-        svg.setAttribute('height', '60%');
-        svg.style.flexShrink = '0';
-
-        const shape = document.createElementNS(svgNS, sym === 'circle' ? 'circle' :
-            sym === 'square' ? 'rect' :
-            sym === 'triangle' ? 'polygon' :
-            sym === 'diamond' ? 'polygon' :
-            sym === 'ring' ? 'circle' : 'g');
-
-        if (sym === 'circle') {
-            shape.setAttribute('cx', '32'); shape.setAttribute('cy', '32'); shape.setAttribute('r', '16');
-            shape.setAttribute('fill', 'rgba(255,255,255,0.8)');
-        } else if (sym === 'square') {
-            shape.setAttribute('x', '18'); shape.setAttribute('y', '18');
-            shape.setAttribute('width', '28'); shape.setAttribute('height', '28');
-            shape.setAttribute('rx', '5');
-            shape.setAttribute('fill', 'rgba(255,255,255,0.8)');
-        } else if (sym === 'triangle') {
-            shape.setAttribute('points', '32,16 46,46 18,46');
-            shape.setAttribute('fill', 'rgba(255,255,255,0.8)');
-        } else if (sym === 'diamond') {
-            shape.setAttribute('points', '32,14 48,32 32,50 16,32');
-            shape.setAttribute('fill', 'rgba(255,255,255,0.8)');
-        } else if (sym === 'ring') {
-            shape.setAttribute('cx', '32'); shape.setAttribute('cy', '32'); shape.setAttribute('r', '15');
-            shape.setAttribute('fill', 'none');
-            shape.setAttribute('stroke', 'rgba(255,255,255,0.8)');
-            shape.setAttribute('stroke-width', '6');
-        } else {
-            const r1 = document.createElementNS(svgNS, 'rect');
-            r1.setAttribute('x', '28'); r1.setAttribute('y', '16');
-            r1.setAttribute('width', '8'); r1.setAttribute('height', '32'); r1.setAttribute('rx', '3');
-            r1.setAttribute('fill', 'rgba(255,255,255,0.8)');
-            const r2 = document.createElementNS(svgNS, 'rect');
-            r2.setAttribute('x', '16'); r2.setAttribute('y', '28');
-            r2.setAttribute('width', '32'); r2.setAttribute('height', '8'); r2.setAttribute('rx', '3');
-            r2.setAttribute('fill', 'rgba(255,255,255,0.8)');
-            shape.appendChild(r1); shape.appendChild(r2);
-        }
-
-        svg.appendChild(shape);
-        overlay.appendChild(svg);
-        div.appendChild(overlay);
-
-        const avatarData = `avatar-${i}-${c1}`;
-        div.addEventListener('click', () => selectAvatar(div, avatarData, c1, c2));
-        container.appendChild(div);
+    const styles = ['shapes','identicon','bottts','avataaars','fun-emoji','notionists','thumbs','adventurer','big-ears','big-smile','croodles','lorelei'];
+    for (let i = 0; i < 36; i++) {
+        const style = styles[i % styles.length];
+        const url = `https://api.dicebear.com/9.x/${style}/svg?seed=${style}-${i + 1}`;
+        const d = document.createElement('div');
+        d.className = 'grid-item';
+        d.style.background = '#e8e8e8';
+        const img = document.createElement('img');
+        img.referrerPolicy = 'no-referrer';
+        img.loading = 'eager';
+        img.alt = style;
+        img.src = url;
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+        d.appendChild(img);
+        d.addEventListener('click', () => {
+            document.querySelectorAll('.grid-item').forEach(x => x.classList.remove('selected'));
+            d.classList.add('selected');
+            const pi = document.getElementById('pref-current-img');
+            if (pi) {
+                pi.style.display = 'block';
+                pi.src = url;
+                pi.parentElement.style.background = '';
+            }
+            window.prefAvatarUrl = url;
+        });
+        container.appendChild(d);
     }
 }
 

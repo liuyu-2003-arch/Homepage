@@ -21,7 +21,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e4d0e5">
     <meta name="apple-mobile-web-app-title" content="My Homepage">
-    <meta name="app-version" content="2.8.2">
+    <meta name="app-version" content="2.8.3">
 
     <!-- Preconnect for external resources -->
     <link rel="preconnect" href="https://ossrsfyqbrzeauzksvpv.supabase.co">
@@ -116,12 +116,5 @@
     <input type="file" id="import-file-input" style="display: none;" accept=".json">
 
     <script type="module" src="js/main.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(() => {});
-            });
-        }
-    </script>
 </body>
 </html>
