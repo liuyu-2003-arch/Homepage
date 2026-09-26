@@ -57,10 +57,18 @@ function populateForm(user) {
     }
 
     // Avatar
-    prefAvatarUrl = meta.avatar_url || generateDefaultAvatar();
     const img = document.getElementById('pref-current-img');
     img.referrerPolicy = 'no-referrer';
-    img.src = prefAvatarUrl;
+    if (meta.avatar_url) {
+        prefAvatarUrl = meta.avatar_url;
+        img.style.display = 'block';
+        img.src = meta.avatar_url;
+    } else {
+        const h = Math.floor(Math.random() * 360);
+        prefAvatarUrl = `avatar-default-${h}`;
+        img.style.display = 'none';
+        img.parentElement.style.background = `linear-gradient(135deg, hsl(${h},70%,65%), hsl(${(h+40)%360},70%,55%))`;
+    }
 }
 
 window.switchAvatarTab = function(tabName) {
@@ -75,29 +83,30 @@ window.handleAvatarUrlInput = function(url) {
     prefAvatarUrl = url;
     const safe = safeUrl(url);
     const img = document.getElementById('pref-current-img');
-    img.src = safe || generateDefaultAvatar();
+    if (safe) {
+        img.style.display = 'block';
+        img.src = safe;
+    } else {
+        const h = Math.floor(Math.random() * 360);
+        img.style.display = 'none';
+        img.parentElement.style.background = `linear-gradient(135deg, hsl(${h},70%,65%), hsl(${(h+40)%360},70%,55%))`;
+    }
     document.querySelectorAll('.grid-item').forEach(i => i.classList.remove('selected'));
 };
 
-function selectAvatar(el, url) {
+function selectAvatar(el, url, c1, c2) {
     document.querySelectorAll('.grid-item').forEach(i => i.classList.remove('selected'));
     el.classList.add('selected');
     prefAvatarUrl = url;
-    document.getElementById('pref-current-img').src = url;
-}
-
-function generateDefaultAvatar() {
-    const hue = Math.floor(Math.random() * 360);
-    return `data:image/svg+xml,${encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-            <defs><linearGradient id="dg" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="hsl(${hue},70%,65%)"/><stop offset="100%" stop-color="hsl(${(hue+40)%360},70%,55%)"/>
-            </linearGradient></defs>
-            <rect width="64" height="64" rx="16" fill="url(#dg)"/>
-            <circle cx="32" cy="26" r="10" fill="rgba(255,255,255,0.85)"/>
-            <ellipse cx="32" cy="50" rx="16" ry="12" fill="rgba(255,255,255,0.85)"/>
-        </svg>`
-    )}`;
+    const img = document.getElementById('pref-current-img');
+    if (c1 && c2) {
+        img.style.display = 'none';
+        img.parentElement.style.background = `linear-gradient(135deg, ${c1}, ${c2})`;
+        img.parentElement.dataset.avatarId = url;
+    } else {
+        img.style.display = 'block';
+        img.src = url;
+    }
 }
 
 function renderAvatarGrid(currentUrl) {
@@ -105,57 +114,82 @@ function renderAvatarGrid(currentUrl) {
     if (!container) return;
     container.innerHTML = '';
 
-    const palettes = [
-        ['#FF6B6B','#EE5A24'], ['#54A0FF','#5F27CD'], ['#00D2D3','#01A3A4'],
-        ['#FF9FF3','#F368E0'], ['#54A0FF','#2E86DE'], ['#5F27CD','#341f97'],
-        ['#FF6348','#eb4d4b'], ['#1DD1A1','#10ac84'], ['#FECA57','#ff9f43'],
-        ['#54A0FF','#48dbfb'], ['#FF6B6B','#fc5c65'], ['#00D2D3','#0abde3'],
-        ['#A29BFE','#6c5ce7'], ['#FD79A8','#e84393'], ['#FDCB6E','#f39c12'],
-        ['#6C5CE7','#a29bfe'], ['#00B894','#00cec9'], ['#E17055','#d35400'],
-        ['#74B9FF','#0984e3'], ['#81ECEC','#00cec9'], ['#DFE6E9','#b2bec3'],
-        ['#FAB1A0','#e17055'], ['#55E6C1','#1abc9c'], ['#C44569','#c0392b'],
-        ['#786FA6','#574b90'], ['#F8A5C2','#e84393'], ['#63CDDA','#22a6b3'],
-        ['#E66767','#c0392b'], ['#778BEB','#3B4CCA'], ['#7DCEA0','#27AE60']
+    const colors = [
+        ['#FF6B6B','#EE5A24','#54A0FF','#5F27CD','#00D2D3','#01A3A4'],
+        ['#FF9FF3','#F368E0','#FECA57','#FF9F43','#1DD1A1','#10AC84'],
+        ['#A29BFE','#6C5CE7','#FD79A8','#E84393','#FDCB6E','#F39C12'],
+        ['#74B9FF','#0984E3','#81ECEC','#00CEC9','#FAB1A0','#E17055'],
+        ['#55E6C1','#1ABC9C','#C44569','#C0392B','#786FA6','#574B90'],
+        ['#F8A5C2','#E84393','#63CDDA','#22A6B3','#E66767','#C0392B']
     ];
+    const symbols = ['circle','square','triangle','diamond','ring','cross'];
+    const n = 30;
 
-    const symbols = [
-        // circle
-        (c) => `<circle cx="32" cy="32" r="14" fill="rgba(255,255,255,0.85)"/>`,
-        // square
-        (c) => `<rect x="20" y="20" width="24" height="24" rx="4" fill="rgba(255,255,255,0.85)"/>`,
-        // triangle
-        (c) => `<polygon points="32,18 44,44 20,44" fill="rgba(255,255,255,0.85)"/>`,
-        // diamond
-        (c) => `<polygon points="32,16 44,32 32,48 20,32" fill="rgba(255,255,255,0.85)"/>`,
-        // cross
-        (c) => `<rect x="28" y="18" width="8" height="28" rx="3" fill="rgba(255,255,255,0.85)"/><rect x="18" y="28" width="28" height="8" rx="3" fill="rgba(255,255,255,0.85)"/>`,
-        // ring
-        (c) => `<circle cx="32" cy="32" r="14" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="5"/>`,
-    ];
-
-    palettes.forEach((colors, i) => {
-        const symbol = symbols[i % symbols.length]();
-        const svg = `data:image/svg+xml,${encodeURIComponent(
-            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-                <defs><linearGradient id="g${i}" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="${colors[0]}"/><stop offset="100%" stop-color="${colors[1]}"/>
-                </linearGradient></defs>
-                <rect width="64" height="64" rx="16" fill="url(#g${i})"/>${symbol}
-            </svg>`
-        )}`;
+    for (let i = 0; i < n; i++) {
+        const c1 = colors[Math.floor(i / 5)][i % 5];
+        const c2 = colors[Math.floor(i / 5)][(i % 5 + 1) % 5];
+        const sym = symbols[i % symbols.length];
 
         const div = document.createElement('div');
         div.className = 'grid-item';
-        div.title = `Avatar ${i + 1}`;
+        div.title = 'Avatar ' + (i + 1);
+        div.style.background = `linear-gradient(135deg, ${c1}, ${c2})`;
 
-        const img = document.createElement('img');
-        img.src = svg;
-        img.alt = `Avatar ${i + 1}`;
+        // Add symbol overlay
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'width:100%;height:100%;display:flex;align-items:center;justify-content:center;';
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(svgNS, 'svg');
+        svg.setAttribute('viewBox', '0 0 64 64');
+        svg.setAttribute('width', '60%');
+        svg.setAttribute('height', '60%');
+        svg.style.flexShrink = '0';
 
-        div.appendChild(img);
-        div.addEventListener('click', () => selectAvatar(div, svg));
+        const shape = document.createElementNS(svgNS, sym === 'circle' ? 'circle' :
+            sym === 'square' ? 'rect' :
+            sym === 'triangle' ? 'polygon' :
+            sym === 'diamond' ? 'polygon' :
+            sym === 'ring' ? 'circle' : 'g');
+
+        if (sym === 'circle') {
+            shape.setAttribute('cx', '32'); shape.setAttribute('cy', '32'); shape.setAttribute('r', '16');
+            shape.setAttribute('fill', 'rgba(255,255,255,0.8)');
+        } else if (sym === 'square') {
+            shape.setAttribute('x', '18'); shape.setAttribute('y', '18');
+            shape.setAttribute('width', '28'); shape.setAttribute('height', '28');
+            shape.setAttribute('rx', '5');
+            shape.setAttribute('fill', 'rgba(255,255,255,0.8)');
+        } else if (sym === 'triangle') {
+            shape.setAttribute('points', '32,16 46,46 18,46');
+            shape.setAttribute('fill', 'rgba(255,255,255,0.8)');
+        } else if (sym === 'diamond') {
+            shape.setAttribute('points', '32,14 48,32 32,50 16,32');
+            shape.setAttribute('fill', 'rgba(255,255,255,0.8)');
+        } else if (sym === 'ring') {
+            shape.setAttribute('cx', '32'); shape.setAttribute('cy', '32'); shape.setAttribute('r', '15');
+            shape.setAttribute('fill', 'none');
+            shape.setAttribute('stroke', 'rgba(255,255,255,0.8)');
+            shape.setAttribute('stroke-width', '6');
+        } else {
+            const r1 = document.createElementNS(svgNS, 'rect');
+            r1.setAttribute('x', '28'); r1.setAttribute('y', '16');
+            r1.setAttribute('width', '8'); r1.setAttribute('height', '32'); r1.setAttribute('rx', '3');
+            r1.setAttribute('fill', 'rgba(255,255,255,0.8)');
+            const r2 = document.createElementNS(svgNS, 'rect');
+            r2.setAttribute('x', '16'); r2.setAttribute('y', '28');
+            r2.setAttribute('width', '32'); r2.setAttribute('height', '8'); r2.setAttribute('rx', '3');
+            r2.setAttribute('fill', 'rgba(255,255,255,0.8)');
+            shape.appendChild(r1); shape.appendChild(r2);
+        }
+
+        svg.appendChild(shape);
+        overlay.appendChild(svg);
+        div.appendChild(overlay);
+
+        const avatarData = `avatar-${i}-${c1}`;
+        div.addEventListener('click', () => selectAvatar(div, avatarData, c1, c2));
         container.appendChild(div);
-    });
+    }
 }
 
 window.updatePrefNamePreview = function(value) {
