@@ -86,5 +86,13 @@
   "msg_please_login": "يرجى تسجيل الدخول أولاً",
   "msg_invalid_url": "يرجى إدخال رابط صالح",
   "msg_navigating": "جارٍ الانتقال إلى {provider}...",
-  "untitled_page": "بدون عنوان"
+  "untitled_page": "بدون عنوان",
+  "btn_delete": "حذف",
+  "confirm_delete_msg": "هل تريد حذف هذا العلامة المرجعية؟",
+  "confirm_delete_title": "تأكيد الحذف",
+  "menu_debug": "وضع التصحيح",
+  "menu_donate": "تبرع",
+  "msg_input_url": "الصق رابط الصورة هنا",
+  "tab_url": "رابط",
+  "msg_invalid_phone": "رقم هاتف غير صالح"
 }

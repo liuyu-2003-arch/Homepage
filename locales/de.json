@@ -86,5 +86,13 @@
   "msg_please_login": "Bitte zuerst anmelden",
   "msg_invalid_url": "Bitte geben Sie eine gültige URL ein",
   "msg_navigating": "Weiterleitung zu {provider}...",
-  "untitled_page": "Unbenannt"
+  "untitled_page": "Unbenannt",
+  "btn_delete": "Löschen",
+  "confirm_delete_msg": "Dieses Lesezeichen wirklich löschen?",
+  "confirm_delete_title": "Löschen bestätigen",
+  "menu_debug": "Debug-Modus",
+  "menu_donate": "Spenden",
+  "msg_input_url": "Bild-URL hier einfügen",
+  "tab_url": "URL",
+  "msg_invalid_phone": "Ungültige Telefonnummer"
 }

@@ -1,4 +1,6 @@
 {
+  "id": "/",
+  "scope": "/",
   "name": "My Homepage",
   "short_name": "Homepage",
   "description": "仿 iOS 毛玻璃风格的浏览器起始页",
@@ -6,11 +8,14 @@
   "display": "standalone",
   "background_color": "#e4d0e5",
   "theme_color": "#e4d0e5",
+  "lang": "zh-CN",
+  "categories": ["utilities", "productivity"],
   "icons": [
     {
       "src": "icon.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

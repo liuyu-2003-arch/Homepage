@@ -156,7 +156,7 @@ function createVisualPages() {
     const chunkSize = isMobile ? CONFIG.PAGE_SIZE_MOBILE : CONFIG.PAGE_SIZE_DESKTOP;
 
     if (!state.pages || state.pages.length === 0) {
-        state.pages = [{ title: "Home", bookmarks: [] }];
+        state.pages = [{ title: t("untitled_page") || "Home", bookmarks: [] }];
     }
 
     state.pages.forEach((page, originalPageIndex) => {
@@ -250,7 +250,7 @@ export function saveBookmark() {
         }
     } else {
         const newItem = { id: generateUniqueId(), title, url, icon: safeIcon, style };
-        if (!state.pages[newPageIndex]) state.pages[newPageIndex] = { title: "New Page", bookmarks: [] };
+        if (!state.pages[newPageIndex]) state.pages[newPageIndex] = { title: t("untitled_page") || "New Page", bookmarks: [] };
         state.pages[newPageIndex].bookmarks.push(newItem);
         state.currentPage = newPageIndex;
     }
@@ -391,7 +391,7 @@ function renderRandomButtons(container) {
 }
 
 export function updatePreview() {
-    const titleVal = document.getElementById('input-title').value || "Preview";
+    const titleVal = document.getElementById('input-title').value || t("untitled_page") || "Preview";
     const iconVal = document.getElementById('input-icon').value;
     const styleEl = document.querySelector('.style-option.active');
     const styleVal = styleEl ? styleEl.dataset.style : 'full';
@@ -512,7 +512,7 @@ export function renderPageList() {
 }
 
 export function addPage() {
-    state.pages.push({ title: "New Page", bookmarks: [] });
+    state.pages.push({ title: t("untitled_page") || "New Page", bookmarks: [] });
     saveData();
     if (document.getElementById('page-edit-modal').classList.contains('hidden')) {
         state.currentPage = state.pages.length - 1;
@@ -523,7 +523,7 @@ export function addPage() {
 }
 
 export function deletePage(e, pageIndex) {
-    if (state.pages[pageIndex].bookmarks.length > 0) return showToast("页面不为空 / Page not empty", "error");
+    if (state.pages[pageIndex].bookmarks.length > 0) return showToast(t("msg_page_not_empty"), "error");
     const listItem = e.target.closest('.page-list-item');
     listItem.classList.add('fading-out');
     setTimeout(() => {
@@ -1050,6 +1050,6 @@ export function updatePrefNamePreview(value) {
     const previewEl = document.getElementById('pref-preview-name');
     if (previewEl) {
         // 如果输入为空，显示默认占位符或邮箱前缀（这里简化为 Display Name）
-        previewEl.innerText = value || "Display Name";
+        previewEl.innerText = value || t("label_display_name") || "Display Name";
     }
 }

@@ -86,5 +86,13 @@
   "msg_please_login": "先にログインしてください",
   "msg_invalid_url": "有効なURLを入力してください",
   "msg_navigating": "{provider} に移動中...",
-  "untitled_page": "無題"
+  "untitled_page": "無題",
+  "btn_delete": "削除",
+  "confirm_delete_msg": "このブックマークを削除しますか？",
+  "confirm_delete_title": "削除の確認",
+  "menu_debug": "デバッグモード",
+  "menu_donate": "寄付",
+  "msg_input_url": "画像URLをここに貼り付け",
+  "tab_url": "URL",
+  "msg_invalid_phone": "無効な電話番号です"
 }

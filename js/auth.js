@@ -213,7 +213,7 @@ export async function savePreferences() {
 
     // 简单校验：必须是数字，且长度合理
     if (phoneNumber && !/^\d{5,15}$/.test(phoneNumber)) {
-         showToast("无效的电话号码 / Invalid Phone Number", "error");
+         showToast(t("msg_invalid_phone"), "error");
          return;
     }
 

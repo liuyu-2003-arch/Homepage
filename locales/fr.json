@@ -86,5 +86,13 @@
   "msg_please_login": "Veuillez d'abord vous connecter",
   "msg_invalid_url": "Veuillez entrer une URL valide",
   "msg_navigating": "Redirection vers {provider}...",
-  "untitled_page": "Sans titre"
+  "untitled_page": "Sans titre",
+  "btn_delete": "Supprimer",
+  "confirm_delete_msg": "Supprimer ce favori ?",
+  "confirm_delete_title": "Confirmer la suppression",
+  "menu_debug": "Mode debug",
+  "menu_donate": "Faire un don",
+  "msg_input_url": "Collez l'URL de l'image ici",
+  "tab_url": "URL",
+  "msg_invalid_phone": "Numéro de téléphone invalide"
 }

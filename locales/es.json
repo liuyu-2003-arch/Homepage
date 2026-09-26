@@ -86,5 +86,13 @@
   "msg_please_login": "Por favor, inicia sesión primero",
   "msg_invalid_url": "Por favor, introduce una URL válida",
   "msg_navigating": "Navegando a {provider}...",
-  "untitled_page": "Sin título"
+  "untitled_page": "Sin título",
+  "btn_delete": "Eliminar",
+  "confirm_delete_msg": "¿Eliminar este marcador?",
+  "confirm_delete_title": "Confirmar eliminación",
+  "menu_debug": "Modo depuración",
+  "menu_donate": "Donar",
+  "msg_input_url": "Pegar URL de imagen aquí",
+  "tab_url": "URL",
+  "msg_invalid_phone": "Número de teléfono no válido"
 }

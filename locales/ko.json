@@ -86,5 +86,13 @@
   "msg_please_login": "먼저 로그인하세요",
   "msg_invalid_url": "올바른 URL을 입력하세요",
   "msg_navigating": "{provider}로 이동 중...",
-  "untitled_page": "제목 없음"
+  "untitled_page": "제목 없음",
+  "btn_delete": "삭제",
+  "confirm_delete_msg": "이 북마크를 삭제하시겠습니까?",
+  "confirm_delete_title": "삭제 확인",
+  "menu_debug": "디버그 모드",
+  "menu_donate": "후원하기",
+  "msg_input_url": "이미지 URL을 여기에 붙여넣기",
+  "tab_url": "URL",
+  "msg_invalid_phone": "잘못된 전화번호입니다"
 }

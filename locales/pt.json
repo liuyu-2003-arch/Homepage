@@ -86,5 +86,13 @@
   "msg_please_login": "Faça login primeiro",
   "msg_invalid_url": "Por favor, insira uma URL válida",
   "msg_navigating": "Navegando para {provider}...",
-  "untitled_page": "Sem título"
+  "untitled_page": "Sem título",
+  "btn_delete": "Excluir",
+  "confirm_delete_msg": "Excluir este favorito?",
+  "confirm_delete_title": "Confirmar exclusão",
+  "menu_debug": "Modo debug",
+  "menu_donate": "Doar",
+  "msg_input_url": "Cole a URL da imagem aqui",
+  "tab_url": "URL",
+  "msg_invalid_phone": "Número de telefone inválido"
 }

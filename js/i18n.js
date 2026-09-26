@@ -51,7 +51,7 @@ export const i18n = {
 
         const placeholderElements = {
             'input-url': 'ph_url', 'input-title': 'ph_title', 'input-icon': 'ph_icon',
-            'pref-name': 'label_display_name', 'pref-phone': 'label_phone'
+            'pref-name': 'label_display_name'
         };
         for (const [id, key] of Object.entries(placeholderElements)) {
             const el = document.getElementById(id);

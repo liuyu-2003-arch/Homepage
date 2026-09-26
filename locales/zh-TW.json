@@ -89,5 +89,10 @@
   "msg_please_login": "請先登入",
   "msg_invalid_url": "請輸入有效的網址",
   "msg_navigating": "正在跳轉到 {provider}...",
-  "untitled_page": "未命名"
+  "untitled_page": "未命名",
+  "menu_debug": "除錯模式",
+  "menu_donate": "贊助",
+  "msg_input_url": "請在此貼上圖片連結",
+  "tab_url": "連結",
+  "msg_invalid_phone": "無效的電話號碼"
 }

@@ -92,5 +92,7 @@
   "msg_please_login": "请先登录",
   "msg_invalid_url": "请输入有效的网址",
   "msg_navigating": "正在跳转到 {provider}...",
-  "untitled_page": "未命名"
+  "untitled_page": "未命名",
+  "menu_debug": "调试模式",
+  "msg_invalid_phone": "无效的电话号码"
 }

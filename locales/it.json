@@ -86,5 +86,13 @@
   "msg_please_login": "Effettua prima l'accesso",
   "msg_invalid_url": "Inserisci un URL valido",
   "msg_navigating": "Reindirizzamento a {provider}...",
-  "untitled_page": "Senza titolo"
+  "untitled_page": "Senza titolo",
+  "btn_delete": "Elimina",
+  "confirm_delete_msg": "Eliminare questo segnalibro?",
+  "confirm_delete_title": "Conferma eliminazione",
+  "menu_debug": "Modalità debug",
+  "menu_donate": "Dona",
+  "msg_input_url": "Incolla URL immagine qui",
+  "tab_url": "URL",
+  "msg_invalid_phone": "Numero di telefono non valido"
 }

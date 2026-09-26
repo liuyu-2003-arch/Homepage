@@ -86,5 +86,13 @@
   "msg_please_login": "Сначала войдите в систему",
   "msg_invalid_url": "Пожалуйста, введите корректный URL",
   "msg_navigating": "Переход к {provider}...",
-  "untitled_page": "Без названия"
+  "untitled_page": "Без названия",
+  "btn_delete": "Удалить",
+  "confirm_delete_msg": "Удалить эту закладку?",
+  "confirm_delete_title": "Подтвердите удаление",
+  "menu_debug": "Режим отладки",
+  "menu_donate": "Поддержать",
+  "msg_input_url": "Вставьте URL изображения сюда",
+  "tab_url": "URL",
+  "msg_invalid_phone": "Неверный номер телефона"
 }

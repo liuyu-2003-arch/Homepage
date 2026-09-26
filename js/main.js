@@ -28,6 +28,7 @@ async function loadTemplates() {
     await Promise.all(templates.map(async (template) => {
         try {
             const response = await fetch(template.url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const html = await response.text();
             const placeholder = document.getElementById(template.id);
             if (placeholder) {
@@ -54,7 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (el) el.textContent = 'v' + CONFIG.APP_VERSION;
     };
     injectVersion();
-    setTimeout(injectVersion, 500);
 
     // 2. 注册数据重载回调（解除 api.js ↔ ui.js 循环依赖）
     onDataReloaded(render);
