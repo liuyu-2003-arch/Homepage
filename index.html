@@ -21,7 +21,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e4d0e5">
     <meta name="apple-mobile-web-app-title" content="My Homepage">
-    <meta name="app-version" content="2.5.9">
+    <meta name="app-version" content="2.6.0">
 
     <!-- Preconnect for external resources -->
     <link rel="preconnect" href="https://ossrsfyqbrzeauzksvpv.supabase.co">
@@ -50,8 +50,10 @@
 <body>
     <div class="background-layer"></div>
 
-    <div id="toast-container" class="toast-container"></div>
-    <div id="sync-status" class="sync-status"></div>
+    <h1 class="visually-hidden">My Homepage</h1>
+
+    <div id="toast-container" class="toast-container" role="status" aria-live="polite" aria-atomic="false"></div>
+    <div id="sync-status" class="sync-status" role="status" aria-live="polite"></div>
 
     <div class="user-trigger-area">
         <div id="user-pill" class="user-pill" onclick="toggleAuthModal()">

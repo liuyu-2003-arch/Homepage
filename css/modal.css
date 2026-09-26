@@ -76,7 +76,7 @@
 }
 
 #auth-modal input::placeholder {
-    color: #999;
+    color: #767676;
 }
 
 .page-options-container { display: flex; flex-direction: row; flex-wrap: nowrap; gap: 8px; padding: 0; border: none; background: transparent; overflow-x: auto; }
@@ -112,7 +112,7 @@
 }
 .page-list-item:last-child { margin-bottom: 0; }
 .page-list-item.sortable-ghost { opacity: 0.4; background: #cce5ff; }
-.drag-handle { cursor: grab; padding: 0 10px; color: #999; }
+.drag-handle { cursor: grab; padding: 0 10px; color: #6b6b6b; }
 .page-title-input { flex-grow: 1; border: none; background: transparent; font-size: 16px; padding: 5px; border-radius: 5px; outline: none; }
 .page-title-input:focus { background: white; }
 .delete-page-list-btn { background: transparent; border: none; color: #ff4d4d; font-size: 20px; font-weight: bold; cursor: pointer; padding: 0 10px; }

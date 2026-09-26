@@ -81,6 +81,40 @@ export function t(key) {
     return i18n.t(key);
 }
 
+// --- Focus trap for modals ---
+let lastFocused = null;
+
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function trapFocus(e) {
+    if (e.key !== 'Tab') return;
+    const dlg = document.querySelector('.modal:not(.hidden)');
+    if (!dlg) return;
+    const items = [...dlg.querySelectorAll(FOCUSABLE)].filter(el => el.offsetParent !== null);
+    if (!items.length) return;
+    const first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+
+export function openDialog(id) {
+    const dlg = document.getElementById(id);
+    if (!dlg) return;
+    lastFocused = document.activeElement;
+    dlg.classList.remove('hidden');
+    const first = dlg.querySelector(FOCUSABLE);
+    if (first) first.focus();
+    document.addEventListener('keydown', trapFocus, true);
+}
+
+export function closeDialog(id) {
+    const dlg = document.getElementById(id);
+    if (!dlg) return;
+    dlg.classList.add('hidden');
+    document.removeEventListener('keydown', trapFocus, true);
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+}
+
 export function updateSyncStatus(status) {
     const el = document.getElementById('sync-status');
     if (!el) return;

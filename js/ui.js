@@ -1,7 +1,7 @@
 import { state } from './state.js';
 import { saveData } from './api.js';
 import { CONFIG } from './config.js';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal } from './utils.js';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, closeDialog } from './utils.js';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -81,6 +81,9 @@ export function render() {
             div.className = `bookmark-item ${styleClass}`;
             div.dataset.id = item.id;
             div.dataset.url = item.url;
+            div.setAttribute('role', 'button');
+            div.tabIndex = 0;
+            div.setAttribute('aria-label', item.title || item.url);
 
             // 使用事件监听器而非 onclick 字符串
             div.addEventListener('click', (e) => {
@@ -89,6 +92,9 @@ export function render() {
                 } else {
                     if (!state.hasDragged) openExternal(item.url);
                 }
+            });
+            div.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); div.click(); }
             });
 
             const firstChar = item.title ? item.title.charAt(0).toUpperCase() : 'A';
@@ -804,6 +810,7 @@ export function closeModalById(id) {
     const el = document.getElementById(id);
     if (!el) return;
     el.classList.add('hidden');
+    closeDialog(id);
 
     // Restore edit toolbar if it was hidden by this modal
     if (state.isEditing && (id === 'modal' || id === 'page-edit-modal')) {
