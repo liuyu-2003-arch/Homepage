@@ -22,17 +22,24 @@ export function showConfirm(message, title) {
 
         modal.classList.remove('hidden');
 
-        const cleanup = () => {
+        let settled = false;
+        const cleanup = (val) => {
+            if (settled) return;
+            settled = true;
             modal.classList.add('hidden');
             cancelBtn.removeEventListener('click', onCancel);
             okBtn.removeEventListener('click', onOk);
+            document.removeEventListener('keydown', onKey, true);
+            resolve(val);
         };
 
-        const onCancel = () => { cleanup(); resolve(false); };
-        const onOk = () => { cleanup(); resolve(true); };
+        const onCancel = () => cleanup(false);
+        const onOk = () => cleanup(true);
+        const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); cleanup(false); } };
 
         cancelBtn.addEventListener('click', onCancel);
         okBtn.addEventListener('click', onOk);
+        document.addEventListener('keydown', onKey, true);
     });
 }
 
