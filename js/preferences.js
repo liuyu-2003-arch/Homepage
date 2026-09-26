@@ -82,8 +82,8 @@ window.switchAvatarTab = function(tabName) {
 };
 
 window.handleAvatarUrlInput = function(url) {
-    window.prefAvatarUrl = url;
     const safe = safeUrl(url);
+    window.prefAvatarUrl = safe || '';
     const img = document.getElementById('pref-current-img');
     if (safe) {
         img.style.display = 'block';
