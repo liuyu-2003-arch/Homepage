@@ -520,7 +520,7 @@ function buildTimelineHTML(subs, title, seriesLabel, filename) {
     s: Math.round(s.start * 100) / 100,
     e: Math.round(s.end * 100) / 100,
     t: s.text
-  })));
+  }))).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
 
   const seriesHTML = seriesLabel ? `<div class="series-label">${esc(seriesLabel)}</div>` : '';
 
@@ -528,6 +528,7 @@ function buildTimelineHTML(subs, title, seriesLabel, filename) {
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(title)}</title>
 <style>
