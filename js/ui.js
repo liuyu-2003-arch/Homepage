@@ -549,7 +549,9 @@ export function closeThemeControls() {
 }
 
 export function closePrefModal() {
-    closeModalById('pref-modal');
+    const el = document.getElementById('pref-modal');
+    if (el) el.classList.add('hidden');
+    startPillAnimation();
 }
 
 export function quickChangeTheme(color, pattern) {
@@ -810,7 +812,7 @@ export function closeModalById(id) {
     const el = document.getElementById(id);
     if (!el) return;
     el.classList.add('hidden');
-    closeDialog(id);
+    try { closeDialog(id); } catch (e) { /* focus trap cleanup is non-critical */ }
 
     // Restore edit toolbar if it was hidden by this modal
     if (state.isEditing && (id === 'modal' || id === 'page-edit-modal')) {
