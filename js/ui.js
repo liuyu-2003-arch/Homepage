@@ -104,6 +104,8 @@ export function render() {
 
             if (item.icon && item.icon.trim() !== "") {
                 const img = document.createElement('img');
+        img.referrerPolicy = 'no-referrer';
+        img.loading = 'lazy';
                 img.src = item.icon;
                 img.addEventListener('load', () => { img.style.display = 'block'; textIcon.style.display = 'none'; });
                 img.addEventListener('error', () => { img.style.display = 'none'; textIcon.style.display = 'flex'; });
@@ -335,6 +337,8 @@ export function generateIconCandidates(urlVal) {
         item.className = 'candidate-item';
         item.title = src.name;
         const img = document.createElement('img');
+        img.referrerPolicy = 'no-referrer';
+        img.loading = 'lazy';
         img.src = src.url;
 
         item.addEventListener('click', () => {
@@ -671,6 +675,8 @@ function renderAvatarGrid(currentUrl) {
         div.className = 'emoji-item';
         div.style.border = "2px solid #007AFF";
         const img = document.createElement('img');
+        img.referrerPolicy = 'no-referrer';
+        img.loading = 'lazy';
         img.src = currentUrl;
         img.style.width = '100%';
         img.style.height = '100%';
@@ -693,6 +699,8 @@ function renderAvatarGrid(currentUrl) {
             const div = document.createElement('div');
             div.className = 'emoji-item';
             const img = document.createElement('img');
+        img.referrerPolicy = 'no-referrer';
+        img.loading = 'lazy';
             img.src = url;
             img.style.width = '100%';
             img.style.height = '100%';
@@ -721,6 +729,8 @@ export function createAvatarSelector(containerId, onSelect) {
         const div = document.createElement('div');
         div.className = 'avatar-option';
         const img = document.createElement('img');
+        img.referrerPolicy = 'no-referrer';
+        img.loading = 'lazy';
         img.src = url;
         div.appendChild(img);
         div.addEventListener('click', () => {

@@ -66,6 +66,7 @@ export function updateUserStatus(user, animate = true) {
 
         if (avatarUrl) {
             imgIcon.src = avatarUrl;
+            imgIcon.referrerPolicy = 'no-referrer';
             imgIcon.style.display = 'block';
             svgIcon.style.display = 'none';
         } else {
@@ -86,7 +87,10 @@ export function updateUserStatus(user, animate = true) {
             menuUserName.innerText = userName;
         }
         if(menuUserEmail) menuUserEmail.innerText = user.email;
-        if(menuUserAvatar) menuUserAvatar.src = avatarUrl || `https://api.dicebear.com/9.x/shapes/svg?seed=${Math.random()}`;
+        if(menuUserAvatar) {
+            menuUserAvatar.src = avatarUrl || `https://api.dicebear.com/9.x/shapes/svg?seed=${Math.random()}`;
+            menuUserAvatar.referrerPolicy = 'no-referrer';
+        }
 
         const currentEmailEl = document.getElementById('current-email');
         if(currentEmailEl) currentEmailEl.innerText = user.email;
