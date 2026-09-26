@@ -59,12 +59,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2. 注册数据重载回调（解除 api.js ↔ ui.js 循环依赖）
     onDataReloaded(render);
 
-    // 3. 初始化 Supabase
-    const sb = initSupabase();
-    if (sb) {
-        initAuth().then(() => { if (!state.currentUser) loadData(); });
-    } else {
-        loadData();
+    // 3. 初始化 Supabase + 加载数据（容错：任何失败都不能白屏）
+    try {
+        const sb = initSupabase();
+        if (sb) {
+            try {
+                await initAuth();
+            } catch (authErr) {
+                logger.error('Auth init failed, falling back to local data', authErr);
+            }
+            if (!state.currentUser) await loadData();
+        } else {
+            await loadData();
+        }
+    } catch (bootErr) {
+        logger.error('Boot failed, loading local fallback', bootErr);
+        await loadData();
+    } finally {
+        document.body.style.visibility = 'visible';
     }
 
     // 4. 监听导入文件

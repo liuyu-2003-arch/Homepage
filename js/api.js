@@ -58,17 +58,13 @@ export async function loadData() {
     if (Array.isArray(storedData)) {
         state.pages = ensureBookmarkIds(migrateData(storedData));
         emit('dataReloaded');
-        document.body.style.visibility = 'visible';
     } else {
         try {
             const response = await fetch('homepage_config.json');
             if (response.ok) {
-                const data = await response.json();
-                state.pages = migrateData(data);
-                state.pages = ensureBookmarkIds(state.pages);
                 emit('dataReloaded');
             }
-        } catch (e) { logger.error(e); }
+        } catch (e) { logger.error("Cloud load error", e); }
     }
 
     if (state.currentUser && supabaseClient) {
@@ -86,7 +82,6 @@ export async function loadData() {
             }
         } catch (e) { logger.error("Cloud load error", e); }
     }
-    document.body.style.visibility = 'visible';
 }
 
 export async function saveData() {

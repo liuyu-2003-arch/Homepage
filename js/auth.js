@@ -2,12 +2,17 @@ import { getSupabase, loadData } from './api.js';
 import { state } from './state.js';
 import { showToast, t, startPillAnimation } from './utils.js';
 import { CONFIG } from './config.js';
+import { logger } from './logger.js';
 
 export async function initAuth() {
     const sb = getSupabase();
     if (!sb) return;
-    const { data: { session } } = await sb.auth.getSession();
-    updateUserStatus(session?.user);
+    try {
+        const { data: { session } } = await sb.auth.getSession();
+        updateUserStatus(session?.user);
+    } catch (e) {
+        logger.error('getSession failed', e);
+    }
 
     // 【修改点 1】监听 Auth 状态变化时，增加智能判断
     sb.auth.onAuthStateChange((event, session) => {
