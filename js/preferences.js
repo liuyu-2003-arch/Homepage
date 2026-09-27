@@ -9,25 +9,39 @@ window.prefAvatarUrl = window.prefAvatarUrl || '';
 
 // Event delegation for data-action
 const PREF_ACTIONS = {
-    navigate: (el) => location.href = el.dataset.arg,
+    navigate: (el) => { location.href = el.dataset.arg; },
     switchAvatarTab: (el) => window.switchAvatarTab(el.dataset.arg),
     handleAvatarUrlInput: (el) => window.handleAvatarUrlInput(el.value),
     updatePrefNamePreview: (el) => window.updatePrefNamePreview(el.value),
     savePreferences: () => window.savePreferences(),
 };
-document.addEventListener('click', (e) => {
-    const el = e.target.closest('[data-action]');
-    if (!el) return;
+
+function closestFromTarget(target, selector) {
+    const element = target instanceof Element ? target : target?.parentElement;
+    return element?.closest(selector) || null;
+}
+
+function runPrefAction(el, event) {
     const fn = PREF_ACTIONS[el.dataset.action];
-    if (fn) { e.preventDefault(); fn(el, e); }
+    if (!fn) return;
+    event.preventDefault();
+    fn(el, event);
+}
+
+document.addEventListener('click', (event) => {
+    const el = closestFromTarget(event.target, '[data-action]');
+    if (!el) return;
+    runPrefAction(el, event);
 });
-document.addEventListener('input', (e) => {
-    const el = e.target.closest('[data-action][data-input]');
+
+document.addEventListener('input', (event) => {
+    const el = closestFromTarget(event.target, '[data-action][data-input]');
     if (el) {
         const fn = PREF_ACTIONS[el.dataset.action];
-        if (fn) fn(el, e);
+        if (fn) fn(el, event);
     }
-    const filterEl = e.target.closest('[data-filter="digits"]');
+
+    const filterEl = closestFromTarget(event.target, '[data-filter="digits"]');
     if (filterEl) filterEl.value = filterEl.value.replace(/\D/g, '');
 });
 

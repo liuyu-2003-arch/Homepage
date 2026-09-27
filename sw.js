@@ -1,9 +1,10 @@
-const CACHE_NAME = 'homepage-v2.7.9';
+const APP_VERSION = '2.9.1';
+const CACHE_NAME = `homepage-v${APP_VERSION}`;
 const APP_SCOPE = self.registration.scope;
 const STATIC_ASSETS = [
     '', 'index.html', 'preferences.html',
     'css/base.css', 'css/bookmark.css', 'css/modal.css', 'css/controls.css', 'css/user.css', 'css/responsive.css',
-    'js/main.js', 'js/ui.js', 'js/api.js', 'js/auth.js', 'js/state.js', 'js/utils.js', 'js/i18n.js', 'js/config.js', 'js/logger.js', 'js/preferences.js',
+    `js/main.js?v=${APP_VERSION}`, 'js/ui.js', 'js/api.js', 'js/auth.js', 'js/state.js', 'js/utils.js', 'js/i18n.js', 'js/config.js', 'js/logger.js', `js/preferences.js?v=${APP_VERSION}`,
     'templates/user_dropdown.html', 'templates/bookmark_modal.html', 'templates/page_edit_modal.html',
     'templates/auth_modal.html', 'templates/help_modal.html', 'templates/confirm_modal.html',
     'homepage_config.json', 'manifest.webmanifest', 'icon.png',
@@ -12,6 +13,21 @@ const STATIC_ASSETS = [
     'locales/pt.json', 'locales/ru.json', 'locales/it.json', 'locales/ar.json'
 ].map((path) => new URL(path, APP_SCOPE).href);
 const STATIC_ASSET_URLS = new Set(STATIC_ASSETS);
+
+function cacheSuccessfulResponse(request, response) {
+    if (!response || response.status !== 200) return response;
+    const clone = response.clone();
+    caches.open(CACHE_NAME)
+        .then((cache) => cache.put(request, clone))
+        .catch(() => {});
+    return response;
+}
+
+function networkFirst(request) {
+    return fetch(request)
+        .then((response) => cacheSuccessfulResponse(request, response))
+        .catch(() => caches.match(request, { ignoreSearch: true }));
+}
 
 // Install: pre-cache core assets (resilient — one failure won't abort the install)
 self.addEventListener('install', (event) => {
@@ -49,21 +65,15 @@ self.addEventListener('fetch', (event) => {
     const isLocale = url.pathname.startsWith(new URL('locales/', APP_SCOPE).pathname) && url.pathname.endsWith('.json');
     if (!STATIC_ASSET_URLS.has(url.href) && !isLocale) return;
 
+    // Keep HTML and JavaScript in sync by preferring fresh, same-version files.
+    if (event.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('.js')) {
+        event.respondWith(networkFirst(event.request));
+        return;
+    }
+
     // Network-first for JSON config files
     if (url.pathname.endsWith('.json')) {
-        event.respondWith(
-            fetch(event.request)
-                .then((response) => {
-                    if (response && response.status === 200) {
-                        const clone = response.clone();
-                        caches.open(CACHE_NAME)
-                            .then((cache) => cache.put(event.request, clone))
-                            .catch(() => {});
-                    }
-                    return response;
-                })
-                .catch(() => caches.match(event.request))
-        );
+        event.respondWith(networkFirst(event.request));
         return;
     }
 
