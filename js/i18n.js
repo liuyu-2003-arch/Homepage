@@ -50,7 +50,7 @@ export const i18n = {
         });
 
         const placeholderElements = {
-            'input-url': 'ph_url', 'input-title': 'ph_title', 'input-icon': 'ph_icon',
+            'input-url': 'ph_url', 'input-title': 'ph_title', 'input-note': 'ph_note', 'input-icon': 'ph_icon',
             'pref-name': 'label_display_name'
         };
         for (const [id, key] of Object.entries(placeholderElements)) {

@@ -5,6 +5,49 @@ import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAn
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
+let activeTooltipTarget = null;
+let tooltipListenersBound = false;
+
+function ensureBookmarkTooltipListeners() {
+    if (tooltipListenersBound) return;
+    tooltipListenersBound = true;
+    const hide = () => hideBookmarkTooltip();
+    document.addEventListener('scroll', hide, true);
+    window.addEventListener('resize', hide);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
+}
+
+function showBookmarkTooltip(target, note) {
+    if (state.isEditing || !note) return;
+    const tooltip = document.getElementById('bookmark-tooltip');
+    if (!tooltip) return;
+
+    activeTooltipTarget = target;
+    tooltip.textContent = note;
+    tooltip.setAttribute('aria-hidden', 'false');
+    tooltip.classList.add('visible');
+
+    const gap = 10;
+    const padding = 12;
+    const targetRect = target.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const maxLeft = Math.max(padding, window.innerWidth - tooltipRect.width - padding);
+    const left = Math.min(Math.max(targetRect.left + targetRect.width / 2 - tooltipRect.width / 2, padding), maxLeft);
+    let top = targetRect.top - tooltipRect.height - gap;
+    if (top < padding) top = Math.min(targetRect.bottom + gap, window.innerHeight - tooltipRect.height - padding);
+
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${Math.max(padding, top)}px`;
+}
+
+function hideBookmarkTooltip(target) {
+    if (target && activeTooltipTarget !== target) return;
+    activeTooltipTarget = null;
+    const tooltip = document.getElementById('bookmark-tooltip');
+    if (!tooltip) return;
+    tooltip.classList.remove('visible');
+    tooltip.setAttribute('aria-hidden', 'true');
+}
 
 // --- Custom Confirm Modal (replaces browser confirm) ---
 export function showConfirm(message, title) {
@@ -45,6 +88,8 @@ export function showConfirm(message, title) {
 
 // --- 渲染核心 (Render) ---
 export function render() {
+    hideBookmarkTooltip();
+    ensureBookmarkTooltipListeners();
     const oldScrollTops = [];
     document.querySelectorAll('.bookmark-page').forEach(p => oldScrollTops.push(p.scrollTop));
 
@@ -83,7 +128,15 @@ export function render() {
             div.dataset.url = item.url;
             div.setAttribute('role', 'button');
             div.tabIndex = 0;
-            div.setAttribute('aria-label', item.title || item.url);
+            const note = typeof item.note === 'string' ? item.note.trim() : '';
+            div.setAttribute('aria-label', note ? `${item.title || item.url}. ${note}` : (item.title || item.url));
+            if (note) {
+                div.dataset.note = note;
+                div.addEventListener('mouseenter', () => showBookmarkTooltip(div, note));
+                div.addEventListener('mouseleave', () => hideBookmarkTooltip(div));
+                div.addEventListener('focus', () => showBookmarkTooltip(div, note));
+                div.addEventListener('blur', () => hideBookmarkTooltip(div));
+            }
 
             // 使用事件监听器而非 onclick 字符串
             div.addEventListener('click', (e) => {
@@ -177,6 +230,7 @@ function createVisualPages() {
 
 // --- 模态框与书签逻辑 ---
 export function openModal(pageIndex = -1, bookmarkIndex = -1) {
+    hideBookmarkTooltip();
     // 【修改点 1】打开书签编辑窗口时，隐藏底部编辑按钮栏
     const controls = document.getElementById('edit-controls');
     if (controls) controls.classList.add('hidden');
@@ -185,6 +239,7 @@ export function openModal(pageIndex = -1, bookmarkIndex = -1) {
     openDialog('modal');
     const titleInput = document.getElementById('input-title');
     const urlInput = document.getElementById('input-url');
+    const noteInput = document.getElementById('input-note');
     const iconInput = document.getElementById('input-icon');
 
     let currentStyle = 'full';
@@ -194,6 +249,7 @@ export function openModal(pageIndex = -1, bookmarkIndex = -1) {
         const item = state.pages[pageIndex].bookmarks[bookmarkIndex];
         titleInput.value = item.title;
         urlInput.value = item.url;
+        noteInput.value = item.note || '';
         iconInput.value = item.icon || "";
         currentStyle = item.style || 'full';
         targetPageIndex = pageIndex;
@@ -202,6 +258,7 @@ export function openModal(pageIndex = -1, bookmarkIndex = -1) {
         const currentVisualPage = state.visualPages[state.currentPage];
         titleInput.value = '';
         urlInput.value = '';
+        noteInput.value = '';
         iconInput.value = '';
         targetPageIndex = currentVisualPage ? currentVisualPage.originalPageIndex : 0;
         document.getElementById('icon-candidates').innerHTML = '';
@@ -223,6 +280,7 @@ export function closeModal() {
 export function saveBookmark() {
     const title = document.getElementById('input-title').value;
     let url = document.getElementById('input-url').value;
+    const note = document.getElementById('input-note').value.trim();
     const icon = document.getElementById('input-icon').value;
     const styleEl = document.querySelector('.style-option.active');
     const style = styleEl ? styleEl.dataset.style : 'full';
@@ -240,7 +298,7 @@ export function saveBookmark() {
 
     if (pageIndex >= 0 && bookmarkIndex >= 0) {
         const itemToUpdate = state.pages[pageIndex].bookmarks[bookmarkIndex];
-        const newItem = { ...itemToUpdate, title, url, icon: safeIcon, style };
+        const newItem = { ...itemToUpdate, title, url, note, icon: safeIcon, style };
 
         if (pageIndex !== newPageIndex) {
             state.pages[pageIndex].bookmarks.splice(bookmarkIndex, 1);
@@ -249,7 +307,7 @@ export function saveBookmark() {
             state.pages[pageIndex].bookmarks[bookmarkIndex] = newItem;
         }
     } else {
-        const newItem = { id: generateUniqueId(), title, url, icon: safeIcon, style };
+        const newItem = { id: generateUniqueId(), title, url, note, icon: safeIcon, style };
         if (!state.pages[newPageIndex]) state.pages[newPageIndex] = { title: t("untitled_page") || "New Page", bookmarks: [] };
         state.pages[newPageIndex].bookmarks.push(newItem);
         state.currentPage = newPageIndex;

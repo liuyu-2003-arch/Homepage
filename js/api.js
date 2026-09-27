@@ -6,6 +6,7 @@ import { logger } from './logger.js';
 let supabaseClient = null;
 let saveQueue = Promise.resolve();
 let latestSaveVersion = 0;
+let defaultBookmarkNotesPromise = null;
 
 const LEGACY_STORAGE_KEY = 'pagedData';
 const GUEST_STORAGE_KEY = 'pagedData:guest';
@@ -33,6 +34,45 @@ function writeCachedPages(key, pages) {
     }
 }
 
+function loadDefaultBookmarkNotes() {
+    if (!defaultBookmarkNotesPromise) {
+        defaultBookmarkNotesPromise = fetch('homepage_config.json')
+            .then((response) => response.ok ? response.json() : [])
+            .then((pages) => {
+                const notes = new Map();
+                if (!Array.isArray(pages)) return notes;
+                pages.forEach((page) => {
+                    if (!Array.isArray(page.bookmarks)) return;
+                    page.bookmarks.forEach((bookmark) => {
+                        if (bookmark.url && typeof bookmark.note === 'string' && bookmark.note.trim()) {
+                            notes.set(bookmark.url, bookmark.note.trim().slice(0, 160));
+                        }
+                    });
+                });
+                return notes;
+            })
+            .catch((error) => {
+                logger.error('Default bookmark notes load error', error);
+                return new Map();
+            });
+    }
+    return defaultBookmarkNotesPromise;
+}
+
+async function preparePages(rawPages) {
+    const pages = ensureBookmarkIds(sanitizePages(migrateData(rawPages)));
+    const defaultNotes = await loadDefaultBookmarkNotes();
+    pages.forEach((page) => {
+        if (!Array.isArray(page.bookmarks)) return;
+        page.bookmarks.forEach((bookmark) => {
+            if (typeof bookmark.note !== 'string' && defaultNotes.has(bookmark.url)) {
+                bookmark.note = defaultNotes.get(bookmark.url);
+            }
+        });
+    });
+    return pages;
+}
+
 export function initSupabase() {
     if (window.supabase && window.supabase.createClient) {
         try {
@@ -56,14 +96,15 @@ export async function loadData() {
     const cacheKey = getStorageKey();
     const storedData = readCachedPages(cacheKey);
     if (Array.isArray(storedData)) {
-        state.pages = ensureBookmarkIds(migrateData(storedData));
+        state.pages = await preparePages(storedData);
+        writeCachedPages(cacheKey, state.pages);
         emit('dataReloaded');
     } else {
         try {
             const response = await fetch('homepage_config.json');
             if (response.ok) {
                 const data = await response.json();
-                state.pages = ensureBookmarkIds(sanitizePages(migrateData(data)));
+                state.pages = await preparePages(data);
                 emit('dataReloaded');
             }
         } catch (e) { logger.error("Config load error", e); }
@@ -78,7 +119,7 @@ export async function loadData() {
                 .maybeSingle();
 
             if (data && data.config_data) {
-                state.pages = ensureBookmarkIds(sanitizePages(data.config_data));
+                state.pages = await preparePages(data.config_data);
                 writeCachedPages(getStorageKey(state.currentUser.id), state.pages);
                 emit('dataReloaded');
             }
@@ -169,6 +210,7 @@ function sanitizePages(pages) {
         page.bookmarks.forEach(b => {
             b.url = safeUrl(b.url, '#');
             b.icon = safeUrl(b.icon, '');
+            if (typeof b.note === 'string') b.note = b.note.trim().slice(0, 160);
         });
     });
     return pages;

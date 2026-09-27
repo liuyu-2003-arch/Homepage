@@ -37,6 +37,23 @@
 }
 .bookmark-item:hover { transform: scale(1.05); }
 
+.bookmark-tooltip {
+    position: fixed; left: 0; top: 0; z-index: 2000;
+    max-width: min(300px, calc(100vw - 24px));
+    padding: 10px 12px; border-radius: 10px;
+    background: rgba(24, 24, 28, 0.94); color: #fff;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    font-size: 12px; line-height: 1.5; text-align: left;
+    white-space: normal; overflow-wrap: anywhere;
+    pointer-events: none; opacity: 0; visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s;
+}
+
+.bookmark-tooltip.visible {
+    opacity: 1; visibility: visible; transform: translateY(0);
+}
+
 .icon-box {
     width: var(--card-size); height: var(--card-size);
     background: white; border-radius: var(--radius);

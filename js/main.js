@@ -263,6 +263,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.1').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.4').catch(() => {});
     });
 }

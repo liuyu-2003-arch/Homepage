@@ -93,8 +93,12 @@ function trapFocus(e) {
     const items = [...dlg.querySelectorAll(FOCUSABLE)].filter(el => el.offsetParent !== null);
     if (!items.length) return;
     const first = items[0], last = items[items.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    const activeIndex = items.indexOf(document.activeElement);
+    if (e.shiftKey && activeIndex <= 0) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && (activeIndex === -1 || activeIndex === items.length - 1)) {
+        e.preventDefault();
+        first.focus();
+    }
 }
 
 export function openDialog(id) {
@@ -102,8 +106,13 @@ export function openDialog(id) {
     if (!dlg) return;
     lastFocused = document.activeElement;
     dlg.classList.remove('hidden');
-    const first = dlg.querySelector(FOCUSABLE);
-    if (first) first.focus();
+    const initialFocus = dlg.querySelector('.modal-content') || dlg.querySelector(FOCUSABLE);
+    if (initialFocus) {
+        if (initialFocus.classList.contains('modal-content') && !initialFocus.hasAttribute('tabindex')) {
+            initialFocus.setAttribute('tabindex', '-1');
+        }
+        initialFocus.focus({ preventScroll: true });
+    }
     document.addEventListener('keydown', trapFocus, true);
 }
 
