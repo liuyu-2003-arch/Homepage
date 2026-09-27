@@ -42,6 +42,7 @@ export const i18n = {
 
     updateTexts() {
         document.documentElement.lang = this.currentLang;
+        document.title = this.t('app_title');
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if (key) {
