@@ -130,8 +130,8 @@ body.dark-mode #user-icon-svg {
             transparent 32%,
             rgba(255, 255, 255, 0.08) 64%,
             rgba(255, 255, 255, 0.26));
-    background-position: 0 0, 0 0, center !important;
-    background-size: 1180px 750px, 1180px 750px, cover !important;
+    background-position: center, center, center !important;
+    background-size: cover, cover, cover !important;
     background-repeat: no-repeat !important;
     overflow: hidden;
     isolation: isolate;
@@ -198,7 +198,6 @@ body.dark-mode #user-icon-svg {
             transparent 0 128px,
             rgba(255, 255, 255, 0.17) 129px 130px,
             transparent 131px 256px);
-    clip-path: polygon(0 18%, 100% 0, 100% 42%, 0 68%);
     transform: translate3d(-4%, -3%, 0);
     opacity: 0.88;
     animation: lines-shift 14s ease-in-out infinite alternate;
@@ -211,7 +210,6 @@ body.dark-mode #user-icon-svg {
             transparent 0 46px,
             rgba(18, 48, 58, 0.07) 47px,
             transparent 48px 92px);
-    clip-path: polygon(0 58%, 100% 31%, 100% 100%, 0 100%);
     transform: translate3d(2%, 2%, 0);
     opacity: 0.8;
 }
@@ -276,7 +274,7 @@ body.dark-mode #user-icon-svg {
     }
 
     .background-layer.bg-pattern-flow {
-        background-size: 920px 585px, 920px 585px, cover !important;
+        background-size: cover, cover, cover !important;
     }
 
     .background-layer.bg-pattern-flow::before {
