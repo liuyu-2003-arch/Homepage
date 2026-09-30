@@ -92,7 +92,8 @@
 
     .bookmark-dock {
         bottom: 10px; gap: 6px;
-        width: min(372px, calc(100vw - 16px));
+        width: fit-content;
+        max-width: min(372px, calc(100vw - 16px));
         padding: 6px 8px; border-radius: 18px;
     }
     .dock-group,

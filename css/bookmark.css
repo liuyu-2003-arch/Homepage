@@ -159,8 +159,8 @@
     position: fixed; left: 50%; bottom: 14px;
     z-index: 500;
     display: flex; align-items: center; justify-content: center; gap: 14px;
-    width: min(calc(var(--page-width) + 36px), calc(100vw - 16px), 94vw);
-    max-width: calc(100vw - 16px);
+    width: fit-content;
+    max-width: min(calc(var(--page-width) + 36px), calc(100vw - 16px), 94vw);
     padding: 8px 14px;
     box-sizing: border-box;
     border: 1px solid rgba(255, 255, 255, 0.62);
