@@ -1,7 +1,7 @@
-import { state } from './state.js?v=2.9.19';
-import { saveData } from './api.js?v=2.9.19';
-import { CONFIG } from './config.js?v=2.9.19';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.19';
+import { state } from './state.js?v=2.9.20';
+import { saveData } from './api.js?v=2.9.20';
+import { CONFIG } from './config.js?v=2.9.20';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.20';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -189,7 +189,13 @@ function clearLongPressGesture() {
     if (longPressContext?.element) {
         longPressContext.element.classList.remove('long-press-armed', 'long-press-active');
     }
-    document.body.classList.remove('long-press-bookmark-active', 'long-press-theme-armed', 'long-press-theme-active');
+    document.body.classList.remove(
+        'long-press-bookmark-active',
+        'long-press-theme-armed',
+        'long-press-theme-active',
+        'long-press-dock-armed',
+        'long-press-dock-active'
+    );
     longPressContext = null;
     longPressPointerId = null;
     longPressTriggered = false;
@@ -211,6 +217,14 @@ function activateLongPress() {
         return;
     }
 
+    if (context.type === 'dock') {
+        context.element.classList.remove('long-press-armed');
+        context.element.classList.add('long-press-active');
+        document.body.classList.add('long-press-dock-active');
+        openDockEditModal();
+        return;
+    }
+
     document.body.classList.remove('long-press-theme-armed');
     document.body.classList.add('long-press-theme-active');
     openThemeControls({ source: 'longPress' });
@@ -222,16 +236,15 @@ function startLongPressGesture(e) {
 
     const target = e.target;
     const bookmarkItem = target.closest('#bookmark-swiper .bookmark-item');
-    const dockItem = target.closest('#bookmark-dock .dock-item');
+    const dock = target.closest('#bookmark-dock');
     if (target.closest('.delete-btn')) return;
 
     let context = null;
     if (bookmarkItem) {
         const location = findBookmarkLocation(bookmarkItem.dataset.id);
         if (location) context = { type: 'bookmark', element: bookmarkItem, location };
-    } else if (dockItem) {
-        const location = findBookmarkLocation(dockItem.dataset.bookmarkKey);
-        if (location) context = { type: 'bookmark', element: dockItem, location };
+    } else if (dock) {
+        context = { type: 'dock', element: dock };
     } else if (target.closest('.container')) {
         context = { type: 'theme', element: target.closest('.bookmark-page-content') || target };
     }
@@ -247,7 +260,12 @@ function startLongPressGesture(e) {
     longPressFeedbackTimer = window.setTimeout(() => {
         if (!longPressContext || state.hasDragged || state.isScrolling) return;
         if (longPressContext.type === 'bookmark') longPressContext.element.classList.add('long-press-armed');
-        else document.body.classList.add('long-press-theme-armed');
+        else if (longPressContext.type === 'dock') {
+            longPressContext.element.classList.add('long-press-armed');
+            document.body.classList.add('long-press-dock-armed');
+        } else {
+            document.body.classList.add('long-press-theme-armed');
+        }
     }, LONG_PRESS_FEEDBACK_DELAY);
 
     longPressTimer = window.setTimeout(activateLongPress, LONG_PRESS_DELAY);
@@ -283,7 +301,7 @@ function initLongPressGestures() {
     document.addEventListener('pointercancel', endLongPressGesture, { passive: true });
     document.addEventListener('click', suppressLongPressClick, true);
     document.addEventListener('contextmenu', (e) => {
-        if (e.target.closest('#bookmark-swiper, #bookmark-dock .dock-item')) e.preventDefault();
+        if (e.target.closest('#bookmark-swiper, #bookmark-dock')) e.preventDefault();
     });
     window.addEventListener('blur', clearLongPressGesture);
     window.addEventListener('scroll', clearLongPressGesture, true);

@@ -94,6 +94,28 @@ body.long-press-theme-active .bookmark-dock {
     filter: blur(1.2px) saturate(0.76);
 }
 
+.bookmark-dock.long-press-armed {
+    transform: translateX(-50%) scale(0.96);
+}
+
+.bookmark-dock.long-press-active {
+    transform: translateX(-50%) translateY(-4px) scale(1.04);
+    box-shadow:
+        0 22px 44px rgba(49, 37, 55, 0.26),
+        inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+body.long-press-dock-armed .bookmark-page-content {
+    opacity: 0.9;
+    transform: scale(0.992);
+}
+
+body.long-press-dock-active .bookmark-page-content {
+    opacity: 0.48;
+    filter: blur(1.4px) saturate(0.82);
+    transform: scale(0.972);
+}
+
 .bookmark-tooltip {
     position: fixed; left: 0; top: 0; z-index: 2000;
     max-width: min(300px, calc(100vw - 24px));
