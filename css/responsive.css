@@ -99,8 +99,7 @@
     .dock-group,
     .dock-items { gap: 6px; }
     .dock-divider { height: 28px; }
-    .dock-item,
-    .dock-icon { width: 40px; height: 40px; }
+    .dock-item { --dock-item-size: 40px; }
     .dock-icon { border-radius: 11px; }
     .dock-icon .text-icon { font-size: 18px; }
     .dock-empty { min-height: 34px; padding: 0 6px; font-size: 10px; }

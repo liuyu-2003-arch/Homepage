@@ -1,7 +1,7 @@
-import { state } from './state.js?v=2.9.21';
-import { saveData } from './api.js?v=2.9.21';
-import { CONFIG } from './config.js?v=2.9.21';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.21';
+import { state } from './state.js?v=2.9.22';
+import { saveData } from './api.js?v=2.9.22';
+import { CONFIG } from './config.js?v=2.9.22';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.22';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -339,7 +339,8 @@ function applyDockMagnification() {
     dock.querySelectorAll('.dock-item').forEach((item) => {
         const rect = item.getBoundingClientRect();
         const distance = Math.abs(dockMagnificationPointerX - (rect.left + rect.width / 2));
-        const sigma = Math.max(38, rect.width * 1.18);
+        const baseSize = parseFloat(getComputedStyle(item).getPropertyValue('--dock-item-size')) || 46;
+        const sigma = Math.max(38, baseSize * 1.18);
         const influence = Math.exp(-(distance * distance) / (2 * sigma * sigma));
         const scale = 1 + DOCK_MAGNIFICATION_SCALE * influence;
         const lift = -DOCK_MAGNIFICATION_LIFT * influence;
