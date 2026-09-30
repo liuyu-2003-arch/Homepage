@@ -7,6 +7,9 @@ export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 300
 let autoFillTimer = null;
 let activeTooltipTarget = null;
 let tooltipListenersBound = false;
+const DOCK_STATS_PREFIX = 'homepageDockStats';
+const DOCK_LIMIT_DESKTOP = 5;
+const DOCK_LIMIT_MOBILE = 3;
 
 function ensureBookmarkTooltipListeners() {
     if (tooltipListenersBound) return;
@@ -49,6 +52,284 @@ function hideBookmarkTooltip(target) {
     tooltip.setAttribute('aria-hidden', 'true');
 }
 
+function getDockStatsKey() {
+    return `${DOCK_STATS_PREFIX}:${state.currentUser?.id || 'guest'}`;
+}
+
+function readDockStats() {
+    try {
+        const raw = localStorage.getItem(getDockStatsKey());
+        const stats = raw ? JSON.parse(raw) : {};
+        return stats && typeof stats === 'object' && !Array.isArray(stats) ? stats : {};
+    } catch {
+        return {};
+    }
+}
+
+function recordBookmarkOpen(bookmark) {
+    const key = bookmark?.id || bookmark?.url;
+    if (!key) return;
+
+    const stats = readDockStats();
+    const previous = stats[key] || {};
+    stats[key] = {
+        count: Math.max(0, Number(previous.count) || 0) + 1,
+        lastOpened: Date.now()
+    };
+
+    const prunedStats = Object.fromEntries(
+        Object.entries(stats)
+            .sort(([, a], [, b]) => (Number(b?.lastOpened) || 0) - (Number(a?.lastOpened) || 0))
+            .slice(0, 200)
+    );
+
+    try {
+        localStorage.setItem(getDockStatsKey(), JSON.stringify(prunedStats));
+    } catch {
+        // Dock history is a convenience feature; storage failures should not block opening a link.
+    }
+}
+
+function getAllBookmarks() {
+    const bookmarks = [];
+    const seen = new Set();
+
+    state.pages.forEach((page) => {
+        if (!Array.isArray(page?.bookmarks)) return;
+        page.bookmarks.forEach((bookmark) => {
+            const key = bookmark?.id || bookmark?.url;
+            if (!key || seen.has(key) || !safeUrl(bookmark?.url)) return;
+            seen.add(key);
+            bookmarks.push(bookmark);
+        });
+    });
+
+    return bookmarks;
+}
+
+function findBookmarkById(id) {
+    if (!id) return null;
+    for (const page of state.pages) {
+        const bookmark = page.bookmarks?.find(item => item.id === id);
+        if (bookmark) return bookmark;
+    }
+    return null;
+}
+
+function createBookmarkIcon(item, extraClass = '') {
+    const firstChar = item.title ? item.title.charAt(0).toUpperCase() : 'A';
+    const iconBox = document.createElement('div');
+    iconBox.className = `icon-box ${extraClass}`.trim();
+
+    if (item.icon && item.icon.trim() !== '') {
+        const img = document.createElement('img');
+        img.referrerPolicy = 'no-referrer';
+        img.loading = 'lazy';
+        img.src = item.icon;
+
+        const textIcon = document.createElement('div');
+        textIcon.className = 'text-icon';
+        textIcon.textContent = firstChar;
+        textIcon.style.display = 'none';
+
+        img.addEventListener('load', () => {
+            img.style.display = 'block';
+            textIcon.style.display = 'none';
+        });
+        img.addEventListener('error', () => {
+            img.style.display = 'none';
+            textIcon.style.display = 'flex';
+        });
+
+        iconBox.appendChild(img);
+        iconBox.appendChild(textIcon);
+    } else {
+        const textIcon = document.createElement('div');
+        textIcon.className = 'text-icon';
+        textIcon.textContent = firstChar;
+        iconBox.appendChild(textIcon);
+    }
+
+    return iconBox;
+}
+
+function openBookmark(bookmark) {
+    if (!bookmark) return;
+    const safeHref = safeUrl(bookmark.url);
+    if (!safeHref) return;
+
+    recordBookmarkOpen(bookmark);
+    openExternal(safeHref);
+    renderBookmarkDock();
+}
+
+function createDockItem(bookmark) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'dock-item';
+    if (bookmark.style === 'white') button.classList.add('style-white');
+    if (bookmark.style === 'fit') button.classList.add('style-fit');
+    button.title = bookmark.title || bookmark.url;
+    button.setAttribute('aria-label', bookmark.title || bookmark.url);
+
+    const icon = createBookmarkIcon(bookmark, 'dock-icon');
+    const label = document.createElement('span');
+    label.className = 'dock-item-label';
+    label.textContent = bookmark.title || bookmark.url;
+
+    button.appendChild(icon);
+    button.appendChild(label);
+    button.addEventListener('click', () => openBookmark(bookmark));
+    return button;
+}
+
+function renderDockEmpty(container, textKey) {
+    const empty = document.createElement('span');
+    empty.className = 'dock-empty';
+    empty.dataset.i18n = textKey;
+    empty.textContent = t(textKey);
+    container.appendChild(empty);
+}
+
+function renderBookmarkDock() {
+    const dock = document.getElementById('bookmark-dock');
+    const commonContainer = document.getElementById('dock-common-items');
+    const recentContainer = document.getElementById('dock-recent-items');
+    if (!dock || !commonContainer || !recentContainer) return;
+
+    commonContainer.innerHTML = '';
+    recentContainer.innerHTML = '';
+
+    const bookmarks = getAllBookmarks();
+    if (bookmarks.length === 0) {
+        dock.classList.add('hidden');
+        return;
+    }
+
+    const stats = readDockStats();
+    const entries = bookmarks.map((bookmark, index) => {
+        const stat = stats[bookmark.id || bookmark.url] || {};
+        return {
+            bookmark,
+            index,
+            count: Math.max(0, Number(stat.count) || 0),
+            lastOpened: Math.max(0, Number(stat.lastOpened) || 0)
+        };
+    });
+    const limit = window.innerWidth < CONFIG.MOBILE_MAX_WIDTH ? DOCK_LIMIT_MOBILE : DOCK_LIMIT_DESKTOP;
+    const commonEntries = entries
+        .slice()
+        .sort((a, b) => {
+            if (b.count !== a.count) return b.count - a.count;
+            if (b.lastOpened !== a.lastOpened) return b.lastOpened - a.lastOpened;
+            return a.index - b.index;
+        })
+        .slice(0, limit);
+    const recentEntries = entries
+        .filter(entry => entry.lastOpened > 0)
+        .sort((a, b) => b.lastOpened - a.lastOpened)
+        .slice(0, limit);
+
+    commonEntries.forEach(({ bookmark }) => {
+        commonContainer.appendChild(createDockItem(bookmark));
+    });
+
+    if (recentEntries.length === 0) {
+        renderDockEmpty(recentContainer, 'dock_no_recent');
+    } else {
+        recentEntries.forEach(({ bookmark }) => {
+            recentContainer.appendChild(createDockItem(bookmark));
+        });
+    }
+
+    dock.classList.remove('hidden');
+}
+
+function countGridColumns(template) {
+    if (!template || template === 'none') return 1;
+    return template.trim().split(/\s+/).filter(Boolean).length || 1;
+}
+
+function measurePageCapacity(wrapper) {
+    if (!wrapper) return 1;
+
+    const page = document.createElement('div');
+    page.className = 'bookmark-page';
+    page.setAttribute('aria-hidden', 'true');
+
+    const content = document.createElement('div');
+    content.className = 'bookmark-page-content';
+
+    const title = document.createElement('h2');
+    title.className = 'page-title';
+    title.textContent = 'Probe';
+    content.appendChild(title);
+
+    // Enough items make auto-fit reveal every column the viewport can hold.
+    for (let i = 0; i < 64; i++) {
+        const item = document.createElement('div');
+        item.className = 'bookmark-item';
+        item.innerHTML = '<div class="icon-box"></div><div class="bookmark-title">Probe</div>';
+        content.appendChild(item);
+    }
+
+    page.appendChild(content);
+    wrapper.appendChild(page);
+
+    try {
+        const contentStyle = getComputedStyle(content);
+        const columns = countGridColumns(contentStyle.gridTemplateColumns);
+        const rowGap = parseFloat(contentStyle.rowGap) || parseFloat(contentStyle.gap) || 0;
+        const paddingBottom = parseFloat(contentStyle.paddingBottom) || 0;
+        const pageRect = page.getBoundingClientRect();
+        const probeItem = content.querySelector('.bookmark-item');
+        const itemRect = probeItem.getBoundingClientRect();
+        const itemTop = Math.max(0, itemRect.top - pageRect.top + page.scrollTop);
+        const itemHeight = probeItem.offsetHeight || itemRect.height || 1;
+        const availableHeight = page.clientHeight - itemTop - paddingBottom;
+        const rows = Math.max(1, Math.floor((availableHeight + rowGap) / (itemHeight + rowGap)));
+
+        return Math.max(1, columns * rows);
+    } finally {
+        page.remove();
+    }
+}
+
+function getVisualPageAnchor() {
+    const currentVisualPage = state.visualPages[state.currentPage];
+    if (!currentVisualPage) return null;
+
+    return {
+        originalPageIndex: currentVisualPage.originalPageIndex,
+        bookmarkId: currentVisualPage.bookmarks[0]?.id || null,
+        chunkIndex: currentVisualPage.chunkIndex || 0
+    };
+}
+
+function restoreVisualPage(anchor) {
+    if (!anchor || state.visualPages.length === 0) return;
+
+    let nextIndex = -1;
+    if (anchor.bookmarkId) {
+        nextIndex = state.visualPages.findIndex(page =>
+            page.bookmarks.some(bookmark => bookmark.id === anchor.bookmarkId)
+        );
+    }
+
+    if (nextIndex < 0) {
+        nextIndex = state.visualPages.findIndex(page =>
+            page.originalPageIndex === anchor.originalPageIndex &&
+            page.chunkIndex >= anchor.chunkIndex
+        );
+    }
+
+    if (nextIndex < 0) {
+        nextIndex = state.visualPages.findIndex(page => page.originalPageIndex === anchor.originalPageIndex);
+    }
+
+    if (nextIndex >= 0) state.currentPage = nextIndex;
+}
+
 // --- Custom Confirm Modal (replaces browser confirm) ---
 export function showConfirm(message, title) {
     return new Promise((resolve) => {
@@ -87,15 +368,17 @@ export function showConfirm(message, title) {
 }
 
 // --- 渲染核心 (Render) ---
-export function render() {
+export function render(options = {}) {
     hideBookmarkTooltip();
     ensureBookmarkTooltipListeners();
+    const preservePosition = options?.preservePosition === true;
+    const currentAnchor = preservePosition ? getVisualPageAnchor() : null;
     const oldScrollTops = [];
     document.querySelectorAll('.bookmark-page').forEach(p => oldScrollTops.push(p.scrollTop));
 
-    createVisualPages();
     const swiperWrapper = document.getElementById('bookmark-swiper-wrapper');
     if (!swiperWrapper) return;
+    createVisualPages(measurePageCapacity(swiperWrapper));
     swiperWrapper.innerHTML = '';
 
     state.sortableInstances.forEach(instance => instance.destroy());
@@ -143,14 +426,12 @@ export function render() {
                 if (state.isEditing) {
                     if (!e.target.classList.contains('delete-btn')) openModal(originalPageIndex, originalBookmarkIndex);
                 } else {
-                    if (!state.hasDragged) openExternal(item.url);
+                    if (!state.hasDragged) openBookmark(item);
                 }
             });
             div.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); div.click(); }
             });
-
-            const firstChar = item.title ? item.title.charAt(0).toUpperCase() : 'A';
 
             // 构建 DOM 结构而非 innerHTML，防止 XSS
             const deleteBtn = document.createElement('div');
@@ -158,28 +439,7 @@ export function render() {
             deleteBtn.textContent = '×';
             deleteBtn.addEventListener('click', (e) => deleteBookmark(e, item.id));
 
-            const iconBox = document.createElement('div');
-            iconBox.className = 'icon-box';
-
-            if (item.icon && item.icon.trim() !== "") {
-                const img = document.createElement('img');
-        img.referrerPolicy = 'no-referrer';
-        img.loading = 'lazy';
-                img.src = item.icon;
-                img.addEventListener('load', () => { img.style.display = 'block'; textIcon.style.display = 'none'; });
-                img.addEventListener('error', () => { img.style.display = 'none'; textIcon.style.display = 'flex'; });
-                const textIcon = document.createElement('div');
-                textIcon.className = 'text-icon';
-                textIcon.textContent = firstChar;
-                textIcon.style.display = 'none';
-                iconBox.appendChild(img);
-                iconBox.appendChild(textIcon);
-            } else {
-                const textIcon = document.createElement('div');
-                textIcon.className = 'text-icon';
-                textIcon.textContent = firstChar;
-                iconBox.appendChild(textIcon);
-            }
+            const iconBox = createBookmarkIcon(item);
 
             const titleEl = document.createElement('div');
             titleEl.className = 'bookmark-title';
@@ -197,16 +457,18 @@ export function render() {
 
     swiperWrapper.appendChild(fragment);
 
+    restoreVisualPage(currentAnchor);
     if (state.currentPage >= state.visualPages.length) state.currentPage = Math.max(0, state.visualPages.length - 1);
     updateSwiperPosition(false);
     renderPaginationDots();
+    renderBookmarkDock();
     if (state.isEditing) initSortable();
 }
 
-function createVisualPages() {
+function createVisualPages(chunkSize = state.visualPageSize) {
     state.visualPages = [];
-    const isMobile = window.innerWidth < CONFIG.MOBILE_MAX_WIDTH;
-    const chunkSize = isMobile ? CONFIG.PAGE_SIZE_MOBILE : CONFIG.PAGE_SIZE_DESKTOP;
+    chunkSize = Math.max(1, Number(chunkSize) || 1);
+    state.visualPageSize = chunkSize;
 
     if (!state.pages || state.pages.length === 0) {
         state.pages = [{ title: t("untitled_page") || "Home", bookmarks: [] }];
@@ -226,6 +488,20 @@ function createVisualPages() {
              }
         }
     });
+}
+
+export function handleViewportResize() {
+    const wrapper = document.getElementById('bookmark-swiper-wrapper');
+    if (!wrapper) return;
+
+    renderBookmarkDock();
+    const nextPageSize = measurePageCapacity(wrapper);
+    if (nextPageSize !== state.visualPageSize) {
+        render({ preservePosition: true });
+        return;
+    }
+
+    updateSwiperPosition(false);
 }
 
 // --- 模态框与书签逻辑 ---
@@ -805,8 +1081,7 @@ function dragEnd(e) {
 
             // 执行跳转或打开编辑
             if (!state.isEditing) {
-                const url = item.dataset.url;
-                if (url) openExternal(url);
+                openBookmark(findBookmarkById(item.dataset.id));
             }
             // 编辑模式下的点击由 Sortable 或其他逻辑处理，或者如果需要也可在此添加
         }
@@ -927,7 +1202,7 @@ function initSortable() {
 
                 updateSyncStatus('saving');
                 debouncedSaveData();
-                createVisualPages(); setTimeout(() => { render(); }, 10);
+                setTimeout(() => { render(); }, 10);
             }
         });
         state.sortableInstances.push(instance);

@@ -1,5 +1,8 @@
 {
   "app_title": "My Homepage - Página inicial minimalista",
+  "dock_common": "Frequentes",
+  "dock_recent": "Recentes",
+  "dock_no_recent": "Sem recentes",
   "menu_edit_bookmark": "Editar Favorito",
   "menu_edit_theme": "Editar Tema",
   "menu_pref": "Preferências da Conta",

@@ -1,5 +1,8 @@
 {
   "app_title": "My Homepage - Минималистичная стартовая страница",
+  "dock_common": "Частые",
+  "dock_recent": "Недавние",
+  "dock_no_recent": "Нет недавних",
   "menu_edit_bookmark": "Редактировать закладку",
   "menu_edit_theme": "Редактировать тему",
   "menu_pref": "Настройки учетной записи",

@@ -1,6 +1,6 @@
 export const CONFIG = {
     // App version — bump on release
-    APP_VERSION: '2.9.6',
+    APP_VERSION: '2.9.8',
 
     // Supabase (anon key is safe to expose when RLS is enabled)
     SUPABASE_URL: 'https://ossrsfyqbrzeauzksvpv.supabase.co',
@@ -14,7 +14,5 @@ export const CONFIG = {
     MAX_IMPORT_SIZE: 2 * 1024 * 1024,
     MAX_AVATAR_BYTES: 2 * 1024 * 1024,
     MAX_AVATAR_URL_LENGTH: 3_000_000,
-    PAGE_SIZE_DESKTOP: 32,
-    PAGE_SIZE_MOBILE: 20,
     MOBILE_MAX_WIDTH: 768
 };

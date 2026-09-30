@@ -1,5 +1,8 @@
 {
   "app_title": "My Homepage - Minimale Startseite",
+  "dock_common": "Häufig",
+  "dock_recent": "Zuletzt",
+  "dock_no_recent": "Keine letzten Aufrufe",
   "menu_edit_bookmark": "Lesezeichen bearbeiten",
   "menu_edit_theme": "Theme bearbeiten",
   "menu_pref": "Kontoeinstellungen",

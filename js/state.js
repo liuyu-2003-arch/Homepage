@@ -1,6 +1,7 @@
 export const state = {
     pages: [],
     visualPages: [],
+    visualPageSize: 0,
     currentUser: null,
     isEditing: false,
     sortableInstances: [],

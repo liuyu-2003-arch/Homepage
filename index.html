@@ -21,7 +21,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e4d0e5">
     <meta name="apple-mobile-web-app-title" content="My Homepage">
-    <meta name="app-version" content="2.9.6">
+    <meta name="app-version" content="2.9.8">
 
     <!-- Preconnect for external resources -->
     <link rel="preconnect" href="https://ossrsfyqbrzeauzksvpv.supabase.co">
@@ -74,6 +74,16 @@
         <div id="pagination-dots" class="pagination-dots"></div>
     </div>
 
+    <nav id="bookmark-dock" class="bookmark-dock hidden" aria-label="Bookmark dock">
+        <section class="dock-group">
+            <div id="dock-common-items" class="dock-items"></div>
+        </section>
+        <div class="dock-divider" aria-hidden="true"></div>
+        <section class="dock-group">
+            <div id="dock-recent-items" class="dock-items"></div>
+        </section>
+    </nav>
+
     <div id="edit-controls" class="edit-controls hidden">
         <button data-action="openModal" data-i18n="btn_add_bookmark">➕ Add Bookmark</button>
         <button data-action="openPageEditModal" data-i18n="btn_edit_page">📝 Edit Pages</button>
@@ -116,6 +126,6 @@
 
     <input type="file" id="import-file-input" style="display: none;" accept=".json">
 
-    <script type="module" src="js/main.js?v=2.9.6"></script>
+    <script type="module" src="js/main.js?v=2.9.8"></script>
 </body>
 </html>

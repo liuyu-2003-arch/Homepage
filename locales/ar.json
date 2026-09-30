@@ -1,5 +1,8 @@
 {
   "app_title": "My Homepage - صفحة بداية بسيطة",
+  "dock_common": "الأكثر استخدامًا",
+  "dock_recent": "الأخيرة",
+  "dock_no_recent": "لا توجد زيارات أخيرة",
   "menu_edit_bookmark": "تحرير الإشارة المرجعية",
   "menu_edit_theme": "تحرير السمة",
   "menu_pref": "تفضيلات الحساب",

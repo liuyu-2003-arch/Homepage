@@ -1,5 +1,8 @@
 {
   "app_title": "My Homepage - ミニマルスタートページ",
+  "dock_common": "よく使う",
+  "dock_recent": "最近",
+  "dock_no_recent": "最近の履歴なし",
   "menu_edit_bookmark": "ブックマークを編集",
   "menu_edit_theme": "テーマを編集",
   "menu_pref": "アカウント設定",

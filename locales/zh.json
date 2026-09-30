@@ -1,5 +1,8 @@
 {
   "app_title": "My Homepage - 极简起始页",
+  "dock_common": "常用",
+  "dock_recent": "最近",
+  "dock_no_recent": "暂无最近",
   "menu_edit_bookmark": "编辑书签",
   "menu_edit_theme": "编辑主题",
   "menu_pref": "账户设置",

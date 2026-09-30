@@ -1,5 +1,8 @@
 {
   "app_title": "My Homepage - Pagina iniziale minimale",
+  "dock_common": "Frequenti",
+  "dock_recent": "Recenti",
+  "dock_no_recent": "Nessun recente",
   "menu_edit_bookmark": "Modifica segnalibro",
   "menu_edit_theme": "Modifica tema",
   "menu_pref": "Preferenze account",

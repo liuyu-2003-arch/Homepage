@@ -1,5 +1,8 @@
 {
   "app_title": "My Homepage - Minimal Start Page",
+  "dock_common": "Common",
+  "dock_recent": "Recent",
+  "dock_no_recent": "No recent visits",
   "menu_edit_bookmark": "Edit Bookmark",
   "menu_edit_theme": "Edit Theme",
   "menu_pref": "Account Preferences",

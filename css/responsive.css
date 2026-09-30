@@ -3,7 +3,7 @@
 /* --- 移动端适配 --- */
 @media (max-width: 768px) {
     /* 1. 整体上移 */
-    .container { padding-top: 10px; }
+    .container { padding-top: 10px; padding-bottom: 72px; }
 
     /* 2. 标题绝对定位，与右上角 Logo 对齐 */
     .bookmark-page { position: relative; padding-top: 0; }
@@ -20,8 +20,10 @@
         justify-content: center;
         align-content: flex-start;
         padding-bottom: 80px;
+        width: min(100%, 360px);
         max-width: 100%;
         padding-left: 10px; padding-right: 10px;
+        box-sizing: border-box;
 
         /* --- 核心参数调整 --- */
         --mobile-card-size: 70px; /* 图标加大 */
@@ -29,9 +31,8 @@
         /* ------------------ */
 
         display: grid;
-        grid-template-columns: repeat(4, var(--mobile-card-size)); /* 4列 */
+        grid-template-columns: repeat(auto-fit, var(--mobile-card-size));
         gap: var(--mobile-gap);
-        width: auto;
     }
 
     /* 4. 图标样式适配 */
@@ -87,7 +88,20 @@
     /* 其他适配 */
     .user-trigger-area { padding: 15px; }
     .user-pill { padding: 4px 12px 4px 4px; }
-    .pagination-dots { bottom: 5px; }
+    .pagination-dots { bottom: 74px; }
+
+    .bookmark-dock {
+        bottom: 10px; gap: 6px;
+        padding: 6px 8px; border-radius: 18px;
+    }
+    .dock-group,
+    .dock-items { gap: 6px; }
+    .dock-divider { height: 28px; }
+    .dock-item,
+    .dock-icon { width: 40px; height: 40px; }
+    .dock-icon { border-radius: 11px; }
+    .dock-icon .text-icon { font-size: 18px; }
+    .dock-empty { min-height: 34px; padding: 0 6px; font-size: 10px; }
 
     /* 7. 登录窗口/弹窗适配 (修复：垂直居中 & 高度自适应 & 内容溢出) */
 

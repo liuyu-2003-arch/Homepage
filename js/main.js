@@ -4,7 +4,7 @@ import { i18n } from './i18n.js';
 import { logger } from './logger.js';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
-    addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList,
+    addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
 } from './ui.js';
@@ -175,15 +175,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     let resizeTimer;
-    let lastIsMobile = window.innerWidth < CONFIG.MOBILE_MAX_WIDTH;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-            const isMobile = window.innerWidth < CONFIG.MOBILE_MAX_WIDTH;
-            if (isMobile !== lastIsMobile) {
-                lastIsMobile = isMobile;
-                render();
-            }
+            handleViewportResize();
         }, 150);
     });
 
@@ -263,6 +258,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.6').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.8').catch(() => {});
     });
 }
