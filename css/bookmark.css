@@ -206,9 +206,8 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-.dock-items:hover .dock-item { transform: translateY(0) scale(0.96); }
-.dock-items:hover .dock-item:hover,
-.dock-items:hover .dock-item:focus-visible {
+.dock-item:hover,
+.dock-item:focus-visible {
     transform: translateY(-10px) scale(1.28);
     z-index: 3;
     outline: none;
