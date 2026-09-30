@@ -1,11 +1,12 @@
-import { state } from './state.js?v=2.9.22';
-import { saveData } from './api.js?v=2.9.22';
-import { CONFIG } from './config.js?v=2.9.22';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.22';
+import { state } from './state.js?v=2.9.23';
+import { saveData } from './api.js?v=2.9.23';
+import { CONFIG } from './config.js?v=2.9.23';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.23';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
 let activeTooltipTarget = null;
+let tooltipShowTimer = null;
 let tooltipListenersBound = false;
 const DOCK_STATS_PREFIX = 'homepageDockStats';
 const DOCK_PINNED_PREFIX = 'homepageDockPinned';
@@ -14,6 +15,7 @@ const DOCK_LIMIT_MOBILE = 3;
 const LONG_PRESS_DELAY = 520;
 const LONG_PRESS_FEEDBACK_DELAY = 180;
 const LONG_PRESS_MOVE_TOLERANCE = 12;
+const BOOKMARK_TOOLTIP_DELAY = 700;
 const DOCK_MAGNIFICATION_SCALE = 0.38;
 const DOCK_MAGNIFICATION_LIFT = 8;
 let dockEditDraftIds = [];
@@ -41,6 +43,8 @@ function ensureBookmarkTooltipListeners() {
 
 function showBookmarkTooltip(target, note) {
     if (state.isEditing || !note) return;
+    clearTimeout(tooltipShowTimer);
+    tooltipShowTimer = null;
     const tooltip = document.getElementById('bookmark-tooltip');
     if (!tooltip) return;
 
@@ -62,7 +66,20 @@ function showBookmarkTooltip(target, note) {
     tooltip.style.top = `${Math.max(padding, top)}px`;
 }
 
+function scheduleBookmarkTooltip(target, note) {
+    clearTimeout(tooltipShowTimer);
+    tooltipShowTimer = null;
+    if (state.isEditing || !note) return;
+
+    tooltipShowTimer = window.setTimeout(() => {
+        tooltipShowTimer = null;
+        showBookmarkTooltip(target, note);
+    }, BOOKMARK_TOOLTIP_DELAY);
+}
+
 function hideBookmarkTooltip(target) {
+    clearTimeout(tooltipShowTimer);
+    tooltipShowTimer = null;
     if (target && activeTooltipTarget !== target) return;
     activeTooltipTarget = null;
     const tooltip = document.getElementById('bookmark-tooltip');
@@ -823,7 +840,7 @@ export function render(options = {}) {
             div.setAttribute('aria-label', note ? `${item.title || item.url}. ${note}` : (item.title || item.url));
             if (note) {
                 div.dataset.note = note;
-                div.addEventListener('mouseenter', () => showBookmarkTooltip(div, note));
+                div.addEventListener('mouseenter', () => scheduleBookmarkTooltip(div, note));
                 div.addEventListener('mouseleave', () => hideBookmarkTooltip(div));
                 div.addEventListener('focus', () => showBookmarkTooltip(div, note));
                 div.addEventListener('blur', () => hideBookmarkTooltip(div));
