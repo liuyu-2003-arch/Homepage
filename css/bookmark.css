@@ -277,6 +277,11 @@ body.long-press-dock-active .bookmark-page-content {
 }
 
 .dock-item {
+    --dock-scale: 1;
+    --dock-lift: 0px;
+    --dock-shadow-y: 5px;
+    --dock-shadow-blur: 12px;
+    --dock-shadow-alpha: 0.16;
     position: relative; flex: 0 0 auto;
     width: 46px; height: 46px; padding: 0; border: 0;
     background: transparent; color: inherit; cursor: pointer;
@@ -312,15 +317,15 @@ body.long-press-bookmark-active .dock-item:not(.long-press-active) {
 
 .dock-icon {
     width: 46px; height: 46px; border-radius: 12px;
-    box-shadow: 0 5px 12px rgba(40, 34, 46, 0.16);
+    box-shadow: 0 var(--dock-shadow-y) var(--dock-shadow-blur) rgba(40, 34, 46, var(--dock-shadow-alpha));
+    transform: translate3d(0, var(--dock-lift), 0) scale3d(var(--dock-scale), var(--dock-scale), 1);
     transform-origin: bottom center;
-    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.16s ease;
     will-change: transform;
 }
 
-.dock-item:hover .dock-icon,
 .dock-item:focus-visible .dock-icon {
-    transform: scale3d(1.38, 1.38, 1);
+    transform: translate3d(0, -8px, 0) scale3d(1.38, 1.38, 1);
     box-shadow: 0 12px 26px rgba(40, 34, 46, 0.28);
 }
 

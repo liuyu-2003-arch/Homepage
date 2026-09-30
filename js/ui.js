@@ -1,7 +1,7 @@
-import { state } from './state.js?v=2.9.20';
-import { saveData } from './api.js?v=2.9.20';
-import { CONFIG } from './config.js?v=2.9.20';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.20';
+import { state } from './state.js?v=2.9.21';
+import { saveData } from './api.js?v=2.9.21';
+import { CONFIG } from './config.js?v=2.9.21';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.21';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -14,6 +14,8 @@ const DOCK_LIMIT_MOBILE = 3;
 const LONG_PRESS_DELAY = 520;
 const LONG_PRESS_FEEDBACK_DELAY = 180;
 const LONG_PRESS_MOVE_TOLERANCE = 12;
+const DOCK_MAGNIFICATION_SCALE = 0.38;
+const DOCK_MAGNIFICATION_LIFT = 8;
 let dockEditDraftIds = [];
 let dockEditSortable = null;
 let longPressTimer = null;
@@ -24,6 +26,9 @@ let longPressStartX = 0;
 let longPressStartY = 0;
 let longPressTriggered = false;
 let suppressClickUntil = 0;
+let dockMagnificationBound = false;
+let dockMagnificationFrame = null;
+let dockMagnificationPointerX = null;
 
 function ensureBookmarkTooltipListeners() {
     if (tooltipListenersBound) return;
@@ -305,6 +310,74 @@ function initLongPressGestures() {
     });
     window.addEventListener('blur', clearLongPressGesture);
     window.addEventListener('scroll', clearLongPressGesture, true);
+}
+
+function resetDockMagnification() {
+    dockMagnificationPointerX = null;
+    if (dockMagnificationFrame) {
+        cancelAnimationFrame(dockMagnificationFrame);
+        dockMagnificationFrame = null;
+    }
+
+    document.querySelectorAll('#bookmark-dock .dock-item').forEach((item) => {
+        item.style.removeProperty('--dock-scale');
+        item.style.removeProperty('--dock-lift');
+        item.style.removeProperty('--dock-shadow-y');
+        item.style.removeProperty('--dock-shadow-blur');
+        item.style.removeProperty('--dock-shadow-alpha');
+    });
+}
+
+function applyDockMagnification() {
+    const dock = document.getElementById('bookmark-dock');
+    if (!dock || dockMagnificationPointerX === null || dock.classList.contains('hidden')) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        resetDockMagnification();
+        return;
+    }
+
+    dock.querySelectorAll('.dock-item').forEach((item) => {
+        const rect = item.getBoundingClientRect();
+        const distance = Math.abs(dockMagnificationPointerX - (rect.left + rect.width / 2));
+        const sigma = Math.max(38, rect.width * 1.18);
+        const influence = Math.exp(-(distance * distance) / (2 * sigma * sigma));
+        const scale = 1 + DOCK_MAGNIFICATION_SCALE * influence;
+        const lift = -DOCK_MAGNIFICATION_LIFT * influence;
+
+        item.style.setProperty('--dock-scale', scale.toFixed(3));
+        item.style.setProperty('--dock-lift', `${lift.toFixed(2)}px`);
+        item.style.setProperty('--dock-shadow-y', `${(5 + influence * 8).toFixed(2)}px`);
+        item.style.setProperty('--dock-shadow-blur', `${(12 + influence * 15).toFixed(2)}px`);
+        item.style.setProperty('--dock-shadow-alpha', (0.16 + influence * 0.12).toFixed(3));
+    });
+}
+
+function queueDockMagnification(clientX) {
+    dockMagnificationPointerX = clientX;
+    if (dockMagnificationFrame) return;
+    dockMagnificationFrame = requestAnimationFrame(() => {
+        dockMagnificationFrame = null;
+        applyDockMagnification();
+    });
+}
+
+function initDockMagnification() {
+    const dock = document.getElementById('bookmark-dock');
+    if (!dock || dockMagnificationBound) return;
+    dockMagnificationBound = true;
+
+    dock.addEventListener('pointerenter', (e) => {
+        if (e.pointerType !== 'touch') queueDockMagnification(e.clientX);
+    });
+    dock.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'touch') queueDockMagnification(e.clientX);
+    });
+    dock.addEventListener('pointerleave', (e) => {
+        if (e.pointerType !== 'touch') resetDockMagnification();
+    });
+    dock.addEventListener('pointercancel', resetDockMagnification);
+    window.addEventListener('blur', resetDockMagnification);
+    window.addEventListener('resize', resetDockMagnification);
 }
 
 function createBookmarkIcon(item, extraClass = '') {
@@ -1258,6 +1331,7 @@ export function changeTheme(color, element, pattern) {
 export function initSwiper() {
     const swiper = document.getElementById('bookmark-swiper');
     if (!swiper) return;
+    initDockMagnification();
     initLongPressGestures();
     swiper.addEventListener('mousedown', dragStart);
     swiper.addEventListener('touchstart', dragStart, { passive: true });
