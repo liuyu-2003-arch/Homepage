@@ -53,8 +53,8 @@
 .input-row { display: block; }
 
 .bookmark-modal-content {
-    width: min(620px, calc(100vw - 40px));
-    max-width: 620px;
+    width: min(680px, calc(100vw - 40px));
+    max-width: 680px;
     box-sizing: border-box;
 }
 .bookmark-modal-content .form-group { gap: 10px; }
