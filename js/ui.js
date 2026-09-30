@@ -1,7 +1,7 @@
-import { state } from './state.js?v=2.9.17';
-import { saveData } from './api.js?v=2.9.17';
-import { CONFIG } from './config.js?v=2.9.17';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.17';
+import { state } from './state.js?v=2.9.18';
+import { saveData } from './api.js?v=2.9.18';
+import { CONFIG } from './config.js?v=2.9.18';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.18';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;

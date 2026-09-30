@@ -164,6 +164,22 @@
         border-radius: 20px;
     }
 
+    .modal-content.bookmark-modal-content {
+        width: min(calc(100vw - 16px), 440px);
+        max-width: min(calc(100vw - 16px), 440px);
+        max-height: calc(100vh - 128px);
+        max-height: calc(100dvh - 128px);
+        padding: 16px 18px;
+        gap: 10px;
+        overflow-y: auto;
+    }
+
+    .bookmark-modal-content .form-group { gap: 8px; }
+    .bookmark-modal-content .inline-field {
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 8px;
+    }
+
     .input-row {
         display: block;
     }

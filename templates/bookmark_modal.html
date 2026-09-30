@@ -1,5 +1,5 @@
 <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal-content">
+    <div class="modal-content bookmark-modal-content">
         <h3 data-i18n="modal_edit_title">Edit/Add Bookmark</h3>
         <div class="modal-top-split">
             <div class="preview-section">
@@ -21,24 +21,24 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="input-wrapper">
+            <div class="input-wrapper inline-field">
                 <label for="input-url" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;" data-i18n="label_url">URL</label>
-                <div style="height: 8px;"></div>
+                <div class="input-spacer"></div>
                 <input type="text" id="input-url" placeholder="e.g. bilibili.com" data-action="autoFillInfo" data-input>
             </div>
-            <div class="input-wrapper">
+            <div class="input-wrapper inline-field">
                 <label for="input-title" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;" data-i18n="label_title">Title</label>
-                <div style="height: 8px;"></div>
+                <div class="input-spacer"></div>
                 <input type="text" id="input-title" placeholder="Title" data-action="updatePreview" data-input>
             </div>
-            <div class="input-wrapper">
+            <div class="input-wrapper inline-field">
                 <label for="input-note" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;" data-i18n="label_note">Note</label>
-                <div style="height: 8px;"></div>
+                <div class="input-spacer"></div>
                 <input type="text" id="input-note" maxlength="160" placeholder="Short note (optional)" autocomplete="off">
             </div>
-            <div class="input-wrapper">
+            <div class="input-wrapper inline-field">
                 <label for="input-icon" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;" data-i18n="label_logo">Logo URL</label>
-                <div style="height: 8px;"></div>
+                <div class="input-spacer"></div>
                 <input type="text" id="input-icon" placeholder="Icon URL (Optional)" data-action="updatePreview" data-input>
             </div>
             <div class="input-wrapper">
