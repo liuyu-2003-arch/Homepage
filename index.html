@@ -21,7 +21,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e4d0e5">
     <meta name="apple-mobile-web-app-title" content="My Homepage">
-    <meta name="app-version" content="2.9.8">
+    <meta name="app-version" content="2.9.9">
 
     <!-- Preconnect for external resources -->
     <link rel="preconnect" href="https://ossrsfyqbrzeauzksvpv.supabase.co">
@@ -75,11 +75,11 @@
     </div>
 
     <nav id="bookmark-dock" class="bookmark-dock hidden" aria-label="Bookmark dock">
-        <section class="dock-group">
+        <section id="dock-common-group" class="dock-group">
             <div id="dock-common-items" class="dock-items"></div>
         </section>
-        <div class="dock-divider" aria-hidden="true"></div>
-        <section class="dock-group">
+        <div id="dock-divider" class="dock-divider" aria-hidden="true"></div>
+        <section id="dock-recent-group" class="dock-group">
             <div id="dock-recent-items" class="dock-items"></div>
         </section>
     </nav>
@@ -87,6 +87,7 @@
     <div id="edit-controls" class="edit-controls hidden">
         <button data-action="openModal" data-i18n="btn_add_bookmark">➕ Add Bookmark</button>
         <button data-action="openPageEditModal" data-i18n="btn_edit_page">📝 Edit Pages</button>
+        <button data-action="openDockEditModal" data-i18n="btn_edit_dock">Edit Dock</button>
         <button data-action="importConfig" data-i18n="btn_import">📥 Import</button>
         <button data-action="exportConfig" data-i18n="btn_export">📤 Export</button>
         <button class="done-btn" data-action="toggleEditMode" data-i18n="btn_done">Done</button>
@@ -118,6 +119,7 @@
 
     <div id="modal-placeholder"></div>
     <div id="page-edit-modal-placeholder"></div>
+    <div id="dock-edit-modal-placeholder"></div>
     <div id="auth-modal-placeholder"></div>
     <div id="user-dropdown-placeholder"></div>
     <div id="help-modal-placeholder"></div>
@@ -126,6 +128,6 @@
 
     <input type="file" id="import-file-input" style="display: none;" accept=".json">
 
-    <script type="module" src="js/main.js?v=2.9.8"></script>
+    <script type="module" src="js/main.js?v=2.9.9"></script>
 </body>
 </html>

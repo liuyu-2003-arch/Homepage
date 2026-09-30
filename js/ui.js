@@ -8,8 +8,11 @@ let autoFillTimer = null;
 let activeTooltipTarget = null;
 let tooltipListenersBound = false;
 const DOCK_STATS_PREFIX = 'homepageDockStats';
+const DOCK_PINNED_PREFIX = 'homepageDockPinned';
 const DOCK_LIMIT_DESKTOP = 5;
 const DOCK_LIMIT_MOBILE = 3;
+let dockEditDraftIds = [];
+let dockEditSortable = null;
 
 function ensureBookmarkTooltipListeners() {
     if (tooltipListenersBound) return;
@@ -56,6 +59,18 @@ function getDockStatsKey() {
     return `${DOCK_STATS_PREFIX}:${state.currentUser?.id || 'guest'}`;
 }
 
+function getDockPinnedKey() {
+    return `${DOCK_PINNED_PREFIX}:${state.currentUser?.id || 'guest'}`;
+}
+
+function getDockLimit() {
+    return window.innerWidth < CONFIG.MOBILE_MAX_WIDTH ? DOCK_LIMIT_MOBILE : DOCK_LIMIT_DESKTOP;
+}
+
+function getBookmarkKey(bookmark) {
+    return bookmark?.id || bookmark?.url || '';
+}
+
 function readDockStats() {
     try {
         const raw = localStorage.getItem(getDockStatsKey());
@@ -63,6 +78,26 @@ function readDockStats() {
         return stats && typeof stats === 'object' && !Array.isArray(stats) ? stats : {};
     } catch {
         return {};
+    }
+}
+
+function readDockPinnedIds() {
+    try {
+        const raw = localStorage.getItem(getDockPinnedKey());
+        if (raw === null) return null;
+        const ids = JSON.parse(raw);
+        if (!Array.isArray(ids)) return null;
+        return [...new Set(ids.filter(id => typeof id === 'string' && id.trim()))];
+    } catch {
+        return null;
+    }
+}
+
+function writeDockPinnedIds(ids) {
+    try {
+        localStorage.setItem(getDockPinnedKey(), JSON.stringify([...new Set(ids)]));
+    } catch {
+        showToast(t('msg_save_fail'), 'error');
     }
 }
 
@@ -183,19 +218,14 @@ function createDockItem(bookmark) {
     return button;
 }
 
-function renderDockEmpty(container, textKey) {
-    const empty = document.createElement('span');
-    empty.className = 'dock-empty';
-    empty.dataset.i18n = textKey;
-    empty.textContent = t(textKey);
-    container.appendChild(empty);
-}
-
 function renderBookmarkDock() {
     const dock = document.getElementById('bookmark-dock');
     const commonContainer = document.getElementById('dock-common-items');
     const recentContainer = document.getElementById('dock-recent-items');
-    if (!dock || !commonContainer || !recentContainer) return;
+    const commonGroup = document.getElementById('dock-common-group');
+    const recentGroup = document.getElementById('dock-recent-group');
+    const divider = document.getElementById('dock-divider');
+    if (!dock || !commonContainer || !recentContainer || !commonGroup || !recentGroup || !divider) return;
 
     commonContainer.innerHTML = '';
     recentContainer.innerHTML = '';
@@ -207,6 +237,7 @@ function renderBookmarkDock() {
     }
 
     const stats = readDockStats();
+    const bookmarkByKey = new Map(bookmarks.map(bookmark => [getBookmarkKey(bookmark), bookmark]));
     const entries = bookmarks.map((bookmark, index) => {
         const stat = stats[bookmark.id || bookmark.url] || {};
         return {
@@ -216,33 +247,179 @@ function renderBookmarkDock() {
             lastOpened: Math.max(0, Number(stat.lastOpened) || 0)
         };
     });
-    const limit = window.innerWidth < CONFIG.MOBILE_MAX_WIDTH ? DOCK_LIMIT_MOBILE : DOCK_LIMIT_DESKTOP;
-    const commonEntries = entries
-        .slice()
-        .sort((a, b) => {
-            if (b.count !== a.count) return b.count - a.count;
-            if (b.lastOpened !== a.lastOpened) return b.lastOpened - a.lastOpened;
-            return a.index - b.index;
-        })
-        .slice(0, limit);
+    const limit = getDockLimit();
+    const pinnedIds = readDockPinnedIds();
+    const commonBookmarks = pinnedIds === null
+        ? entries
+            .slice()
+            .sort((a, b) => {
+                if (b.count !== a.count) return b.count - a.count;
+                if (b.lastOpened !== a.lastOpened) return b.lastOpened - a.lastOpened;
+                return a.index - b.index;
+            })
+            .slice(0, limit)
+            .map(entry => entry.bookmark)
+        : pinnedIds
+            .map(id => bookmarkByKey.get(id))
+            .filter(Boolean)
+            .slice(0, limit);
     const recentEntries = entries
         .filter(entry => entry.lastOpened > 0)
         .sort((a, b) => b.lastOpened - a.lastOpened)
         .slice(0, limit);
 
-    commonEntries.forEach(({ bookmark }) => {
+    commonGroup.classList.toggle('hidden', commonBookmarks.length === 0);
+    recentGroup.classList.toggle('hidden', recentEntries.length === 0);
+    divider.classList.toggle('hidden', commonBookmarks.length === 0 || recentEntries.length === 0);
+
+    commonBookmarks.forEach((bookmark) => {
         commonContainer.appendChild(createDockItem(bookmark));
     });
 
-    if (recentEntries.length === 0) {
-        renderDockEmpty(recentContainer, 'dock_no_recent');
+    recentEntries.forEach(({ bookmark }) => {
+        recentContainer.appendChild(createDockItem(bookmark));
+    });
+
+    dock.classList.remove('hidden');
+}
+
+function getAutomaticCommonIds() {
+    const stats = readDockStats();
+    return getAllBookmarks()
+        .map((bookmark, index) => {
+            const stat = stats[getBookmarkKey(bookmark)] || {};
+            return {
+                bookmark,
+                index,
+                count: Math.max(0, Number(stat.count) || 0),
+                lastOpened: Math.max(0, Number(stat.lastOpened) || 0)
+            };
+        })
+        .sort((a, b) => {
+            if (b.count !== a.count) return b.count - a.count;
+            if (b.lastOpened !== a.lastOpened) return b.lastOpened - a.lastOpened;
+            return a.index - b.index;
+        })
+        .slice(0, getDockLimit())
+        .map(entry => getBookmarkKey(entry.bookmark));
+}
+
+function createDockEditItem(bookmark, action) {
+    const item = document.createElement('li');
+    item.className = 'dock-edit-item';
+    item.dataset.id = getBookmarkKey(bookmark);
+
+    if (action === 'remove') {
+        const handle = document.createElement('span');
+        handle.className = 'dock-edit-handle';
+        handle.textContent = '☰';
+        handle.setAttribute('aria-hidden', 'true');
+        item.appendChild(handle);
+    }
+
+    item.appendChild(createBookmarkIcon(bookmark, 'dock-edit-icon'));
+
+    const title = document.createElement('span');
+    title.className = 'dock-edit-title';
+    title.textContent = bookmark.title || bookmark.url;
+    title.title = bookmark.title || bookmark.url;
+    item.appendChild(title);
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `dock-edit-toggle ${action}`;
+    button.textContent = action === 'remove' ? '−' : '+';
+    button.setAttribute('aria-label', action === 'remove' ? `Remove ${title.textContent}` : `Add ${title.textContent}`);
+    button.addEventListener('click', () => {
+        const key = getBookmarkKey(bookmark);
+        if (action === 'remove') {
+            dockEditDraftIds = dockEditDraftIds.filter(id => id !== key);
+        } else if (dockEditDraftIds.length >= getDockLimit()) {
+            showToast(t('dock_limit_reached'), 'error');
+            return;
+        } else {
+            dockEditDraftIds.push(key);
+        }
+        renderDockEditModal();
+    });
+    item.appendChild(button);
+    return item;
+}
+
+function renderDockEditModal() {
+    const pinnedList = document.getElementById('dock-pinned-list');
+    const availableList = document.getElementById('dock-available-list');
+    const count = document.getElementById('dock-pinned-count');
+    if (!pinnedList || !availableList || !count) return;
+
+    const bookmarks = getAllBookmarks();
+    const bookmarkByKey = new Map(bookmarks.map(bookmark => [getBookmarkKey(bookmark), bookmark]));
+    const validPinnedIds = dockEditDraftIds.filter(id => bookmarkByKey.has(id)).slice(0, getDockLimit());
+    dockEditDraftIds = validPinnedIds;
+
+    pinnedList.innerHTML = '';
+    availableList.innerHTML = '';
+    count.textContent = `${validPinnedIds.length}/${getDockLimit()}`;
+
+    if (validPinnedIds.length === 0) {
+        const empty = document.createElement('li');
+        empty.className = 'dock-edit-empty';
+        empty.textContent = t('dock_empty_pinned');
+        pinnedList.appendChild(empty);
     } else {
-        recentEntries.forEach(({ bookmark }) => {
-            recentContainer.appendChild(createDockItem(bookmark));
+        validPinnedIds.forEach((id) => {
+            pinnedList.appendChild(createDockEditItem(bookmarkByKey.get(id), 'remove'));
         });
     }
 
-    dock.classList.remove('hidden');
+    const pinnedSet = new Set(validPinnedIds);
+    const available = bookmarks.filter(bookmark => !pinnedSet.has(getBookmarkKey(bookmark)));
+    if (available.length === 0) {
+        const empty = document.createElement('li');
+        empty.className = 'dock-edit-empty';
+        empty.textContent = t('dock_empty_available');
+        availableList.appendChild(empty);
+    } else {
+        available.forEach((bookmark) => {
+            availableList.appendChild(createDockEditItem(bookmark, 'add'));
+        });
+    }
+
+    if (dockEditSortable) dockEditSortable.destroy();
+    dockEditSortable = new Sortable(pinnedList, {
+        animation: 160,
+        handle: '.dock-edit-handle',
+        ghostClass: 'dock-edit-ghost',
+        onEnd: (evt) => {
+            const [moved] = dockEditDraftIds.splice(evt.oldIndex, 1);
+            dockEditDraftIds.splice(evt.newIndex, 0, moved);
+            renderDockEditModal();
+        }
+    });
+}
+
+export function openDockEditModal() {
+    const controls = document.getElementById('edit-controls');
+    if (controls) controls.classList.add('hidden');
+
+    const storedIds = readDockPinnedIds();
+    dockEditDraftIds = storedIds === null ? getAutomaticCommonIds() : storedIds.slice(0, getDockLimit());
+    renderDockEditModal();
+    openDialog('dock-edit-modal');
+}
+
+export function closeDockEditModal() {
+    if (dockEditSortable) {
+        dockEditSortable.destroy();
+        dockEditSortable = null;
+    }
+    closeModalById('dock-edit-modal');
+}
+
+export function saveDockEditConfig() {
+    writeDockPinnedIds(dockEditDraftIds);
+    closeDockEditModal();
+    renderBookmarkDock();
 }
 
 function countGridColumns(template) {
@@ -956,7 +1133,7 @@ export function initSwiper() {
 }
 
 function closeTopModal() {
-    const modalIds = ['confirm-modal', 'auth-modal', 'pref-modal', 'page-edit-modal', 'modal', 'help-modal'];
+    const modalIds = ['confirm-modal', 'auth-modal', 'pref-modal', 'dock-edit-modal', 'page-edit-modal', 'modal', 'help-modal'];
     for (const id of modalIds) {
         const el = document.getElementById(id);
         if (el && !el.classList.contains('hidden')) {
@@ -978,7 +1155,7 @@ export function closeModalById(id) {
     try { closeDialog(id); } catch (e) { /* focus trap cleanup is non-critical */ }
 
     // Restore edit toolbar if it was hidden by this modal
-    if (state.isEditing && (id === 'modal' || id === 'page-edit-modal')) {
+    if (state.isEditing && (id === 'modal' || id === 'page-edit-modal' || id === 'dock-edit-modal')) {
         const controls = document.getElementById('edit-controls');
         if (controls) controls.classList.remove('hidden');
     }

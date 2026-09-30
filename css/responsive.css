@@ -92,6 +92,7 @@
 
     .bookmark-dock {
         bottom: 10px; gap: 6px;
+        width: min(372px, calc(100vw - 16px));
         padding: 6px 8px; border-radius: 18px;
     }
     .dock-group,
@@ -102,6 +103,9 @@
     .dock-icon { border-radius: 11px; }
     .dock-icon .text-icon { font-size: 18px; }
     .dock-empty { min-height: 34px; padding: 0 6px; font-size: 10px; }
+
+    .dock-edit-sections { grid-template-columns: 1fr; min-height: 0; }
+    .dock-edit-list { max-height: 24vh; }
 
     /* 7. 登录窗口/弹窗适配 (修复：垂直居中 & 高度自适应 & 内容溢出) */
 

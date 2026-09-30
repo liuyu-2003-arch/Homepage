@@ -5,6 +5,7 @@ import { logger } from './logger.js';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
+    openDockEditModal, closeDockEditModal, saveDockEditConfig,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
 } from './ui.js';
@@ -17,6 +18,7 @@ async function loadTemplates() {
         { id: 'user-dropdown-placeholder', url: 'templates/user_dropdown.html' },
         { id: 'modal-placeholder', url: 'templates/bookmark_modal.html' },
         { id: 'page-edit-modal-placeholder', url: 'templates/page_edit_modal.html' },
+        { id: 'dock-edit-modal-placeholder', url: 'templates/dock_edit_modal.html' },
         { id: 'auth-modal-placeholder', url: 'templates/auth_modal.html' },
         { id: 'help-modal-placeholder', url: 'templates/help_modal.html' },
         { id: 'confirm-modal-placeholder', url: 'templates/confirm_modal.html' }
@@ -187,14 +189,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         navigate: (el) => location.href = el.dataset.arg,
         closeModal: () => closeModal(),
         closePageEditModal: () => closePageEditModal(),
+        closeDockEditModal: () => closeDockEditModal(),
         closeThemeControls: () => closeThemeControls(),
         closeAuthModal: () => window.closeAuthModal(),
         closeHelpModal: () => window.closeHelpModal(),
         openModal: () => openModal(),
         openPageEditModal: () => openPageEditModal(),
+        openDockEditModal: () => openDockEditModal(),
         openThemeControls: () => openThemeControls(),
         openHelpModal: () => window.openHelpModal(),
         saveBookmark: () => saveBookmark(),
+        saveDockEditConfig: () => saveDockEditConfig(),
         handleLogin: () => handleLogin(),
         handleRegister: () => handleRegister(),
         handleLogout: () => handleLogout(),
@@ -258,6 +263,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.8').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.9').catch(() => {});
     });
 }

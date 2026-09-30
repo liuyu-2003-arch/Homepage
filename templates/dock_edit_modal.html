@@ -1,0 +1,24 @@
+<div id="dock-edit-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content dock-edit-modal-content">
+        <h3 data-i18n="modal_dock_title">Edit Dock</h3>
+        <div class="dock-edit-sections">
+            <section class="dock-edit-section">
+                <div class="dock-edit-header">
+                    <span data-i18n="dock_pinned">Fixed</span>
+                    <span id="dock-pinned-count" class="dock-edit-count">0/5</span>
+                </div>
+                <ul id="dock-pinned-list" class="dock-edit-list"></ul>
+            </section>
+            <section class="dock-edit-section">
+                <div class="dock-edit-header">
+                    <span data-i18n="dock_available">Bookmarks</span>
+                </div>
+                <ul id="dock-available-list" class="dock-edit-list"></ul>
+            </section>
+        </div>
+        <div class="modal-actions">
+            <button data-action="closeDockEditModal" data-i18n="btn_cancel">Cancel</button>
+            <button class="primary" data-action="saveDockEditConfig" data-i18n="btn_save">Save Changes</button>
+        </div>
+    </div>
+</div>

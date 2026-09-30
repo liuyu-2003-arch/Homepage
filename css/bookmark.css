@@ -158,9 +158,11 @@
 .bookmark-dock {
     position: fixed; left: 50%; bottom: 14px;
     z-index: 500;
-    display: flex; align-items: center; gap: 12px;
-    max-width: calc(100vw - 28px);
-    padding: 8px 12px;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    width: min(calc(var(--page-width) + 36px), calc(100vw - 16px), 94vw);
+    max-width: calc(100vw - 16px);
+    padding: 8px 14px;
+    box-sizing: border-box;
     border: 1px solid rgba(255, 255, 255, 0.62);
     border-radius: 22px;
     background:
@@ -204,10 +206,11 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-.dock-items:hover .dock-item { transform: scale(0.96); }
-.dock-item:hover,
-.dock-item:focus-visible {
-    transform: translateY(-8px) scale(1.16);
+.dock-items:hover .dock-item { transform: translateY(0) scale(0.96); }
+.dock-items:hover .dock-item:hover,
+.dock-items:hover .dock-item:focus-visible {
+    transform: translateY(-10px) scale(1.28);
+    z-index: 3;
     outline: none;
 }
 
@@ -215,6 +218,8 @@
     width: 46px; height: 46px; border-radius: 12px;
     box-shadow: 0 5px 12px rgba(40, 34, 46, 0.16);
 }
+
+.dock-item:hover .dock-icon { box-shadow: 0 9px 20px rgba(40, 34, 46, 0.24); }
 
 .dock-icon .text-icon { font-size: 21px; }
 .dock-item.style-fit .dock-icon img { object-fit: contain; padding: 15%; box-sizing: border-box; }
@@ -260,9 +265,71 @@ body.dark-mode .bookmark-dock {
 body.dark-mode .dock-empty { color: rgba(255, 255, 255, 0.58); }
 body.dark-mode .dock-divider { background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.24), transparent); }
 
+.dock-edit-modal-content { width: min(760px, calc(100vw - 32px)); box-sizing: border-box; }
+.dock-edit-sections {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px; min-height: 300px;
+}
+.dock-edit-section {
+    display: flex; flex-direction: column; min-width: 0;
+    padding: 12px; border-radius: 16px; background: #f5f7f9;
+}
+.dock-edit-header {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 24px; margin-bottom: 9px;
+    color: #555; font-size: 12px; font-weight: 700;
+}
+.dock-edit-count { color: #8a8a8e; font-variant-numeric: tabular-nums; }
+.dock-edit-list {
+    display: flex; flex-direction: column; gap: 8px;
+    min-height: 0; max-height: min(48vh, 420px); margin: 0; padding: 2px;
+    overflow-y: auto; list-style: none;
+}
+.dock-edit-item {
+    display: flex; align-items: center; gap: 10px;
+    min-height: 50px; padding: 7px 8px; border-radius: 12px; background: #fff;
+    box-sizing: border-box; box-shadow: 0 2px 7px rgba(0, 0, 0, 0.05);
+}
+.dock-edit-handle {
+    flex: 0 0 auto; color: #8a8a8e; cursor: grab; font-size: 15px; line-height: 1;
+}
+.dock-edit-icon {
+    width: 36px; height: 36px; flex: 0 0 36px; border-radius: 9px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+.dock-edit-icon .text-icon { font-size: 16px; }
+.dock-edit-title {
+    min-width: 0; flex: 1; overflow: hidden; color: #333;
+    font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap;
+}
+.dock-edit-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; flex: 0 0 28px; padding: 0; border: 0; border-radius: 50%;
+    background: #e9e9eb; color: #444; cursor: pointer; font-size: 20px; line-height: 1;
+    transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+.dock-edit-toggle:hover { transform: scale(1.08); }
+.dock-edit-toggle.add { background: rgba(0, 122, 255, 0.12); color: #007aff; }
+.dock-edit-toggle.remove { background: rgba(255, 59, 48, 0.1); color: #ff3b30; }
+.dock-edit-empty {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 90px; padding: 12px; color: #8a8a8e; font-size: 12px; text-align: center;
+}
+.dock-edit-ghost { opacity: 0.42; background: #dcecff; }
+
+body.dark-mode .dock-edit-section { background: #29292d; }
+body.dark-mode .dock-edit-item { background: #37373c; box-shadow: none; }
+body.dark-mode .dock-edit-header,
+body.dark-mode .dock-edit-title { color: #f2f2f4; }
+body.dark-mode .dock-edit-count,
+body.dark-mode .dock-edit-empty { color: #a8a8ad; }
+body.dark-mode .dock-edit-toggle { background: #48484d; color: #f2f2f4; }
+body.dark-mode .dock-edit-toggle.add { background: rgba(10, 132, 255, 0.22); color: #64b5ff; }
+body.dark-mode .dock-edit-toggle.remove { background: rgba(255, 69, 58, 0.18); color: #ff6961; }
+
 @media (prefers-reduced-motion: reduce) {
     .is-editing .bookmark-item { animation: none; }
     .toast, .toast.visible { transition: none; animation: none; }
     .user-pill, .user-pill.shrunk, .user-pill.hidden-anim { transition: none; }
-    .bookmark-dock, .dock-item { transition: none; }
+    .bookmark-dock, .dock-item, .dock-edit-toggle { transition: none; }
 }
