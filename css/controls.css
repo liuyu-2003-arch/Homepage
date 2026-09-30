@@ -1,11 +1,22 @@
 .edit-controls {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    background: white; padding: 15px 25px; border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 1000;
+    background: rgba(255, 255, 255, 0.82); padding: 15px 25px; border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    box-shadow: 0 14px 34px rgba(34, 28, 40, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(22px) saturate(1.35);
+    -webkit-backdrop-filter: blur(22px) saturate(1.35);
+    z-index: 1000;
     display: flex; align-items: center; gap: 15px;
     animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes slideUp { from { transform: translate(-50%, 100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+@keyframes iosLongPressReveal {
+    from { opacity: 0; transform: translate(-50%, 28px) scale(0.9); filter: blur(6px); }
+    to { opacity: 1; transform: translate(-50%, 0) scale(1); filter: blur(0); }
+}
+#theme-controls.long-press-origin {
+    animation: iosLongPressReveal 0.36s cubic-bezier(0.18, 0.9, 0.24, 1.12);
+}
 .edit-controls button {
     background: #f0f0f0; border: none; padding: 10px 15px; border-radius: 10px;
     cursor: pointer; font-size: 14px; font-weight: 500; color: #333; transition: background-color 0.2s, transform 0.2s; white-space: nowrap;

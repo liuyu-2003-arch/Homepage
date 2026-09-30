@@ -1,17 +1,17 @@
-import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.15';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.15';
-import { i18n } from './i18n.js?v=2.9.15';
-import { logger } from './logger.js?v=2.9.15';
+import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.17';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.17';
+import { i18n } from './i18n.js?v=2.9.17';
+import { logger } from './logger.js?v=2.9.17';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
     openDockEditModal, closeDockEditModal, saveDockEditConfig,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
-} from './ui.js?v=2.9.15';
-import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.15';
-import { state, onDataReloaded } from './state.js?v=2.9.15';
-import { CONFIG } from './config.js?v=2.9.15';
+} from './ui.js?v=2.9.17';
+import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.17';
+import { state, onDataReloaded } from './state.js?v=2.9.17';
+import { CONFIG } from './config.js?v=2.9.17';
 
 async function loadTemplates() {
     const templates = [
@@ -263,6 +263,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.15').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.17').catch(() => {});
     });
 }

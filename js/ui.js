@@ -1,7 +1,7 @@
-import { state } from './state.js?v=2.9.15';
-import { saveData } from './api.js?v=2.9.15';
-import { CONFIG } from './config.js?v=2.9.15';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.15';
+import { state } from './state.js?v=2.9.17';
+import { saveData } from './api.js?v=2.9.17';
+import { CONFIG } from './config.js?v=2.9.17';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.17';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -11,8 +11,19 @@ const DOCK_STATS_PREFIX = 'homepageDockStats';
 const DOCK_PINNED_PREFIX = 'homepageDockPinned';
 const DOCK_LIMIT_DESKTOP = 5;
 const DOCK_LIMIT_MOBILE = 3;
+const LONG_PRESS_DELAY = 520;
+const LONG_PRESS_FEEDBACK_DELAY = 180;
+const LONG_PRESS_MOVE_TOLERANCE = 12;
 let dockEditDraftIds = [];
 let dockEditSortable = null;
+let longPressTimer = null;
+let longPressFeedbackTimer = null;
+let longPressContext = null;
+let longPressPointerId = null;
+let longPressStartX = 0;
+let longPressStartY = 0;
+let longPressTriggered = false;
+let suppressClickUntil = 0;
 
 function ensureBookmarkTooltipListeners() {
     if (tooltipListenersBound) return;
@@ -151,6 +162,133 @@ function findBookmarkById(id) {
     return null;
 }
 
+function findBookmarkLocation(key) {
+    if (!key) return null;
+    for (let pageIndex = 0; pageIndex < state.pages.length; pageIndex++) {
+        const bookmarkIndex = state.pages[pageIndex].bookmarks?.findIndex(bookmark => getBookmarkKey(bookmark) === key) ?? -1;
+        if (bookmarkIndex >= 0) return { pageIndex, bookmarkIndex };
+    }
+    return null;
+}
+
+function triggerLongPressHaptic() {
+    if (typeof navigator.vibrate !== 'function') return;
+    try {
+        navigator.vibrate(12);
+    } catch {
+        // Haptics are optional and unsupported in several browsers.
+    }
+}
+
+function clearLongPressGesture() {
+    if (longPressTimer) clearTimeout(longPressTimer);
+    if (longPressFeedbackTimer) clearTimeout(longPressFeedbackTimer);
+    longPressTimer = null;
+    longPressFeedbackTimer = null;
+
+    if (longPressContext?.element) {
+        longPressContext.element.classList.remove('long-press-armed', 'long-press-active');
+    }
+    document.body.classList.remove('long-press-bookmark-active', 'long-press-theme-armed', 'long-press-theme-active');
+    longPressContext = null;
+    longPressPointerId = null;
+    longPressTriggered = false;
+}
+
+function activateLongPress() {
+    if (!longPressContext || state.hasDragged || state.isScrolling || state.isEditing) return;
+
+    const context = longPressContext;
+    longPressTriggered = true;
+    suppressClickUntil = Date.now() + 700;
+    triggerLongPressHaptic();
+
+    if (context.type === 'bookmark') {
+        context.element.classList.remove('long-press-armed');
+        context.element.classList.add('long-press-active');
+        document.body.classList.add('long-press-bookmark-active');
+        if (context.location) openModal(context.location.pageIndex, context.location.bookmarkIndex);
+        return;
+    }
+
+    document.body.classList.remove('long-press-theme-armed');
+    document.body.classList.add('long-press-theme-active');
+    openThemeControls({ source: 'longPress' });
+}
+
+function startLongPressGesture(e) {
+    if (state.isEditing || longPressPointerId !== null) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+    const target = e.target;
+    const bookmarkItem = target.closest('#bookmark-swiper .bookmark-item');
+    const dockItem = target.closest('#bookmark-dock .dock-item');
+    if (target.closest('.delete-btn')) return;
+
+    let context = null;
+    if (bookmarkItem) {
+        const location = findBookmarkLocation(bookmarkItem.dataset.id);
+        if (location) context = { type: 'bookmark', element: bookmarkItem, location };
+    } else if (dockItem) {
+        const location = findBookmarkLocation(dockItem.dataset.bookmarkKey);
+        if (location) context = { type: 'bookmark', element: dockItem, location };
+    } else if (target.closest('.container')) {
+        context = { type: 'theme', element: target.closest('.bookmark-page-content') || target };
+    }
+
+    if (!context) return;
+
+    longPressContext = context;
+    longPressPointerId = e.pointerId;
+    longPressStartX = e.clientX;
+    longPressStartY = e.clientY;
+    longPressTriggered = false;
+
+    longPressFeedbackTimer = window.setTimeout(() => {
+        if (!longPressContext || state.hasDragged || state.isScrolling) return;
+        if (longPressContext.type === 'bookmark') longPressContext.element.classList.add('long-press-armed');
+        else document.body.classList.add('long-press-theme-armed');
+    }, LONG_PRESS_FEEDBACK_DELAY);
+
+    longPressTimer = window.setTimeout(activateLongPress, LONG_PRESS_DELAY);
+}
+
+function moveLongPressGesture(e) {
+    if (longPressPointerId === null || e.pointerId !== longPressPointerId) return;
+    if (longPressTriggered) return;
+    const movedX = Math.abs(e.clientX - longPressStartX);
+    const movedY = Math.abs(e.clientY - longPressStartY);
+    if (movedX > LONG_PRESS_MOVE_TOLERANCE || movedY > LONG_PRESS_MOVE_TOLERANCE) {
+        clearLongPressGesture();
+    }
+}
+
+function endLongPressGesture(e) {
+    if (longPressPointerId === null || e.pointerId !== longPressPointerId) return;
+    if (longPressTriggered) suppressClickUntil = Date.now() + 1200;
+    clearLongPressGesture();
+}
+
+function suppressLongPressClick(e) {
+    if (Date.now() > suppressClickUntil) return;
+    suppressClickUntil = 0;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+}
+
+function initLongPressGestures() {
+    document.addEventListener('pointerdown', startLongPressGesture, { passive: true });
+    document.addEventListener('pointermove', moveLongPressGesture, { passive: true });
+    document.addEventListener('pointerup', endLongPressGesture, { passive: true });
+    document.addEventListener('pointercancel', endLongPressGesture, { passive: true });
+    document.addEventListener('click', suppressLongPressClick, true);
+    document.addEventListener('contextmenu', (e) => {
+        if (e.target.closest('#bookmark-swiper, #bookmark-dock .dock-item')) e.preventDefault();
+    });
+    window.addEventListener('blur', clearLongPressGesture);
+    window.addEventListener('scroll', clearLongPressGesture, true);
+}
+
 function createBookmarkIcon(item, extraClass = '') {
     const firstChar = item.title ? item.title.charAt(0).toUpperCase() : 'A';
     const iconBox = document.createElement('div');
@@ -202,6 +340,7 @@ function createDockItem(bookmark) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'dock-item';
+    button.dataset.bookmarkKey = getBookmarkKey(bookmark);
     if (bookmark.style === 'white') button.classList.add('style-white');
     if (bookmark.style === 'fit') button.classList.add('style-fit');
     button.title = bookmark.title || bookmark.url;
@@ -600,6 +739,11 @@ export function render(options = {}) {
 
             // 使用事件监听器而非 onclick 字符串
             div.addEventListener('click', (e) => {
+                if (Date.now() < suppressClickUntil) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
                 if (state.isEditing) {
                     if (!e.target.classList.contains('delete-btn')) openModal(originalPageIndex, originalBookmarkIndex);
                 } else {
@@ -1047,10 +1191,12 @@ export function deletePage(e, pageIndex) {
 }
 
 // --- 主题控制 ---
-export function openThemeControls() {
+export function openThemeControls(options = {}) {
     document.getElementById('user-dropdown').classList.remove('active');
     toggleEditMode(false);
-    document.getElementById('theme-controls').classList.remove('hidden');
+    const controls = document.getElementById('theme-controls');
+    controls.classList.toggle('long-press-origin', options.source === 'longPress');
+    controls.classList.remove('hidden');
 }
 
 export function closeThemeControls() {
@@ -1094,6 +1240,7 @@ export function changeTheme(color, element, pattern) {
 export function initSwiper() {
     const swiper = document.getElementById('bookmark-swiper');
     if (!swiper) return;
+    initLongPressGestures();
     swiper.addEventListener('mousedown', dragStart);
     swiper.addEventListener('touchstart', dragStart, { passive: true });
     swiper.addEventListener('mouseup', dragEnd);
