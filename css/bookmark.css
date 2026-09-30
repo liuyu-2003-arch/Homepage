@@ -178,7 +178,7 @@
 }
 
 .bookmark-dock:hover {
-    transform: translateX(-50%) translateY(-2px);
+    transform: translateX(-50%);
     box-shadow:
         0 20px 42px rgba(49, 37, 55, 0.22),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -202,13 +202,11 @@
     width: 46px; height: 46px; padding: 0; border: 0;
     background: transparent; color: inherit; cursor: pointer;
     transform-origin: bottom center;
-    transition: transform 0.2s cubic-bezier(0.25, 1.4, 0.5, 1);
     -webkit-tap-highlight-color: transparent;
 }
 
 .dock-item:hover,
 .dock-item:focus-visible {
-    transform: translateY(-10px) scale(1.28);
     z-index: 3;
     outline: none;
 }
@@ -216,9 +214,16 @@
 .dock-icon {
     width: 46px; height: 46px; border-radius: 12px;
     box-shadow: 0 5px 12px rgba(40, 34, 46, 0.16);
+    transform-origin: bottom center;
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    will-change: transform;
 }
 
-.dock-item:hover .dock-icon { box-shadow: 0 9px 20px rgba(40, 34, 46, 0.24); }
+.dock-item:hover .dock-icon,
+.dock-item:focus-visible .dock-icon {
+    transform: scale3d(1.38, 1.38, 1);
+    box-shadow: 0 12px 26px rgba(40, 34, 46, 0.28);
+}
 
 .dock-icon .text-icon { font-size: 21px; }
 .dock-item.style-fit .dock-icon img { object-fit: contain; padding: 15%; box-sizing: border-box; }
