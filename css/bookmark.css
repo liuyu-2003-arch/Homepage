@@ -264,13 +264,20 @@ body.dark-mode .bookmark-dock {
 body.dark-mode .dock-empty { color: rgba(255, 255, 255, 0.58); }
 body.dark-mode .dock-divider { background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.24), transparent); }
 
-.dock-edit-modal-content { width: min(760px, calc(100vw - 32px)); box-sizing: border-box; }
+.dock-edit-modal-content {
+    width: min(760px, calc(100vw - 32px));
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+    box-sizing: border-box;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
 .dock-edit-sections {
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 16px; min-height: 300px;
 }
 .dock-edit-section {
-    display: flex; flex-direction: column; min-width: 0;
+    display: flex; flex-direction: column; min-width: 0; min-height: 0;
     padding: 12px; border-radius: 16px; background: #f5f7f9;
 }
 .dock-edit-header {
@@ -282,7 +289,7 @@ body.dark-mode .dock-divider { background: linear-gradient(180deg, transparent, 
 .dock-edit-list {
     display: flex; flex-direction: column; gap: 8px;
     min-height: 0; max-height: min(48vh, 420px); margin: 0; padding: 2px;
-    overflow-y: auto; list-style: none;
+    overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; list-style: none;
 }
 .dock-edit-item {
     display: flex; align-items: center; gap: 10px;
@@ -315,6 +322,7 @@ body.dark-mode .dock-divider { background: linear-gradient(180deg, transparent, 
     min-height: 90px; padding: 12px; color: #8a8a8e; font-size: 12px; text-align: center;
 }
 .dock-edit-ghost { opacity: 0.42; background: #dcecff; }
+.dock-edit-modal-content .modal-actions { flex: 0 0 auto; }
 
 body.dark-mode .dock-edit-section { background: #29292d; }
 body.dark-mode .dock-edit-item { background: #37373c; box-shadow: none; }

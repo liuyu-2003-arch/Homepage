@@ -1,9 +1,10 @@
-const APP_VERSION = '2.9.11';
+const APP_VERSION = '2.9.12';
 const CACHE_NAME = `homepage-v${APP_VERSION}`;
 const APP_SCOPE = self.registration.scope;
 const STATIC_ASSETS = [
     '', 'index.html', 'preferences.html',
-    'css/base.css', 'css/bookmark.css', 'css/modal.css', 'css/controls.css', 'css/user.css', 'css/responsive.css',
+    `css/base.css?v=${APP_VERSION}`, `css/bookmark.css?v=${APP_VERSION}`, `css/modal.css?v=${APP_VERSION}`,
+    `css/controls.css?v=${APP_VERSION}`, `css/user.css?v=${APP_VERSION}`, `css/responsive.css?v=${APP_VERSION}`,
     `js/main.js?v=${APP_VERSION}`, `js/ui.js?v=${APP_VERSION}`, `js/api.js?v=${APP_VERSION}`, `js/auth.js?v=${APP_VERSION}`,
     `js/state.js?v=${APP_VERSION}`, `js/utils.js?v=${APP_VERSION}`, `js/i18n.js?v=${APP_VERSION}`, `js/config.js?v=${APP_VERSION}`,
     `js/logger.js?v=${APP_VERSION}`, `js/preferences.js?v=${APP_VERSION}`,

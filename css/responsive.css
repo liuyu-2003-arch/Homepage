@@ -104,8 +104,31 @@
     .dock-icon .text-icon { font-size: 18px; }
     .dock-empty { min-height: 34px; padding: 0 6px; font-size: 10px; }
 
-    .dock-edit-sections { grid-template-columns: 1fr; min-height: 0; }
-    .dock-edit-list { max-height: 24vh; }
+    .modal-content.dock-edit-modal-content {
+        width: min(calc(100vw - 24px), 420px);
+        max-width: min(calc(100vw - 24px), 420px);
+        max-height: calc(100vh - 24px);
+        max-height: calc(100dvh - 24px);
+        padding: 18px 14px;
+        gap: 12px;
+        overflow-y: auto;
+    }
+    .dock-edit-sections {
+        grid-template-columns: 1fr;
+        min-height: 0;
+        gap: 12px;
+    }
+    .dock-edit-section { padding: 10px; }
+    .dock-edit-list { max-height: min(24vh, 170px); }
+
+    @media (max-height: 640px) {
+        .dock-edit-section { padding: 8px; }
+        .dock-edit-header { margin-bottom: 6px; }
+        .dock-edit-list { gap: 6px; max-height: 142px; }
+        .dock-edit-item { min-height: 42px; padding: 5px 7px; gap: 8px; }
+        .dock-edit-icon { width: 32px; height: 32px; flex-basis: 32px; }
+        .dock-edit-toggle { width: 26px; height: 26px; flex-basis: 26px; font-size: 18px; }
+    }
 
     /* 7. 登录窗口/弹窗适配 (修复：垂直居中 & 高度自适应 & 内容溢出) */
 
@@ -195,4 +218,20 @@
         gap: 10px;
         padding: 10px;
     }
+}
+
+@media (min-width: 769px) and (max-height: 460px) {
+    .dock-edit-modal-content {
+        max-height: calc(100vh - 24px);
+        max-height: calc(100dvh - 24px);
+        padding: 18px 20px;
+        gap: 12px;
+    }
+    .dock-edit-sections { min-height: 0; gap: 12px; }
+    .dock-edit-section { padding: 10px; }
+    .dock-edit-header { margin-bottom: 6px; }
+    .dock-edit-list { gap: 6px; max-height: 110px; }
+    .dock-edit-item { min-height: 42px; padding: 5px 7px; gap: 8px; }
+    .dock-edit-icon { width: 32px; height: 32px; flex-basis: 32px; }
+    .dock-edit-toggle { width: 26px; height: 26px; flex-basis: 26px; font-size: 18px; }
 }
