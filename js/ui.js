@@ -1,7 +1,7 @@
-import { state } from './state.js?v=2.9.24';
-import { saveData } from './api.js?v=2.9.24';
-import { CONFIG } from './config.js?v=2.9.24';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.24';
+import { state } from './state.js?v=2.9.25';
+import { saveData } from './api.js?v=2.9.25';
+import { CONFIG } from './config.js?v=2.9.25';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.25';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -100,7 +100,7 @@ function getDockLimit() {
     return window.innerWidth < CONFIG.MOBILE_MAX_WIDTH ? DOCK_LIMIT_MOBILE : DOCK_LIMIT_DESKTOP;
 }
 
-function getBookmarkKey(bookmark) {
+export function getBookmarkKey(bookmark) {
     return bookmark?.id || bookmark?.url || '';
 }
 
@@ -158,7 +158,7 @@ function recordBookmarkOpen(bookmark) {
     }
 }
 
-function getAllBookmarks() {
+export function getAllBookmarks() {
     const bookmarks = [];
     const seen = new Set();
 
@@ -173,6 +173,54 @@ function getAllBookmarks() {
     });
 
     return bookmarks;
+}
+
+function getBookmarkEntries() {
+    const stats = readDockStats();
+    return getAllBookmarks().map((bookmark, index) => {
+        const stat = stats[getBookmarkKey(bookmark)] || {};
+        return {
+            bookmark,
+            index,
+            count: Math.max(0, Number(stat.count) || 0),
+            lastOpened: Math.max(0, Number(stat.lastOpened) || 0)
+        };
+    });
+}
+
+export function getPinnedBookmarks(limit = getDockLimit()) {
+    const entries = getBookmarkEntries();
+    const bookmarkByKey = new Map(entries.map(entry => [getBookmarkKey(entry.bookmark), entry.bookmark]));
+    const pinnedIds = readDockPinnedIds();
+
+    if (pinnedIds === null) {
+        return entries
+            .slice()
+            .sort((a, b) => {
+                if (b.count !== a.count) return b.count - a.count;
+                if (b.lastOpened !== a.lastOpened) return b.lastOpened - a.lastOpened;
+                return a.index - b.index;
+            })
+            .slice(0, Math.max(0, Number(limit) || 0))
+            .map(entry => entry.bookmark);
+    }
+
+    return pinnedIds
+        .map(id => bookmarkByKey.get(id))
+        .filter(Boolean)
+        .slice(0, Math.max(0, Number(limit) || 0));
+}
+
+export function getRecentBookmarks(limit = getDockLimit()) {
+    return getBookmarkEntries()
+        .filter(entry => entry.lastOpened > 0)
+        .sort((a, b) => b.lastOpened - a.lastOpened)
+        .slice(0, Math.max(0, Number(limit) || 0))
+        .map(entry => entry.bookmark);
+}
+
+function emitBookmarkUpdated() {
+    document.dispatchEvent(new CustomEvent('homepage:bookmark-updated'));
 }
 
 function findBookmarkById(id) {
@@ -216,7 +264,9 @@ function clearLongPressGesture() {
         'long-press-theme-armed',
         'long-press-theme-active',
         'long-press-dock-armed',
-        'long-press-dock-active'
+        'long-press-dock-active',
+        'long-press-widget-armed',
+        'long-press-widget-active'
     );
     longPressContext = null;
     longPressPointerId = null;
@@ -224,12 +274,25 @@ function clearLongPressGesture() {
 }
 
 function activateLongPress() {
-    if (!longPressContext || state.hasDragged || state.isScrolling || state.isEditing) return;
+    if (!longPressContext || state.hasDragged || state.isScrolling || state.isEditing || state.isWidgetEditing) return;
 
     const context = longPressContext;
     longPressTriggered = true;
     suppressClickUntil = Date.now() + 700;
     triggerLongPressHaptic();
+
+    if (context.type === 'widget') {
+        context.element.classList.remove('widget-long-press-armed');
+        document.body.classList.remove('long-press-widget-armed');
+        document.body.classList.add('long-press-widget-active');
+        document.dispatchEvent(new CustomEvent('homepage:widget-edit-request', {
+            detail: {
+                widgetId: context.element.dataset.widgetId,
+                source: 'longPress'
+            }
+        }));
+        return;
+    }
 
     if (context.type === 'bookmark') {
         context.element.classList.remove('long-press-armed');
@@ -253,16 +316,20 @@ function activateLongPress() {
 }
 
 function startLongPressGesture(e) {
-    if (state.isEditing || longPressPointerId !== null) return;
+    if (state.isEditing || state.isWidgetEditing || longPressPointerId !== null) return;
     if (e.pointerType === 'mouse' && e.button !== 0) return;
 
     const target = e.target;
+    if (target.closest('.widget-search-input')) return;
+    const widgetCard = target.closest('.widget-card');
     const bookmarkItem = target.closest('#bookmark-swiper .bookmark-item');
     const dock = target.closest('#bookmark-dock');
     if (target.closest('.delete-btn')) return;
 
     let context = null;
-    if (bookmarkItem) {
+    if (widgetCard) {
+        context = { type: 'widget', element: widgetCard };
+    } else if (bookmarkItem) {
         const location = findBookmarkLocation(bookmarkItem.dataset.id);
         if (location) context = { type: 'bookmark', element: bookmarkItem, location };
     } else if (dock) {
@@ -281,13 +348,15 @@ function startLongPressGesture(e) {
 
     longPressFeedbackTimer = window.setTimeout(() => {
         if (!longPressContext || state.hasDragged || state.isScrolling) return;
-        if (longPressContext.type === 'bookmark') longPressContext.element.classList.add('long-press-armed');
+        if (longPressContext.type === 'widget') longPressContext.element.classList.add('widget-long-press-armed');
+        else if (longPressContext.type === 'bookmark') longPressContext.element.classList.add('long-press-armed');
         else if (longPressContext.type === 'dock') {
             longPressContext.element.classList.add('long-press-armed');
             document.body.classList.add('long-press-dock-armed');
         } else {
             document.body.classList.add('long-press-theme-armed');
         }
+        if (longPressContext.type === 'widget') document.body.classList.add('long-press-widget-armed');
     }, LONG_PRESS_FEEDBACK_DELAY);
 
     longPressTimer = window.setTimeout(activateLongPress, LONG_PRESS_DELAY);
@@ -323,7 +392,7 @@ function initLongPressGestures() {
     document.addEventListener('pointercancel', endLongPressGesture, { passive: true });
     document.addEventListener('click', suppressLongPressClick, true);
     document.addEventListener('contextmenu', (e) => {
-        if (e.target.closest('#bookmark-swiper, #bookmark-dock')) e.preventDefault();
+        if (e.target.closest('#bookmark-swiper, #bookmark-dock, .widget-card')) e.preventDefault();
     });
     window.addEventListener('blur', clearLongPressGesture);
     window.addEventListener('scroll', clearLongPressGesture, true);
@@ -435,7 +504,7 @@ function createBookmarkIcon(item, extraClass = '') {
     return iconBox;
 }
 
-function openBookmark(bookmark) {
+export function openBookmark(bookmark) {
     if (!bookmark) return;
     const safeHref = safeUrl(bookmark.url);
     if (!safeHref) return;
@@ -443,6 +512,7 @@ function openBookmark(bookmark) {
     recordBookmarkOpen(bookmark);
     openExternal(safeHref);
     renderBookmarkDock();
+    emitBookmarkUpdated();
 }
 
 function createDockItem(bookmark) {
@@ -484,47 +554,19 @@ function renderBookmarkDock() {
         return;
     }
 
-    const stats = readDockStats();
-    const bookmarkByKey = new Map(bookmarks.map(bookmark => [getBookmarkKey(bookmark), bookmark]));
-    const entries = bookmarks.map((bookmark, index) => {
-        const stat = stats[bookmark.id || bookmark.url] || {};
-        return {
-            bookmark,
-            index,
-            count: Math.max(0, Number(stat.count) || 0),
-            lastOpened: Math.max(0, Number(stat.lastOpened) || 0)
-        };
-    });
     const limit = getDockLimit();
-    const pinnedIds = readDockPinnedIds();
-    const commonBookmarks = pinnedIds === null
-        ? entries
-            .slice()
-            .sort((a, b) => {
-                if (b.count !== a.count) return b.count - a.count;
-                if (b.lastOpened !== a.lastOpened) return b.lastOpened - a.lastOpened;
-                return a.index - b.index;
-            })
-            .slice(0, limit)
-            .map(entry => entry.bookmark)
-        : pinnedIds
-            .map(id => bookmarkByKey.get(id))
-            .filter(Boolean)
-            .slice(0, limit);
-    const recentEntries = entries
-        .filter(entry => entry.lastOpened > 0)
-        .sort((a, b) => b.lastOpened - a.lastOpened)
-        .slice(0, limit);
+    const commonBookmarks = getPinnedBookmarks(limit);
+    const recentBookmarks = getRecentBookmarks(limit);
 
     commonGroup.classList.toggle('hidden', commonBookmarks.length === 0);
-    recentGroup.classList.toggle('hidden', recentEntries.length === 0);
-    divider.classList.toggle('hidden', commonBookmarks.length === 0 || recentEntries.length === 0);
+    recentGroup.classList.toggle('hidden', recentBookmarks.length === 0);
+    divider.classList.toggle('hidden', commonBookmarks.length === 0 || recentBookmarks.length === 0);
 
     commonBookmarks.forEach((bookmark) => {
         commonContainer.appendChild(createDockItem(bookmark));
     });
 
-    recentEntries.forEach(({ bookmark }) => {
+    recentBookmarks.forEach((bookmark) => {
         recentContainer.appendChild(createDockItem(bookmark));
     });
 
@@ -532,24 +574,7 @@ function renderBookmarkDock() {
 }
 
 function getAutomaticCommonIds() {
-    const stats = readDockStats();
-    return getAllBookmarks()
-        .map((bookmark, index) => {
-            const stat = stats[getBookmarkKey(bookmark)] || {};
-            return {
-                bookmark,
-                index,
-                count: Math.max(0, Number(stat.count) || 0),
-                lastOpened: Math.max(0, Number(stat.lastOpened) || 0)
-            };
-        })
-        .sort((a, b) => {
-            if (b.count !== a.count) return b.count - a.count;
-            if (b.lastOpened !== a.lastOpened) return b.lastOpened - a.lastOpened;
-            return a.index - b.index;
-        })
-        .slice(0, getDockLimit())
-        .map(entry => getBookmarkKey(entry.bookmark));
+    return getPinnedBookmarks().map(getBookmarkKey);
 }
 
 function createDockEditItem(bookmark, action) {
@@ -668,6 +693,7 @@ export function saveDockEditConfig() {
     writeDockPinnedIds(dockEditDraftIds);
     closeDockEditModal();
     renderBookmarkDock();
+    emitBookmarkUpdated();
 }
 
 function countGridColumns(template) {
@@ -893,6 +919,7 @@ export function render(options = {}) {
     renderPaginationDots();
     renderBookmarkDock();
     if (state.isEditing) initSortable();
+    emitBookmarkUpdated();
 }
 
 function createVisualPages(chunkSize = state.visualPageSize) {

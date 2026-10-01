@@ -1,6 +1,6 @@
 export const CONFIG = {
     // App version — bump on release
-    APP_VERSION: '2.9.24',
+    APP_VERSION: '2.9.25',
 
     // Supabase (anon key is safe to expose when RLS is enabled)
     SUPABASE_URL: 'https://ossrsfyqbrzeauzksvpv.supabase.co',

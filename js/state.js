@@ -4,6 +4,7 @@ export const state = {
     visualPageSize: 0,
     currentUser: null,
     isEditing: false,
+    isWidgetEditing: false,
     sortableInstances: [],
     pageListSortable: null,
     currentPage: 0,

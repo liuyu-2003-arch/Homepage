@@ -1,4 +1,4 @@
-import { logger } from './logger.js?v=2.9.24';
+import { logger } from './logger.js?v=2.9.25';
 
 let enTranslations = {};
 let currentTranslations = {};
@@ -47,6 +47,12 @@ export const i18n = {
             const key = el.getAttribute('data-i18n');
             if (key) {
                 el.textContent = this.t(key);
+            }
+        });
+        document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+            const key = el.getAttribute('data-i18n-aria-label');
+            if (key) {
+                el.setAttribute('aria-label', this.t(key));
             }
         });
 
