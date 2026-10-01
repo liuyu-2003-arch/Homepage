@@ -1,5 +1,5 @@
 <div id="user-dropdown" class="user-menu">
-    <div class="menu-header">
+    <a class="menu-header" href="preferences.html" data-action="navigate" data-arg="preferences.html">
         <div class="user-avatar-small">
             <img id="menu-user-avatar" alt="User Avatar">
         </div>
@@ -7,11 +7,7 @@
             <div id="menu-user-name" class="u-name" data-i18n="auth_guest">Guest</div>
             <div id="menu-user-email" class="u-email">guest@example.com</div>
         </div>
-    </div>
-
-    <div class="menu-item" data-action="navigate" data-arg="preferences.html">
-        <span class="menu-icon">⚙️</span> <span data-i18n="menu_pref">Account Preferences</span>
-    </div>
+    </a>
 
     <div class="menu-divider"></div>
 
@@ -54,11 +50,5 @@
 
     <div class="menu-item" data-action="handleDonate">
         <span class="menu-icon">☕</span> <span data-i18n="menu_donate">Donate</span>
-    </div>
-
-    <div class="menu-divider"></div>
-
-    <div class="menu-item" data-action="handleLogout">
-        <span class="menu-icon">🚪</span> <span data-i18n="menu_logout">Log out</span>
     </div>
 </div>

@@ -1,8 +1,8 @@
-import { CONFIG } from './config.js?v=2.9.27';
-import { state } from './state.js?v=2.9.27';
-import { showToast, t, safeUrl } from './utils.js?v=2.9.27';
-import { i18n } from './i18n.js?v=2.9.27';
-import { logger } from './logger.js?v=2.9.27';
+import { CONFIG } from './config.js?v=2.9.28';
+import { state } from './state.js?v=2.9.28';
+import { showToast, t, safeUrl } from './utils.js?v=2.9.28';
+import { i18n } from './i18n.js?v=2.9.28';
+import { logger } from './logger.js?v=2.9.28';
 
 let supabaseClient = null;
 window.prefAvatarUrl = window.prefAvatarUrl || '';
@@ -14,6 +14,7 @@ const PREF_ACTIONS = {
     handleAvatarUrlInput: (el) => window.handleAvatarUrlInput(el.value),
     updatePrefNamePreview: (el) => window.updatePrefNamePreview(el.value),
     savePreferences: () => window.savePreferences(),
+    logoutPreferences: () => window.logoutPreferences(),
 };
 
 function closestFromTarget(target, selector) {
@@ -185,6 +186,28 @@ function renderAvatarGrid() {
 window.updatePrefNamePreview = function(value) {
     const el = document.getElementById('pref-preview-name');
     if (el) el.innerText = value || 'Display Name';
+};
+
+window.logoutPreferences = async function() {
+    if (!supabaseClient || !state.currentUser) {
+        location.href = 'index.html';
+        return;
+    }
+
+    const btn = document.getElementById('btn-logout');
+    if (btn) btn.disabled = true;
+
+    try {
+        const { error } = await supabaseClient.auth.signOut();
+        if (error) throw error;
+        state.currentUser = null;
+        showToast(t('msg_logout'), 'normal');
+        setTimeout(() => location.href = 'index.html', 500);
+    } catch (e) {
+        logger.error('Logout failed', e);
+        showToast(e.message || t('msg_sdk_error'), 'error');
+        if (btn) btn.disabled = false;
+    }
 };
 
 window.savePreferences = async function() {

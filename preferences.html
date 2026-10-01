@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'">
     <title>Account Preferences - My Homepage</title>
-    <meta name="app-version" content="2.9.27">
+    <meta name="app-version" content="2.9.28">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007AFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/%3E%3C/svg%3E">
     <link rel="preconnect" href="https://api.dicebear.com">
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
@@ -172,6 +172,26 @@
         }
         .btn-save:hover { background: #0066d6; }
         .btn-save:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .logout-actions {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+        .btn-logout {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid rgba(198,40,40,0.28);
+            border-radius: 16px;
+            background: rgba(198,40,40,0.07);
+            color: #c62828;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(198,40,40,0.12); }
+        .btn-logout:active { transform: scale(0.98); }
+        .btn-logout:disabled { opacity: 0.5; cursor: wait; transform: none; }
 
         @media (max-width: 480px) {
             .page { padding: 16px 14px 36px; }
@@ -241,9 +261,12 @@
                 <button class="btn-cancel" data-action="navigate" data-arg="index.html" data-i18n="btn_cancel">Cancel</button>
                 <button class="btn-save" id="btn-save" data-action="savePreferences" data-i18n="btn_save">Save Changes</button>
             </div>
+            <div class="logout-actions">
+                <button class="btn-logout" id="btn-logout" data-action="logoutPreferences" data-i18n="menu_logout">Log out</button>
+            </div>
         </div>
     </div>
 
-    <script type="module" src="js/preferences.js?v=2.9.27"></script>
+    <script type="module" src="js/preferences.js?v=2.9.28"></script>
 </body>
 </html>
