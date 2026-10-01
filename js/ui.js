@@ -1,7 +1,7 @@
-import { state } from './state.js?v=2.9.26';
-import { saveData } from './api.js?v=2.9.26';
-import { CONFIG } from './config.js?v=2.9.26';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.26';
+import { state } from './state.js?v=2.9.27';
+import { saveData } from './api.js?v=2.9.27';
+import { CONFIG } from './config.js?v=2.9.27';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.27';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -323,7 +323,9 @@ function initLongPressGestures() {
     document.addEventListener('pointercancel', endLongPressGesture, { passive: true });
     document.addEventListener('click', suppressLongPressClick, true);
     document.addEventListener('contextmenu', (e) => {
-        if (e.target.closest('#bookmark-swiper, #bookmark-dock')) e.preventDefault();
+        const isLongPressArea = e.target.closest('#bookmark-swiper, #bookmark-dock');
+        const hasActiveLongPress = longPressPointerId !== null || Date.now() < suppressClickUntil;
+        if (isLongPressArea && hasActiveLongPress) e.preventDefault();
     });
     window.addEventListener('blur', clearLongPressGesture);
     window.addEventListener('scroll', clearLongPressGesture, true);
