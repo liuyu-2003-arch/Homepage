@@ -1,24 +1,17 @@
-import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.25';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.25';
-import { i18n } from './i18n.js?v=2.9.25';
-import { logger } from './logger.js?v=2.9.25';
+import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.26';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.26';
+import { i18n } from './i18n.js?v=2.9.26';
+import { logger } from './logger.js?v=2.9.26';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
     openDockEditModal, closeDockEditModal, saveDockEditConfig,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
-} from './ui.js?v=2.9.25';
-import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.25';
-import { state, onDataReloaded } from './state.js?v=2.9.25';
-import { CONFIG } from './config.js?v=2.9.25';
-import {
-    initWidgetLayer,
-    refreshWidgetData,
-    renderWidgetLayer,
-    handleWidgetViewportResize,
-    openWidgetEdit
-} from './widgets.js?v=2.9.25';
+} from './ui.js?v=2.9.26';
+import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.26';
+import { state, onDataReloaded } from './state.js?v=2.9.26';
+import { CONFIG } from './config.js?v=2.9.26';
 
 async function loadTemplates() {
     const templates = [
@@ -54,7 +47,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await i18n.loadTranslations(i18n.currentLang);
     initTheme();
     initSwiper();
-    initWidgetLayer();
 
     // 显示版本号
     const injectVersion = () => {
@@ -65,7 +57,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 2. 注册数据重载回调（解除 api.js ↔ ui.js 循环依赖）
     onDataReloaded(render);
-    document.addEventListener('homepage:bookmark-updated', refreshWidgetData);
 
     // 3. 初始化 Supabase + 加载数据（容错：任何失败都不能白屏）
     try {
@@ -148,7 +139,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     window.changeLanguage = async (lang) => {
         await i18n.loadTranslations(lang);
-        renderWidgetLayer();
     };
     window.toggleAuthModal = () => {
          if (state.currentUser) {
@@ -191,7 +181,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
             handleViewportResize();
-            handleWidgetViewportResize();
         }, 150);
     });
 
@@ -208,11 +197,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         openPageEditModal: () => openPageEditModal(),
         openDockEditModal: () => openDockEditModal(),
         openThemeControls: () => openThemeControls(),
-        openWidgetEdit: () => {
-            document.getElementById('user-dropdown')?.classList.remove('active');
-            startPillAnimation();
-            openWidgetEdit(document.getElementById('user-pill') || document.activeElement);
-        },
         openHelpModal: () => window.openHelpModal(),
         saveBookmark: () => saveBookmark(),
         saveDockEditConfig: () => saveDockEditConfig(),
@@ -279,6 +263,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.25').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.26').catch(() => {});
     });
 }
