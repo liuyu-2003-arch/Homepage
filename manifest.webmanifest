@@ -6,16 +6,28 @@
   "description": "仿 iOS 毛玻璃风格的浏览器起始页",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#e4d0e5",
-  "theme_color": "#e4d0e5",
+  "background_color": "#0b0d0e",
+  "theme_color": "#c8ff1a",
   "lang": "zh-CN",
   "categories": ["utilities", "productivity"],
   "icons": [
     {
-      "src": "icon.png",
+      "src": "icon.svg?v=2.9.24",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon-192.png?v=2.9.24",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png?v=2.9.24",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }

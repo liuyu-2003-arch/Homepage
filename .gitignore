@@ -7,3 +7,7 @@
 
 # Node (if ever added)
 node_modules/
+
+# Local browser test artifacts
+.playwright-cli/
+output/
