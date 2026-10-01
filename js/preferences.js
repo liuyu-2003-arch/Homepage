@@ -1,8 +1,8 @@
-import { CONFIG } from './config.js?v=2.9.28';
-import { state } from './state.js?v=2.9.28';
-import { showToast, t, safeUrl } from './utils.js?v=2.9.28';
-import { i18n } from './i18n.js?v=2.9.28';
-import { logger } from './logger.js?v=2.9.28';
+import { CONFIG } from './config.js?v=2.9.29';
+import { state } from './state.js?v=2.9.29';
+import { showToast, t, safeUrl } from './utils.js?v=2.9.29';
+import { i18n } from './i18n.js?v=2.9.29';
+import { logger } from './logger.js?v=2.9.29';
 
 let supabaseClient = null;
 window.prefAvatarUrl = window.prefAvatarUrl || '';
