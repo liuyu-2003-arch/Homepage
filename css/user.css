@@ -143,7 +143,7 @@ body.dark-mode .user-pill-icon {
 .avatar-option:hover { transform: scale(1.1); }
 .avatar-option.selected { border-color: #007AFF; box-shadow: 0 0 0 2px rgba(0,122,255,0.3); }
 
-/* --- Pill shrink/hide animation states --- */
+/* --- Pill shrink animation states --- */
 
 /* 1. Shrink to circle after 10s idle */
 .user-pill.shrunk {
@@ -160,15 +160,7 @@ body.dark-mode .user-pill-icon {
     margin: 0;     /* 移除边距 */
 }
 
-/* 3. 第二阶段：隐藏 (再过2秒后) */
-.user-pill.hidden-anim {
-    opacity: 0;
-    transform: translateX(120%); /* 向右滑出屏幕 (稍微多一点，确保完全移出) */
-    pointer-events: none;        /* 隐藏后不可点击 */
-}
-
-/* 4. 交互优化：鼠标悬停时临时恢复显示 */
-/* 只要鼠标移入右上角区域，强制恢复所有样式 */
+/* 交互优化：鼠标悬停时恢复展开样式 */
 .user-trigger-area:hover .user-pill {
     opacity: 1;
     transform: translateX(0);

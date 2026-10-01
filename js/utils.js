@@ -144,20 +144,18 @@ export function updateSyncStatus(status) {
 
 // --- 核心新增：全局胶囊动画控制 ---
 let shrinkTimer = null;
-let hideTimer = null;
 
 export function startPillAnimation() {
     const pill = document.getElementById('user-pill');
     if (!pill) return;
 
-    // Early return: pill is already expanded and timers are armed
-    const isIdle = !pill.classList.contains('shrunk') && !pill.classList.contains('hidden-anim');
-    if (isIdle && shrinkTimer && hideTimer) return;
+    // Early return: pill is already expanded and the shrink timer is armed
+    const isIdle = !pill.classList.contains('shrunk');
+    if (isIdle && shrinkTimer) return;
 
     // 1. 立即重置状态：显示并展开
-    pill.classList.remove('shrunk', 'hidden-anim');
+    pill.classList.remove('shrunk');
     if (shrinkTimer) clearTimeout(shrinkTimer);
-    if (hideTimer) clearTimeout(hideTimer);
 
     // 2. 检查阻塞条件 (如果正在交互，则不启动倒计时)
     // 直接检查 DOM 类名，避免复杂的依赖引用
@@ -180,8 +178,4 @@ export function startPillAnimation() {
     shrinkTimer = setTimeout(() => {
         if(pill) pill.classList.add('shrunk');
     }, 10000); // 10秒后收缩
-
-    hideTimer = setTimeout(() => {
-        if(pill) pill.classList.add('hidden-anim');
-    }, 12000); // 10秒+2秒后隐藏
 }

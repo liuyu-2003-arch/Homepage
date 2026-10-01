@@ -351,10 +351,16 @@ body.long-press-bookmark-active .dock-item:not(.long-press-active) {
     transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
 }
 
-.dock-item:hover .dock-item-label,
+.dock-item:hover .dock-item-label {
+    opacity: 1; visibility: visible;
+    transform: translate(-50%, 0) scale(1);
+    transition-delay: 700ms;
+}
+
 .dock-item:focus-visible .dock-item-label {
     opacity: 1; visibility: visible;
     transform: translate(-50%, 0) scale(1);
+    transition-delay: 0s;
 }
 
 .dock-empty {
@@ -460,6 +466,6 @@ body.dark-mode .dock-edit-toggle.remove { background: rgba(255, 69, 58, 0.18); c
     body.long-press-theme-active .bookmark-page-content,
     body.long-press-theme-active .bookmark-dock { filter: none; }
     .toast, .toast.visible { transition: none; animation: none; }
-    .user-pill, .user-pill.shrunk, .user-pill.hidden-anim { transition: none; }
+    .user-pill, .user-pill.shrunk { transition: none; }
     .bookmark-dock, .dock-item, .dock-edit-toggle { transition: none; }
 }
