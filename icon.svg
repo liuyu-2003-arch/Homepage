@@ -1,6 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
   <title id="title">My Homepage icon</title>
-  <desc id="desc">A flat black H monogram with a play symbol on a lime rounded tile.</desc>
+  <desc id="desc">A flowing lowercase H made from two smooth black curves on a lime tile.</desc>
   <rect x="28" y="28" width="456" height="456" rx="108" fill="#c8ff00"/>
-  <path fill="#111311" fill-rule="evenodd" d="M148 102h36c31 0 42 17 42 47v77h60v-77c0-30 11-47 42-47h36c31 0 40 17 40 47v216c0 30-9 47-40 47h-36c-31 0-42-17-42-47v-77h-60v77c0 30-11 47-42 47h-36c-31 0-40-17-40-47V149c0-30 9-47 40-47Zm88 130 50 24-50 24v-48Z"/>
+  <g fill="none" stroke="#111311" stroke-width="52" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M153 385C153 307 152 225 154 132"/>
+    <path d="M152 282C190 232 231 208 274 218C323 230 347 277 347 327C347 367 371 383 399 356"/>
+  </g>
 </svg>
