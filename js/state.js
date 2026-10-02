@@ -19,7 +19,8 @@ export const state = {
     prevTranslate: 0,
     animationID: null,
     dotsTimer: null,
-    wheelTimeout: null
+    wheelTimeout: null,
+    isWheelScrolling: false
 };
 
 const DEFAULT_ACCOUNT_EMAILS = ['jemchmi@gmail.com'];
