@@ -1,7 +1,7 @@
-import { state } from './state.js?v=2.9.30';
-import { saveData } from './api.js?v=2.9.30';
-import { CONFIG } from './config.js?v=2.9.30';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.30';
+import { state, isDefaultAccount } from './state.js?v=2.9.31';
+import { saveData } from './api.js?v=2.9.31';
+import { CONFIG } from './config.js?v=2.9.31';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.31';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -88,12 +88,16 @@ function hideBookmarkTooltip(target) {
     tooltip.setAttribute('aria-hidden', 'true');
 }
 
+function getDockScope() {
+    return (state.currentUser && !isDefaultAccount()) ? state.currentUser.id : 'guest';
+}
+
 function getDockStatsKey() {
-    return `${DOCK_STATS_PREFIX}:${state.currentUser?.id || 'guest'}`;
+    return `${DOCK_STATS_PREFIX}:${getDockScope()}`;
 }
 
 function getDockPinnedKey() {
-    return `${DOCK_PINNED_PREFIX}:${state.currentUser?.id || 'guest'}`;
+    return `${DOCK_PINNED_PREFIX}:${getDockScope()}`;
 }
 
 function getDockLimit() {

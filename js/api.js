@@ -1,7 +1,7 @@
-import { CONFIG } from './config.js?v=2.9.30';
-import { state, emit } from './state.js?v=2.9.30';
-import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.30';
-import { logger } from './logger.js?v=2.9.30';
+import { CONFIG } from './config.js?v=2.9.31';
+import { state, emit, isDefaultAccount } from './state.js?v=2.9.31';
+import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.31';
+import { logger } from './logger.js?v=2.9.31';
 
 let supabaseClient = null;
 let saveQueue = Promise.resolve();
@@ -12,7 +12,8 @@ const LEGACY_STORAGE_KEY = 'pagedData';
 const GUEST_STORAGE_KEY = 'pagedData:guest';
 
 function getStorageKey(userId = state.currentUser?.id) {
-    return userId ? `pagedData:user:${userId}` : GUEST_STORAGE_KEY;
+    if (!userId || isDefaultAccount()) return GUEST_STORAGE_KEY;
+    return `pagedData:user:${userId}`;
 }
 
 function readCachedPages(key) {

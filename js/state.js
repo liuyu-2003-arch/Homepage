@@ -22,6 +22,12 @@ export const state = {
     wheelTimeout: null
 };
 
+const DEFAULT_ACCOUNT_EMAILS = ['jemchmi@gmail.com'];
+
+export function isDefaultAccount(user = state.currentUser) {
+    return Boolean(user?.email) && DEFAULT_ACCOUNT_EMAILS.includes(user.email.trim().toLowerCase());
+}
+
 // Simple event bus — breaks circular dependency between api.js and ui.js
 const listeners = new Map();
 let pendingEvents = new Set();
