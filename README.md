@@ -76,6 +76,16 @@
     回调地址：`https://你的域名/api/auth/callback/google` 与 `https://你的域名/api/auth/callback/github`。未配置时对应按钮会提示 "not configured yet"，邮箱+密码登录始终可用。
 5.  密码使用 PBKDF2-SHA256（WebCrypto）存储，会话为 HttpOnly + Secure + SameSite=Lax 的随机令牌，存于 D1 的 `sessions` 表。
 
+### 3. （可选）把 www 跳转到主域名
+
+`workers/` 下有一个独立的小 Worker，把 `www.你的域名/*` 301 到主域名，保证登录态与 SEO 唯一：
+
+```bash
+wrangler deploy --config workers/wrangler.toml
+```
+
+注意：Worker 路由只对**经过 Cloudflare 代理（橙云）**的流量生效，因此 www 那条 DNS 记录需保持橙云；主域名可以继续用灰云，从而原样透传 Pages 的响应头。
+
 ## 🛠️ 使用方法
 
 1.  **注册/登录**：打开页面后，点击左上角的用户图标进行注册或登录。

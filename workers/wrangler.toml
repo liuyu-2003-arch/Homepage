@@ -1,0 +1,9 @@
+# Standalone worker (NOT part of the Pages project).
+# Deploy from the repo root with:  wrangler deploy --config workers/wrangler.toml
+name = "www-redirect"
+main = "www-redirect.js"
+compatibility_date = "2026-10-01"
+
+routes = [
+  { pattern = "www.324893.xyz/*", zone_name = "324893.xyz" }
+]
