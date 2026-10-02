@@ -1,8 +1,8 @@
-import { getSupabase, loadData } from './api.js?v=2.9.31';
-import { state } from './state.js?v=2.9.31';
-import { showToast, t, startPillAnimation } from './utils.js?v=2.9.31';
-import { CONFIG } from './config.js?v=2.9.31';
-import { logger } from './logger.js?v=2.9.31';
+import { getSupabase, loadData } from './api.js?v=2.9.32';
+import { state } from './state.js?v=2.9.32';
+import { showToast, t, startPillAnimation } from './utils.js?v=2.9.32';
+import { CONFIG } from './config.js?v=2.9.32';
+import { logger } from './logger.js?v=2.9.32';
 
 export async function initAuth() {
     const sb = getSupabase();

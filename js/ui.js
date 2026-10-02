@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.31';
-import { saveData } from './api.js?v=2.9.31';
-import { CONFIG } from './config.js?v=2.9.31';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.31';
+import { state, isDefaultAccount } from './state.js?v=2.9.32';
+import { saveData } from './api.js?v=2.9.32';
+import { CONFIG } from './config.js?v=2.9.32';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.32';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -227,6 +227,12 @@ function clearLongPressGesture() {
     longPressTriggered = false;
 }
 
+function promptLogin() {
+    showToast(t('msg_please_login'), 'error');
+    openDialog('auth-modal');
+    if (typeof window.switchToLoginView === 'function') window.switchToLoginView();
+}
+
 function activateLongPress() {
     if (!longPressContext || state.hasDragged || state.isScrolling || state.isEditing) return;
 
@@ -234,6 +240,13 @@ function activateLongPress() {
     longPressTriggered = true;
     suppressClickUntil = Date.now() + 700;
     triggerLongPressHaptic();
+
+    if (!state.currentUser) {
+        clearLongPressGesture();
+        suppressClickUntil = Date.now() + 1200;
+        promptLogin();
+        return;
+    }
 
     if (context.type === 'bookmark') {
         context.element.classList.remove('long-press-armed');

@@ -1,7 +1,7 @@
-import { CONFIG } from './config.js?v=2.9.31';
-import { state, emit, isDefaultAccount } from './state.js?v=2.9.31';
-import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.31';
-import { logger } from './logger.js?v=2.9.31';
+import { CONFIG } from './config.js?v=2.9.32';
+import { state, emit, isDefaultAccount } from './state.js?v=2.9.32';
+import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.32';
+import { logger } from './logger.js?v=2.9.32';
 
 let supabaseClient = null;
 let saveQueue = Promise.resolve();
