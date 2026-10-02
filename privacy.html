@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'">
+    <title>隐私政策 · Privacy Policy · My Homepage</title>
+    <meta name="description" content="My Homepage 隐私政策：我们收集哪些数据、如何使用与删除。">
+    <link rel="icon" type="image/svg+xml" href="icon.svg?v=2.9.37">
+    <style>
+        :root { color-scheme: light; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 48px 20px 72px;
+            background: linear-gradient(135deg, #e4d0e5 0%, #d4c4de 40%, #b8c4e0 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
+            color: #2b2b33; line-height: 1.75;
+        }
+        main {
+            width: min(100%, 760px); margin: 0 auto; padding: 40px 32px 48px;
+            background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 22px; box-shadow: 0 18px 48px rgba(60, 40, 80, 0.16);
+            backdrop-filter: blur(18px);
+        }
+        h1 { margin: 0 0 6px; font-size: 26px; }
+        h2 { margin: 30px 0 8px; font-size: 17px; }
+        p, li { font-size: 14.5px; }
+        .meta { margin: 0 0 22px; font-size: 13px; color: #6b6b78; }
+        ul { margin: 8px 0; padding-left: 20px; }
+        a { color: #007aff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .en { color: #55555f; }
+        .en h2 { font-size: 15px; }
+        footer { margin-top: 34px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.08); font-size: 13px; color: #6b6b78; }
+    </style>
+</head>
+<body>
+<main>
+    <h1>隐私政策</h1>
+    <p class="meta">最近更新：2026-10-02 · <a href="/">返回首页</a> · <a href="/terms">服务条款</a></p>
+
+    <h2>我们收集的信息</h2>
+    <ul>
+        <li><strong>账户信息</strong>：你的邮箱地址。密码只保存为加盐的 PBKDF2-SHA256 哈希，无法还原出明文。</li>
+        <li><strong>你保存的内容</strong>：书签页面配置与收藏数据（用于跨设备同步）。</li>
+        <li><strong>登录会话</strong>：一个随机会话令牌，保存在服务端数据库与浏览器中的 HttpOnly Cookie（<code>hp_session</code>）。</li>
+        <li><strong>第三方登录</strong>：若你选择使用 Google 或 GitHub 登录，我们会收到该平台返回的用户 ID、邮箱与头像地址。</li>
+    </ul>
+
+    <h2>我们不做的事</h2>
+    <ul>
+        <li>不投放广告、不做用户画像，不出售或共享你的数据（本页列出的服务商除外）。</li>
+        <li>不使用分析或追踪类 Cookie。</li>
+    </ul>
+
+    <h2>存储与处理</h2>
+    <ul>
+        <li>数据存储在 Cloudflare（D1 数据库与 Pages Functions），全程通过 HTTPS 传输。</li>
+        <li>登录失败次数按邮箱做 15 分钟窗口计数，仅用于防止暴力破解。</li>
+    </ul>
+
+    <h2>保留与删除</h2>
+    <p>数据保留至你请求删除。你可以通过下方联系方式请求导出或删除账户及其全部数据。</p>
+
+    <h2>第三方服务</h2>
+    <p>Google、GitHub（仅用于你选择的第三方登录）、DiceBear / Manifest / Brandfetch / Logo.dev（页面加载时用于获取图标与头像图片）。</p>
+
+    <h2>儿童</h2>
+    <p>本服务不面向 13 岁以下儿童，我们不会有意收集其个人信息。</p>
+
+    <h2>政策变更</h2>
+    <p>本政策如有更新将在本页公示，并同步更新顶部的日期。</p>
+
+    <div class="en">
+        <h2>Privacy Policy (English summary)</h2>
+        <p>We store your email address, a salted PBKDF2-SHA256 hash of your password (never the password itself), the bookmark configuration and favorites you save, and a random session token (server-side plus an HttpOnly cookie). If you sign in with Google or GitHub we receive your user ID, email and avatar URL from that provider. Data is stored on Cloudflare (D1 + Pages Functions) over HTTPS. No ads, no profiling, no analytics cookies, and we never sell your data. Data is kept until you ask us to delete it. Contact us via GitHub Issues to export or delete your account. Not directed at children under 13.</p>
+    </div>
+
+    <footer>
+        联系方式 / Contact: <a href="https://github.com/liuyu-2003-arch/Homepage/issues" rel="noopener">GitHub Issues</a>
+    </footer>
+</main>
+</body>
+</html>
