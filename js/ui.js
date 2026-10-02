@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.54';
-import { saveData } from './api.js?v=2.9.54';
-import { CONFIG } from './config.js?v=2.9.54';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.54';
+import { state, isDefaultAccount } from './state.js?v=2.9.55';
+import { saveData } from './api.js?v=2.9.55';
+import { CONFIG } from './config.js?v=2.9.55';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.55';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -1570,18 +1570,33 @@ function updateSwiperPosition(withTransition = true) {
     if (withTransition) swiperWrapper.style.transition = 'transform 0.2s ease-out';
     setSwiperPosition();
 }
-// 页面左右边缘的翻页热区：悬停淡入箭头，点击翻页。
-// 箭头仅作展示（pointer-events: none），因此不会挡住所内内容的滚动与拖拽。
+// 页面左右边缘翻页：鼠标悬停淡入箭头（范围内任意位置可点），
+// 触屏没有 hover，则在存在相邻页时常显箭头并让箭头本身可直接点按。
+let syncPageNav = () => {};
+
 function initPageNav() {
     const prev = document.querySelector('.page-nav-prev');
     const next = document.querySelector('.page-nav-next');
     const swiper = document.getElementById('bookmark-swiper');
     if (!prev || !next || !swiper) return;
 
+    const isTouch = window.matchMedia('(hover: none)').matches || window.matchMedia('(pointer: coarse)').matches;
     const ZONE_RATIO = 0.15;
     const ZONE_MIN = 90;
     const ZONE_MAX = 220;
     const VERTICAL_BAND = 0.2; // 上下各留 20%，中间 60% 为热区
+
+    const canPrev = () => !state.isEditing && state.currentPage > 0;
+    const canNext = () => !state.isEditing && state.currentPage < state.visualPages.length - 1;
+
+    const navigate = (dir) => {
+        if (dir === 'prev' && !canPrev()) return;
+        if (dir === 'next' && !canNext()) return;
+        state.currentPage += dir === 'next' ? 1 : -1;
+        updateSwiperPosition(true);
+        renderPaginationDots();
+        refresh();
+    };
 
     const getZone = (clientX, clientY) => {
         const rect = swiper.getBoundingClientRect();
@@ -1589,12 +1604,8 @@ function initPageNav() {
         if (clientY < rect.top + rect.height * VERTICAL_BAND) return null;
         if (clientY > rect.bottom - rect.height * VERTICAL_BAND) return null;
         const zoneWidth = Math.min(Math.max(rect.width * ZONE_RATIO, ZONE_MIN), ZONE_MAX);
-        if (clientX >= rect.left && clientX <= rect.left + zoneWidth) {
-            return state.currentPage > 0 ? 'prev' : null;
-        }
-        if (clientX <= rect.right && clientX >= rect.right - zoneWidth) {
-            return state.currentPage < state.visualPages.length - 1 ? 'next' : null;
-        }
+        if (clientX >= rect.left && clientX <= rect.left + zoneWidth) return canPrev() ? 'prev' : null;
+        if (clientX <= rect.right && clientX >= rect.right - zoneWidth) return canNext() ? 'next' : null;
         return null;
     };
 
@@ -1607,20 +1618,61 @@ function initPageNav() {
         swiper.style.cursor = zone ? 'pointer' : '';
     };
 
-    document.addEventListener('mousemove', (e) => applyZone(getZone(e.clientX, e.clientY)));
-    document.addEventListener('mouseleave', () => applyZone(null));
+    const refresh = () => {
+        prev.hidden = !canPrev();
+        next.hidden = !canNext();
+        if (isTouch) {
+            prev.classList.toggle('visible', canPrev());
+            next.classList.toggle('visible', canNext());
+        }
+    };
+    syncPageNav = refresh;
 
-    // 捕获阶段拦截边缘点击，避免同时触发下方的书签
-    swiper.addEventListener('click', (e) => {
-        const zone = getZone(e.clientX, e.clientY);
-        if (!zone) return;
-        e.preventDefault();
-        e.stopPropagation();
-        state.currentPage += zone === 'next' ? 1 : -1;
-        updateSwiperPosition(true);
-        renderPaginationDots();
-        applyZone(getZone(e.clientX, e.clientY));
-    }, true);
+    // 箭头自身作为真实的可点元素，点按/点击都直接翻页
+    let lastNav = 0;
+    const bindArrow = (el, dir) => {
+        let touchStartX = 0, touchStartY = 0, touchMoved = false;
+        const go = (e) => {
+            const now = Date.now();
+            if (now - lastNav < 350) return; // 防止 touchend 与合成 click 重复触发
+            lastNav = now;
+            e.preventDefault();
+            e.stopPropagation();
+            navigate(dir);
+        };
+        el.addEventListener('pointerdown', (e) => e.stopPropagation(), { passive: true }); // 不触发长按主题手势
+        el.addEventListener('touchstart', (e) => {
+            const t = e.changedTouches[0];
+            touchStartX = t.clientX; touchStartY = t.clientY; touchMoved = false;
+        }, { passive: true });
+        el.addEventListener('touchmove', (e) => {
+            const t = e.changedTouches[0];
+            if (Math.abs(t.clientX - touchStartX) > 10 || Math.abs(t.clientY - touchStartY) > 10) touchMoved = true;
+        }, { passive: true });
+        el.addEventListener('touchend', (e) => {
+            if (touchMoved) return; // 视为滚动/拖拽，不翻页
+            go(e);
+        }, { passive: false });
+        el.addEventListener('click', go);
+    };
+    bindArrow(prev, 'prev');
+    bindArrow(next, 'next');
+
+    if (!isTouch) {
+        document.addEventListener('mousemove', (e) => applyZone(getZone(e.clientX, e.clientY)));
+        document.addEventListener('mouseleave', () => applyZone(null));
+        // 大热区点击（桌面）：捕获阶段拦截，避免同时触发下方书签
+        swiper.addEventListener('click', (e) => {
+            const zone = getZone(e.clientX, e.clientY);
+            if (!zone) return;
+            e.preventDefault();
+            e.stopPropagation();
+            navigate(zone);
+            applyZone(getZone(e.clientX, e.clientY));
+        }, true);
+    }
+
+    refresh();
 }
 
 function renderPaginationDots() {
@@ -1641,6 +1693,7 @@ function renderPaginationDots() {
     dotsContainer.classList.add('visible');
     if(state.dotsTimer) clearTimeout(state.dotsTimer);
     state.dotsTimer = setTimeout(() => dotsContainer.classList.remove('visible'), 2000);
+    syncPageNav();
 }
 
 // --- 编辑与交互 (保持不变) ---
