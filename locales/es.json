@@ -105,5 +105,13 @@
   "menu_donate": "Donar",
   "msg_input_url": "Pegar URL de imagen aquí",
   "tab_url": "URL",
-  "msg_invalid_phone": "Número de teléfono no válido"
+  "msg_invalid_phone": "Número de teléfono no válido",
+  "label_current_password": "Current password",
+  "label_new_password": "New password",
+  "ph_new_password": "New password (min 6 chars)",
+  "btn_change_password": "Change password",
+  "security_note": "Changing your password signs you out on other devices.",
+  "msg_password_changed": "Password changed successfully",
+  "msg_password_req": "Please fill in both the current and the new password",
+  "msg_password_same": "The new password must differ from the current one"
 }

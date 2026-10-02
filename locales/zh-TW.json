@@ -107,5 +107,13 @@
   "menu_donate": "贊助",
   "msg_input_url": "請在此貼上圖片連結",
   "tab_url": "連結",
-  "msg_invalid_phone": "無效的電話號碼"
+  "msg_invalid_phone": "無效的電話號碼",
+  "label_current_password": "目前密碼",
+  "label_new_password": "新密碼",
+  "ph_new_password": "新密碼 (至少6位)",
+  "btn_change_password": "變更密碼",
+  "security_note": "變更密碼後，其他裝置將被登出。",
+  "msg_password_changed": "密碼變更成功",
+  "msg_password_req": "請填寫目前密碼與新密碼",
+  "msg_password_same": "新密碼不能與目前密碼相同"
 }

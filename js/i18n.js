@@ -1,4 +1,4 @@
-import { logger } from './logger.js?v=2.9.57';
+import { logger } from './logger.js?v=2.9.58';
 
 let enTranslations = {};
 let currentTranslations = {};
@@ -52,7 +52,8 @@ export const i18n = {
 
         const placeholderElements = {
             'input-url': 'ph_url', 'input-title': 'ph_title', 'input-note': 'ph_note', 'input-icon': 'ph_icon',
-            'pref-name': 'label_display_name'
+            'pref-name': 'label_display_name',
+            'pref-current-password': 'label_current_password', 'pref-new-password': 'ph_new_password'
         };
         for (const [id, key] of Object.entries(placeholderElements)) {
             const el = document.getElementById(id);

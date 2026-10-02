@@ -101,6 +101,13 @@ export function createCloudClient() {
             return { data: { user }, error: null };
         },
 
+        async changePassword(currentPassword, newPassword) {
+            return request('/auth/password', {
+                method: 'POST',
+                body: { current_password: currentPassword, new_password: newPassword },
+            });
+        },
+
         async signInWithOAuth({ provider }) {
             const providers = await request('/auth/providers');
             if (providers.error) return { data: null, error: providers.error };

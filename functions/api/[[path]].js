@@ -136,7 +136,7 @@ async function getSessionRow(env, request) {
   const hash = await sha256hex(token);
   const row = await env.DB.prepare(
     `SELECT u.id, u.email, u.email_confirmed, u.user_metadata, u.created_at, u.updated_at,
-            s.expires_at
+            s.token_hash, s.expires_at
        FROM sessions s JOIN users u ON u.id = s.user_id
       WHERE s.token_hash = ?`,
   ).bind(hash).first();
@@ -270,6 +270,34 @@ async function handleUpdateUser(request, env, row) {
 
   const updated = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(row.id).first();
   return json({ user: publicUser(updated) });
+}
+
+async function handleChangePassword(request, env, row) {
+  const body = await request.json().catch(() => ({}));
+  const current = String(body.current_password || '');
+  const next = String(body.new_password || '');
+
+  if (!current) return json({ error: 'missing_current', message: 'Current password is required' }, 400);
+  if (next.length < MIN_PASSWORD) {
+    return json({ error: 'weak_password', message: `Password must be at least ${MIN_PASSWORD} characters` }, 400);
+  }
+  if (next === current) return json({ error: 'same_password', message: 'New password must differ from the current one' }, 400);
+
+  if (!(row.password_hash && await verifyPassword(current, row.password_hash))) {
+    return json({ error: 'invalid_credentials', message: 'Current password is incorrect' }, 400);
+  }
+
+  const now = new Date().toISOString();
+  await env.DB.prepare(
+    'UPDATE users SET password_hash = ?, updated_at = ? WHERE id = ?',
+  ).bind(await hashPassword(next), now, row.id).run();
+
+  // Revoked on every other device; this browser's session stays valid.
+  await env.DB.prepare(
+    'DELETE FROM sessions WHERE user_id = ? AND token_hash != ?',
+  ).bind(row.id, row.token_hash).run();
+
+  return json({ ok: true, updated_at: now });
 }
 
 /* ------------------------------------------------------------------ oauth */
@@ -438,6 +466,39 @@ function sameOrigin(request) {
 }
 
 export async function onRequest(context) {
+  const started = Date.now();
+  const requestId = crypto.randomUUID().slice(0, 8);
+  const { request } = context;
+  const url = new URL(request.url);
+
+  let response;
+  try {
+    response = await handleApiRequest(context);
+  } catch (error) {
+    // handleApiRequest guards its own routes; anything reaching here is a bug.
+    console.log(JSON.stringify({
+      lvl: 'error', req: requestId, path: url.pathname, method: request.method,
+      error: String(error && error.message || error).slice(0, 300),
+    }));
+    response = json({ error: 'server_error', message: 'Internal error' }, 500);
+  }
+
+  // One structured line per request goes to Workers Logs (retention is set in
+  // the Pages project). Bodies and cookies are never logged.
+  const { error } = await response.clone().json().catch(() => ({ error: null }));
+  console.log(JSON.stringify({
+    lvl: response.status >= 500 ? 'error' : 'info',
+    req: requestId,
+    method: request.method,
+    path: url.pathname,
+    status: response.status,
+    ms: Date.now() - started,
+    ...(error ? { err: error } : {}),
+  }));
+  return response;
+}
+
+async function handleApiRequest(context) {
   const { request, env, params } = context;
   const url = new URL(request.url);
   const path = `/${(Array.isArray(params.path) ? params.path.join('/') : params.path || '')}`.replace(/\/+$/, '') || '/';
@@ -473,6 +534,11 @@ export async function onRequest(context) {
       const row = await getSessionRow(env, request);
       if (!row) return json({ error: 'not_authenticated' }, 401);
       return await handleUpdateUser(request, env, row);
+    }
+    if (path === '/auth/password' && method === 'POST') {
+      const row = await getSessionRow(env, request);
+      if (!row) return json({ error: 'not_authenticated' }, 401);
+      return await handleChangePassword(request, env, row);
     }
     if (path === '/auth/providers' && method === 'GET') {
       return json({

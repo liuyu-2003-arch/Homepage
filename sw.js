@@ -1,4 +1,4 @@
-const APP_VERSION = '2.9.57';
+const APP_VERSION = '2.9.58';
 const CACHE_NAME = `homepage-v${APP_VERSION}`;
 const APP_SCOPE = self.registration.scope;
 const STATIC_ASSETS = [

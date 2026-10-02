@@ -1,9 +1,9 @@
-import { CONFIG } from './config.js?v=2.9.57';
-import { createCloudClient } from './cloud.js?v=2.9.57';
-import { state } from './state.js?v=2.9.57';
-import { showToast, t, safeUrl } from './utils.js?v=2.9.57';
-import { i18n } from './i18n.js?v=2.9.57';
-import { logger } from './logger.js?v=2.9.57';
+import { CONFIG } from './config.js?v=2.9.58';
+import { createCloudClient } from './cloud.js?v=2.9.58';
+import { state } from './state.js?v=2.9.58';
+import { showToast, t, safeUrl } from './utils.js?v=2.9.58';
+import { i18n } from './i18n.js?v=2.9.58';
+import { logger } from './logger.js?v=2.9.58';
 
 let supabaseClient = null;
 window.prefAvatarUrl = window.prefAvatarUrl || '';
@@ -15,6 +15,7 @@ const PREF_ACTIONS = {
     handleAvatarUrlInput: (el) => window.handleAvatarUrlInput(el.value),
     updatePrefNamePreview: (el) => window.updatePrefNamePreview(el.value),
     savePreferences: () => window.savePreferences(),
+    changePassword: () => window.changePassword(),
     logoutPreferences: () => window.logoutPreferences(),
 };
 
@@ -244,5 +245,37 @@ window.savePreferences = async function() {
         showToast(e.message || t('msg_save_fail'), 'error');
     } finally {
         if (btn) { btn.textContent = t('btn_save'); btn.disabled = false; }
+    }
+};
+
+window.changePassword = async function() {
+    if (!supabaseClient || !state.currentUser) {
+        location.href = 'index.html';
+        return;
+    }
+
+    const currentInput = document.getElementById('pref-current-password');
+    const nextInput = document.getElementById('pref-new-password');
+    const current = currentInput ? currentInput.value : '';
+    const next = nextInput ? nextInput.value : '';
+
+    if (!current || !next) { showToast(t('msg_password_req'), 'error'); return; }
+    if (next.length < 6) { showToast(t('ph_new_password'), 'error'); return; }
+    if (next === current) { showToast(t('msg_password_same'), 'error'); return; }
+
+    const btn = document.getElementById('btn-change-password');
+    if (btn) { btn.textContent = t('msg_saving'); btn.disabled = true; }
+
+    try {
+        const { error } = await supabaseClient.auth.changePassword(current, next);
+        if (error) throw error;
+        if (currentInput) currentInput.value = '';
+        if (nextInput) nextInput.value = '';
+        showToast(t('msg_password_changed'), 'success');
+    } catch (e) {
+        logger.error('Change password failed', e);
+        showToast(e.message || t('msg_save_fail'), 'error');
+    } finally {
+        if (btn) { btn.textContent = t('btn_change_password'); btn.disabled = false; }
     }
 };
