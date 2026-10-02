@@ -1,4 +1,4 @@
-import { i18n } from './i18n.js?v=2.9.59';
+import { i18n } from './i18n.js?v=2.9.60';
 
 export function debounce(func, wait, { maxWait } = {}) {
     let timeout, maxTimeout, lastArgs, lastThis;

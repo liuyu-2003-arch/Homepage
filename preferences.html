@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; base-uri 'none'; form-action 'self'">
     <title>Account Preferences - My Homepage</title>
-    <meta name="app-version" content="2.9.59">
+    <meta name="app-version" content="2.9.60">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007AFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/%3E%3C/svg%3E">
     <link rel="preconnect" href="https://api.dicebear.com">
     <style>
@@ -321,9 +321,20 @@
         }
 
         /* Security (password change) section */
-        .security-settings { border-top: 1px solid rgba(0, 0, 0, 0.06); }
+        .security-settings {
+            grid-column: 2;
+            align-content: start;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        .security-settings .field + .field { margin-top: 14px; }
+        .security-title {
+            margin: 0 0 4px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #2b2b33;
+        }
         .security-note {
-            margin: 2px 0 0;
+            margin: 6px 0 0;
             font-size: 11px;
             line-height: 1.55;
             color: #8a8a95;
@@ -397,6 +408,8 @@
                 </section>
 
                 <section class="account-settings security-settings">
+                    <h2 class="security-title" data-i18n="label_security">Security</h2>
+
                     <div class="field">
                         <label for="pref-current-password" data-i18n="label_current_password">Current password</label>
                         <input type="password" id="pref-current-password" placeholder="Current password"
@@ -427,6 +440,6 @@
         </div>
     </div>
 
-    <script type="module" src="js/preferences.js?v=2.9.59"></script>
+    <script type="module" src="js/preferences.js?v=2.9.60"></script>
 </body>
 </html>

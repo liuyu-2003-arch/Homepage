@@ -113,5 +113,6 @@
   "security_note": "Changing your password signs you out on other devices.",
   "msg_password_changed": "Password changed successfully",
   "msg_password_req": "現在のパスワードと新しいパスワードを入力してください",
-  "msg_password_same": "新しいパスワードは現在のものと異なる必要があります"
+  "msg_password_same": "新しいパスワードは現在のものと異なる必要があります",
+  "label_security": "セキュリティ"
 }

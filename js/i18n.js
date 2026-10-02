@@ -1,11 +1,14 @@
-import { logger } from './logger.js?v=2.9.59';
+import { logger } from './logger.js?v=2.9.60';
+import { CONFIG } from './config.js?v=2.9.60';
 
 let enTranslations = {};
 let currentTranslations = {};
 
 async function fetchLanguageFile(lang) {
     try {
-        const response = await fetch(`locales/${lang}.json`);
+        // 带上版本号，避免浏览器/Service Worker 用旧的翻译缓存（locales 的缓存
+        // 策略较长，不加版本号会让新文案延迟到缓存过期才生效）。
+        const response = await fetch(`locales/${lang}.json?v=${CONFIG.APP_VERSION}`);
         if (!response.ok) {
             logger.error(`Could not load translation file: ${lang}.json`);
             return {};

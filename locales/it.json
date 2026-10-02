@@ -113,5 +113,6 @@
   "security_note": "Changing your password signs you out on other devices.",
   "msg_password_changed": "Password changed successfully",
   "msg_password_req": "Please fill in both the current and the new password",
-  "msg_password_same": "The new password must differ from the current one"
+  "msg_password_same": "The new password must differ from the current one",
+  "label_security": "Sicurezza"
 }

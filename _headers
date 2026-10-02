@@ -40,7 +40,7 @@
   Cache-Control: public, max-age=604800, must-revalidate
 
 /locales/*
-  Cache-Control: public, max-age=604800, must-revalidate
+  Cache-Control: public, max-age=300, must-revalidate
 
 /templates/*
   Cache-Control: public, max-age=604800, must-revalidate

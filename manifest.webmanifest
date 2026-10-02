@@ -12,19 +12,19 @@
   "categories": ["utilities", "productivity"],
   "icons": [
     {
-      "src": "icon.svg?v=2.9.59",
+      "src": "icon.svg?v=2.9.60",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "favicon-192.png?v=2.9.59",
+      "src": "favicon-192.png?v=2.9.60",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon.png?v=2.9.59",
+      "src": "icon.png?v=2.9.60",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"

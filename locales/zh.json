@@ -115,5 +115,6 @@
   "security_note": "修改密码后，其他设备将被强制退出登录。",
   "msg_password_changed": "密码修改成功",
   "msg_password_req": "请填写当前密码和新密码",
-  "msg_password_same": "新密码不能与当前密码相同"
+  "msg_password_same": "新密码不能与当前密码相同",
+  "label_security": "安全"
 }

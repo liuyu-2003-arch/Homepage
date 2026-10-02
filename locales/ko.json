@@ -113,5 +113,6 @@
   "security_note": "Changing your password signs you out on other devices.",
   "msg_password_changed": "Password changed successfully",
   "msg_password_req": "현재 비밀번호와 새 비밀번호를 입력하세요",
-  "msg_password_same": "새 비밀번호는 현재 비밀번호와 달라야 합니다"
+  "msg_password_same": "새 비밀번호는 현재 비밀번호와 달라야 합니다",
+  "label_security": "보안"
 }
