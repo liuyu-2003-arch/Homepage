@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.53';
-import { saveData } from './api.js?v=2.9.53';
-import { CONFIG } from './config.js?v=2.9.53';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.53';
+import { state, isDefaultAccount } from './state.js?v=2.9.54';
+import { saveData } from './api.js?v=2.9.54';
+import { CONFIG } from './config.js?v=2.9.54';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.54';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -1377,7 +1377,7 @@ export function initSwiper() {
     swiper.addEventListener('touchend', dragEnd);
     swiper.addEventListener('mousemove', drag);
     swiper.addEventListener('touchmove', drag, { passive: false });
-    swiper.addEventListener('wheel', handleWheel, { passive: false });
+    initPageNav();
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -1461,24 +1461,9 @@ function triggerKeyboardBounce(offset) {
 function getPositionX(e) { return e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; }
 function getPositionY(e) { return e.type.includes('mouse') ? e.clientY : e.touches[0].clientY; }
 
-// 构造一个与鼠标事件同形的对象，让滚轮手势直接复用拖拽逻辑
-function makePointerEvent(type, x, y, target) {
-    return {
-        type, clientX: x, clientY: y, target,
-        cancelable: true,
-        preventDefault() {}, stopPropagation() {}
-    };
-}
-
-function dragStart(e, fromWheel = false) {
+function dragStart(e) {
     // 编辑模式下点书签，交给 Sortable，我们不管
     if (state.isEditing && e.target.closest('.bookmark-item')) { state.isDragging = false; return; }
-
-    // 真实鼠标/触摸拖拽接管时，结束可能仍在进行的滚轮手势，避免重复翻页
-    if (!fromWheel) {
-        clearTimeout(state.wheelTimeout);
-        state.isWheelScrolling = false;
-    }
 
     state.isDragging = true;
     state.hasDragged = false;
@@ -1585,55 +1570,57 @@ function updateSwiperPosition(withTransition = true) {
     if (withTransition) swiperWrapper.style.transition = 'transform 0.2s ease-out';
     setSwiperPosition();
 }
-// 双指滑动（滚轮）：把横向滚动量合成为一个虚拟指针的拖动，
-// 直接复用 dragStart/drag/dragEnd，手感和鼠标按住拖动完全一致。
-function handleWheel(e) {
+// 页面左右边缘的翻页热区：悬停淡入箭头，点击翻页。
+// 箭头仅作展示（pointer-events: none），因此不会挡住所内内容的滚动与拖拽。
+function initPageNav() {
+    const prev = document.querySelector('.page-nav-prev');
+    const next = document.querySelector('.page-nav-next');
     const swiper = document.getElementById('bookmark-swiper');
-    if (!swiper) return;
+    if (!prev || !next || !swiper) return;
 
-    // 一个滚轮手势对应一次完整的“按下 → 移动 → 松开”
-    if (!state.isWheelScrolling) {
-        state.isWheelScrolling = true;
-        state.wheelPointerX = 0;
-        state.wheelDirX = 0;
-        state.wheelDirY = 0;
-        state.wheelDirectionLocked = false;
-        state.wheelIsVertical = false;
-    }
+    const ZONE_RATIO = 0.15;
+    const ZONE_MIN = 90;
+    const ZONE_MAX = 220;
+    const VERTICAL_BAND = 0.2; // 上下各留 20%，中间 60% 为热区
 
-    state.wheelDirX += Math.abs(e.deltaX);
-    state.wheelDirY += Math.abs(e.deltaY);
-
-    // 事件停歇即视为“松手”，交给与鼠标相同的 dragEnd 判定翻页
-    clearTimeout(state.wheelTimeout);
-    state.wheelTimeout = setTimeout(() => {
-        const wasHorizontal = state.isWheelScrolling && state.wheelDirectionLocked && !state.wheelIsVertical;
-        state.isWheelScrolling = false;
-        state.wheelDirectionLocked = false;
-        if (wasHorizontal) dragEnd(makePointerEvent('mouseup', state.wheelPointerX, 0, swiper));
-    }, 80);
-
-    // 手势开始只判定一次主方向：横向接管拖拽，纵向交还原生滚动。
-    // 锁定后不再逐帧过滤，避免快速滑动时抖动事件被丢弃而卡顿。
-    if (!state.wheelDirectionLocked) {
-        if (state.wheelDirX > 10 || state.wheelDirY > 10) {
-            state.wheelDirectionLocked = true;
-            state.wheelIsVertical = state.wheelDirY > state.wheelDirX;
-            if (state.wheelIsVertical) return;
-            dragStart(makePointerEvent('mousedown', 0, 0, swiper), true);
-        } else {
-            return;
+    const getZone = (clientX, clientY) => {
+        const rect = swiper.getBoundingClientRect();
+        if (state.isEditing || state.isDragging) return null;
+        if (clientY < rect.top + rect.height * VERTICAL_BAND) return null;
+        if (clientY > rect.bottom - rect.height * VERTICAL_BAND) return null;
+        const zoneWidth = Math.min(Math.max(rect.width * ZONE_RATIO, ZONE_MIN), ZONE_MAX);
+        if (clientX >= rect.left && clientX <= rect.left + zoneWidth) {
+            return state.currentPage > 0 ? 'prev' : null;
         }
-    }
+        if (clientX <= rect.right && clientX >= rect.right - zoneWidth) {
+            return state.currentPage < state.visualPages.length - 1 ? 'next' : null;
+        }
+        return null;
+    };
 
-    if (state.wheelIsVertical) return;
-    e.preventDefault();
+    let currentZone = null;
+    const applyZone = (zone) => {
+        if (zone === currentZone) return;
+        currentZone = zone;
+        prev.classList.toggle('visible', zone === 'prev');
+        next.classList.toggle('visible', zone === 'next');
+        swiper.style.cursor = zone ? 'pointer' : '';
+    };
 
-    // 虚拟指针最多移动一屏，等价于鼠标在窗口内能拖动的最大距离，避免惯性无限加速
-    const maxTravel = swiper.clientWidth || window.innerWidth;
-    state.wheelPointerX -= e.deltaX;
-    state.wheelPointerX = Math.max(-maxTravel, Math.min(maxTravel, state.wheelPointerX));
-    drag(makePointerEvent('mousemove', state.wheelPointerX, 0, swiper));
+    document.addEventListener('mousemove', (e) => applyZone(getZone(e.clientX, e.clientY)));
+    document.addEventListener('mouseleave', () => applyZone(null));
+
+    // 捕获阶段拦截边缘点击，避免同时触发下方的书签
+    swiper.addEventListener('click', (e) => {
+        const zone = getZone(e.clientX, e.clientY);
+        if (!zone) return;
+        e.preventDefault();
+        e.stopPropagation();
+        state.currentPage += zone === 'next' ? 1 : -1;
+        updateSwiperPosition(true);
+        renderPaginationDots();
+        applyZone(getZone(e.clientX, e.clientY));
+    }, true);
 }
 
 function renderPaginationDots() {

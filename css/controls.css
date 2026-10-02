@@ -44,6 +44,25 @@
     width: 1px; height: 24px; background: #eee; margin: 0 5px;
 }
 
+/* 左右边缘翻页箭头：默认淡出，悬停到热区时淡入；不接收指针事件 */
+.page-nav {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    z-index: 500;
+    width: 44px; height: 76px;
+    display: flex; align-items: center; justify-content: center;
+    color: #bdbdbd;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.22s ease;
+}
+.page-nav-prev { left: 14px; }
+.page-nav-next { right: 14px; }
+.page-nav.visible { opacity: 0.92; }
+.page-nav svg { width: 100%; height: 100%; display: block; }
+.page-nav svg polyline {
+    fill: none; stroke: currentColor;
+    stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
+}
+
 .theme-patterns {
     display: flex; gap: 8px;
 }

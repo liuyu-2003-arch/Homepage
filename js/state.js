@@ -18,14 +18,7 @@ export const state = {
     currentTranslate: 0,
     prevTranslate: 0,
     animationID: null,
-    dotsTimer: null,
-    wheelTimeout: null,
-    isWheelScrolling: false,
-    wheelPointerX: 0,
-    wheelDirX: 0,
-    wheelDirY: 0,
-    wheelDirectionLocked: false,
-    wheelIsVertical: false
+    dotsTimer: null
 };
 
 const DEFAULT_ACCOUNT_EMAILS = ['jemchmi@gmail.com'];
