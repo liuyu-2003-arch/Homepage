@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>美国地址生成器 · 免税州/应税州区分</title>
+<meta name="description" content="简约无广告的美国地址生成器，支持免税州与应税州筛选，生成真实格式的街道、城市、州、ZIP、电话信息。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232563eb'/%3E%3Cstop offset='1' stop-color='%230ea5e9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M16 3C9.9 3 5 7.9 5 14c0 8.3 9.5 14.7 10.4 15.3.35.25.85.25 1.2 0C17.5 28.7 27 22.3 27 14 27 7.9 22.1 3 16 3z' fill='url(%23g)'/%3E%3Ccircle cx='16' cy='13.6' r='4.8' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f4f6f8;--card:#fff;--line:#e5e9ef;--text:#0f172a;--muted:#64748b;
+  --accent:#2563eb;--accent-hover:#1d4ed8;--free:#059669;--free-bg:#ecfdf5;--free-line:#a7f3d0;
+  --tax:#dc2626;--tax-bg:#fff7ed;--tax-line:#fed7aa;--radius:14px;
+  --shadow:0 1px 2px rgba(15,23,42,.05),0 10px 30px rgba(15,23,42,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:
+    radial-gradient(900px 460px at 8% -60px,rgba(37,99,235,.12),transparent 60%),
+    radial-gradient(800px 420px at 96% -40px,rgba(16,185,129,.10),transparent 58%),
+    radial-gradient(1100px 420px at 50% -140px,#e7eefc 0,var(--bg) 62%);
+  background-attachment:fixed;
+  color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:920px;margin:0 auto;padding:36px 18px 72px}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;animation:rise .55s cubic-bezier(.22,1,.36,1) both}
+.hero-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{display:flex;filter:drop-shadow(0 4px 10px rgba(37,99,235,.32));transition:transform .25s cubic-bezier(.4,0,.2,1)}
+.brand:hover .logo{transform:translateY(-2px) rotate(-6deg)}
+.logo svg{display:block}
+.hero h1{margin:0;font-size:27px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(100deg,#0f172a 35%,#2563eb 78%,#0ea5e9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-top:16px;box-shadow:var(--shadow)}
+.card.main{animation:rise .55s .08s cubic-bezier(.22,1,.36,1) both}
+.card.history{animation:rise .55s .16s cubic-bezier(.22,1,.36,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.tabs{position:relative;flex:none;width:300px;display:flex;background:#eef2f7;border:1px solid var(--line);border-radius:14px;padding:5px}
+.tab{position:relative;z-index:1;flex:1;font:inherit;font-size:14px;font-weight:600;color:var(--muted);background:none;border:0;padding:10px 14px;border-radius:10px;cursor:pointer;transition:color .2s}
+.tab:hover:not(.active){color:var(--text)}
+.tab.active{color:var(--text)}
+.tab-ind{position:absolute;top:5px;left:5px;height:calc(100% - 10px);width:calc((100% - 10px)/2);background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(15,23,42,.14),0 4px 12px rgba(15,23,42,.07);transition:transform .32s cubic-bezier(.4,0,.2,1)}
+.page{display:none}
+.page.active{display:block;animation:pageIn .38s cubic-bezier(.22,1,.36,1) both}
+@keyframes pageIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.sec-label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+.controls{display:flex;flex-direction:column;gap:15px}
+.controls-main{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end}
+.controls-main .field{flex:1 1 320px;min-width:240px}
+.field{display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+.select-wrap{position:relative}
+.select-wrap::after{content:"";position:absolute;right:17px;top:50%;width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+select{appearance:none;-webkit-appearance:none;font:inherit;font-weight:500;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 42px 12px 14px;width:100%;min-width:0;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+select:hover{border-color:#cbd5e1}
+select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.toggles{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.mini-label{font-size:11.5px;font-weight:700;letter-spacing:.08em;color:var(--muted);flex:none;margin-right:2px}
+.check{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer;user-select:none;background:#f8fafc;border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 12px;transition:background .15s,border-color .15s,transform .18s,box-shadow .18s}
+.check:hover{background:#f1f5f9;border-color:#cbd5e1;transform:translateY(-1px);box-shadow:0 4px 10px rgba(15,23,42,.06)}
+.check input{position:absolute;opacity:0;width:0;height:0}
+.track{position:relative;width:34px;height:19px;border-radius:999px;background:#cbd5e1;transition:background .18s;flex:none}
+.track::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .18s}
+.check input:checked+.track{background:var(--accent)}
+.check input:checked+.track::after{transform:translateX(15px)}
+.check.free input:checked+.track{background:var(--free)}
+.check input:focus-visible+.track{outline:2px solid var(--accent);outline-offset:2px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-left:auto}
+.btn{font:inherit;border:0;border-radius:10px;padding:11px 24px;cursor:pointer;font-weight:600;font-size:15px;transition:transform .14s,box-shadow .15s,background .15s,border-color .15s,color .15s}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn.small{padding:9px 17px;font-size:13.5px;border-radius:10px;white-space:nowrap}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(37,99,235,.35),0 6px 16px rgba(37,99,235,.22)}
+.btn.primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 2px 4px rgba(37,99,235,.3),0 10px 22px rgba(37,99,235,.26)}
+.btn.primary:active{transform:scale(.97)}
+.btn.ghost{background:#fff;color:var(--text);border:1px solid var(--line);box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.btn.ghost:hover{background:#f8fafc;border-color:#cbd5e1;transform:translateY(-1px)}
+.state-note{margin-top:16px;font-size:13px;color:var(--muted);background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:9px 13px}
+.state-note.free{background:var(--free-bg);border-color:var(--free-line);color:#047857}
+.state-note.tax{background:var(--tax-bg);border-color:var(--tax-line);color:#c2410c}
+.state-note:empty{display:none}
+.result{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.group-title{grid-column:1/-1;display:flex;align-items:center;gap:9px;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px;padding-bottom:2px;border-bottom:1px dashed var(--line)}
+.group-title::before{content:"";width:7px;height:7px;background:var(--accent);border-radius:2px;transform:rotate(45deg);flex:none;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.group-title:first-child{margin-top:0}
+.result.animate .field-row,.result.animate .group-title{animation:rowIn .5s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i,0)*45ms)}
+@keyframes rowIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+.field-row{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:11px 13px;transition:border-color .15s,background .15s,transform .18s,box-shadow .18s}
+.field-row:hover{border-color:#cbd5e1;background:#fff;transform:translateY(-2px);box-shadow:0 6px 16px rgba(15,23,42,.07)}
+.field-row .k{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-bottom:4px}
+.field-row .v{font-size:15.5px;font-weight:600;word-break:break-word;min-height:24px}
+[data-k="zip"] .v,[data-k="phone"] .v,[data-k="fax"] .v,[data-k="ssn"] .v,[data-k="cvv"] .v,[data-k="exp"] .v,[data-k="email"] .v{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:500;letter-spacing:.03em}
+.copy{font-size:11.5px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:3px 9px;cursor:pointer;color:var(--muted);transition:.15s;flex:none}
+.copy:hover{background:#f1f5f9;color:var(--text);border-color:#cbd5e1}
+.preview{margin-top:16px;background:#0f172a;border-radius:12px;padding:14px 16px;color:#e2e8f0}
+.preview-head{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px}
+.preview .copy{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#cbd5e1;letter-spacing:normal;text-transform:none}
+.preview .copy:hover{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)}
+.preview pre{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.preview pre.flash{animation:flash .65s ease}
+@keyframes flash{0%{opacity:.2;transform:translateY(5px)}60%{opacity:1}100%{opacity:1;transform:none}}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;vertical-align:middle;margin-left:6px}
+.badge.free{background:var(--free-bg);color:var(--free);border:1px solid var(--free-line)}
+.badge.tax{background:var(--tax-bg);color:#c2410c;border:1px solid var(--tax-line)}
+.badge.plain{background:#eef2ff;color:#4338ca;border:1px solid #c7d2fe}
+.v .badge:first-child{margin-left:0}
+.history h3{font-size:11.5px;margin:0 0 12px;color:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.hist-item{font-size:13px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#f8fafc;display:flex;gap:12px;align-items:center;transition:.15s;cursor:pointer}
+.hist-item:hover{background:#fff;border-color:#cbd5e1;transform:translateY(-1px);box-shadow:0 4px 12px rgba(15,23,42,.07)}
+.hist-item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hist-item span{word-break:break-word;color:#334155}
+.hist-item>span:first-child{flex:1;min-width:0}
+.hist-item .hist-go{flex:none;font-size:12px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:6px}
+.hist-go::after{content:"";width:6px;height:6px;border-right:2px solid currentColor;border-top:2px solid currentColor;transform:rotate(45deg);transition:transform .15s}
+.hist-item:hover .hist-go{color:var(--accent)}
+.hist-item:hover .hist-go::after{transform:rotate(45deg) translate(2px,-2px)}
+footer{margin-top:28px;font-size:12px;color:var(--muted);text-align:center;line-height:1.7}
+.about p{margin:0 0 9px;font-size:13.5px;color:#475569}
+.about p:last-child{margin-bottom:0}
+.about b{color:var(--text)}
+.modal{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:24px}
+.modal[hidden]{display:none}
+.modal-mask{position:absolute;inset:0;background:rgba(15,23,42,.45);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fadeIn .2s ease both}
+.modal-card{position:relative;width:100%;max-width:640px;max-height:84vh;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 64px rgba(15,23,42,.28);padding:24px 26px 26px;animation:modalIn .3s cubic-bezier(.22,1,.36,1) both}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.modal-head .sec-label{margin:0}
+.modal-close{flex:none;width:32px;height:32px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;color:var(--muted);font-size:19px;line-height:1;cursor:pointer;transition:background .15s,color .15s,transform .2s}
+.modal-close:hover{background:#fff;color:var(--text);transform:rotate(90deg)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,12px);background:#0f172a;color:#fff;font-size:13.5px;padding:10px 18px;border-radius:999px;box-shadow:0 8px 24px rgba(15,23,42,.28);opacity:0;transition:opacity .2s,transform .2s;z-index:50;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:720px){
+  .wrap{padding:24px 14px 56px}
+  .hero h1{font-size:22px}
+  .result{grid-template-columns:1fr}
+  .controls-main .field{flex:1 1 100%}
+  .select-wrap{width:100%}
+  .toggles{width:100%}
+  .mini-label{width:100%;margin-bottom:-2px}
+  .check{flex:1 1 100%;justify-content:flex-start}
+  .hero{flex-direction:column;align-items:stretch;gap:12px}
+  .hero-actions{width:100%}
+  .tabs{width:auto;flex:1;min-width:0}
+  .btn{flex:1}
+  .btn.small{flex:none}
+  .actions{width:100%;margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoG" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#2563eb"/>
+              <stop offset="1" stop-color="#0ea5e9"/>
+            </linearGradient>
+          </defs>
+          <path d="M16 3C9.9 3 5 7.9 5 14c0 8.3 9.5 14.7 10.4 15.3.35.25.85.25 1.2 0C17.5 28.7 27 22.3 27 14 27 7.9 22.1 3 16 3z" fill="url(#logoG)"/>
+          <circle cx="16" cy="13.6" r="4.8" fill="#fff"/>
+        </svg>
+      </span>
+      <h1>美国地址生成器</h1>
+    </div>
+    <div class="hero-actions">
+      <div class="tabs">
+        <span class="tab-ind" id="tabInd"></span>
+        <button class="tab active" id="tabSetup" type="button">生成设置</button>
+        <button class="tab" id="tabResult" type="button">生成结果</button>
+      </div>
+      <button class="btn ghost small" id="aboutBtn" type="button">关于</button>
+    </div>
+  </header>
+
+  <div class="card main">
+    <div class="page active" id="pageSetup">
+    <div class="controls">
+      <div class="controls-main">
+        <label class="field">目标州
+          <div class="select-wrap"><select id="stateSel"></select></div>
+        </label>
+        <div class="actions">
+          <button class="btn primary" id="genBtn">生成地址</button>
+        </div>
+      </div>
+      <div class="toggles">
+        <span class="mini-label">生成选项</span>
+        <label class="check free"><input type="checkbox" id="onlyFree" checked><span class="track"></span><span>仅生成免税州地址</span></label>
+        <label class="check"><input type="checkbox" id="withName" checked><span class="track"></span><span>包含收件人姓名</span></label>
+        <label class="check"><input type="checkbox" id="withPhone" checked><span class="track"></span><span>包含电话号码</span></label>
+      </div>
+    </div>
+    </div>
+
+    <div class="page" id="pageResult">
+    <div class="state-note" id="stateNote"></div>
+    <div class="result" id="result">
+      <div class="group-title">地址信息</div>
+      <div class="field-row" data-k="street"><div class="k">街道地址 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="city"><div class="k">城市 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="county"><div class="k">区县 County <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="state"><div class="k">州 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="stateFull"><div class="k">州全称 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="zip"><div class="k">ZIP 邮编 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="phone" hidden><div class="k">电话 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="fax"><div class="k">传真 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="group-title">身份信息</div>
+      <div class="field-row" data-k="name" hidden><div class="k">收件人 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="gender"><div class="k">性别 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="birthday"><div class="k">出生日期 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="ssn"><div class="k">社会保障号 SSN <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="email"><div class="k">电子邮箱 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="group-title">就业 &amp; 信用卡</div>
+      <div class="field-row" data-k="occupation"><div class="k">职业 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="company"><div class="k">公司名称 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="card"><div class="k">信用卡号 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="cvv"><div class="k">CVV2 <button class="copy">复制</button></div><div class="v">—</div></div>
+      <div class="field-row" data-k="exp"><div class="k">有效期 <button class="copy">复制</button></div><div class="v">—</div></div>
+    </div>
+    <div class="preview">
+      <div class="preview-head"><span>完整地址</span><button class="copy" id="previewCopy">复制</button></div>
+      <pre id="fullAddr">—</pre>
+    </div>
+    </div>
+  </div>
+
+  <div class="card history" id="histCard" hidden>
+    <h3>最近生成</h3>
+    <div id="histList"></div>
+  </div>
+
+  <footer>数据为演示用途生成的随机地址，ZIP / 区号取自真实号段，不代表可投递的真实住户；SSN、信用卡等信息为随机虚构数据，请勿用于非法用途。</footer>
+</div>
+
+<div class="modal" id="aboutModal" hidden>
+  <div class="modal-mask" id="aboutMask"></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+    <div class="modal-head">
+      <div class="sec-label" id="aboutTitle">关于随机美国地址生成器</div>
+      <button class="modal-close" id="aboutClose" type="button" aria-label="关闭">×</button>
+    </div>
+    <div class="about">
+      <p>本工具用于学习美国的地址格式，了解州、城市、街道与邮编的命名规则，以及区分<b>免税州</b>与<b>应税州</b>的销售税差异。所有地址均为随机构造，街道、ZIP 与区号取自真实号段格式，但不代表可投递的真实住户。</p>
+      <p>美国共有 <b>5 个免税州</b>（无州级销售税）：俄勒冈 OR、蒙大拿 MT、新罕布什尔 NH、特拉华 DE、阿拉斯加 AK；其余 45 州及华盛顿特区购物时需缴纳销售税，税率因州、地方而异。「仅生成免税州地址」默认开启，页面打开即只从这 5 个免税州中随机生成，取消勾选可随机全部 51 个地区。</p>
+      <p>身份与财务区的姓名、性别、生日、SSN、邮箱、职业、公司、信用卡号、CVV2 均为<b>随机生成的演示数据</b>，与任何真实个人或账户无关，仅用于测试与教学，请勿用于非法用途。</p>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var STATES = [
+ {a:"AL",n:"阿拉巴马州",t:false,p:"应税州，州销售税 4%",ac:["205","251","334","938"],c:[["Birmingham",["35203","35205","35211"]],["Montgomery",["36104","36116"]],["Huntsville",["35801","35805"]],["Mobile",["36602","36608"]],["Tuscaloosa",["35401","35405"]],["Hoover",["35244","35236"]]]},
+ {a:"AK",n:"阿拉斯加州",t:true,p:"州级无销售税（个别地方可能征收地方税）",ac:["907","907"],c:[["Anchorage",["99501","99502","99503"]],["Fairbanks",["99701","99709"]],["Juneau",["99801"]],["Wasilla",["99654"]],["Sitka",["99835"]],["Kenai",["99611"]]]},
+ {a:"AZ",n:"亚利桑那州",t:false,p:"应税州，综合税率约 5.6%–11%",ac:["480","520","602","623","928"],c:[["Phoenix",["85003","85004","85012"]],["Tucson",["85701","85705"]],["Mesa",["85201","85204"]],["Scottsdale",["85251","85250"]],["Chandler",["85224","85225"]],["Tempe",["85281","85283"]],["Glendale",["85301","85302"]]]},
+ {a:"AR",n:"阿肯色州",t:false,p:"应税州，州销售税 6.5%",ac:["479","501","870"],c:[["Little Rock",["72201","72205"]],["Fort Smith",["72901","72904"]],["Fayetteville",["72701","72703"]],["Springdale",["72764"]],["Jonesboro",["72401"]]]},
+ {a:"CA",n:"加利福尼亚州",t:false,p:"应税州，综合税率约 7.25%–10.75%",ac:["213","310","323","408","415","510","619","626","650","714","818","858","909","916","949"],c:[["Los Angeles",["90012","90015","90024","90028"]],["San Francisco",["94102","94103","94110"]],["San Diego",["92101","92103","92109"]],["San Jose",["95113","95112","95110"]],["Sacramento",["95814","95811"]],["Oakland",["94612","94607"]],["Fresno",["93721","93703"]],["San Bernardino",["92401","92405"]],["Bakersfield",["93301","93305"]],["Anaheim",["92805","92802"]],["Riverside",["92501","92507"]]]},
+ {a:"CO",n:"科罗拉多州",t:false,p:"应税州，综合税率约 2.9%–11.2%",ac:["303","719","720","970","983"],c:[["Denver",["80202","80205","80211"]],["Colorado Springs",["80903","80918"]],["Aurora",["80010","80014"]],["Fort Collins",["80521","80525"]],["Lakewood",["80215","80226"]],["Pueblo",["81003"]],["Boulder",["80302","80304"]]]},
+ {a:"CT",n:"康涅狄格州",t:false,p:"应税州，州销售税 6.35%",ac:["203","475","860"],c:[["Bridgeport",["06604","06606"]],["New Haven",["06510","06511"]],["Hartford",["06103","06114"]],["Stamford",["06901","06902"]],["Waterbury",["06702"]],["Norwalk",["06850"]]]},
+ {a:"DE",n:"特拉华州",t:true,p:"免税州：全州无销售税（商品和服务税 0%）",ac:["302"],c:[["Wilmington",["19801","19805"]],["Dover",["19901","19904"]],["Newark",["19711","19713"]],["Middletown",["19709"]],["Smyrna",["19977"]]]},
+ {a:"FL",n:"佛罗里达州",t:false,p:"应税州，综合税率约 6%–8.5%",ac:["305","321","352","407","561","727","754","772","813","850","863","904","941","954"],c:[["Miami",["33130","33131","33136"]],["Jacksonville",["32202","32204","32218"]],["Tampa",["33602","33606","33614"]],["Orlando",["32801","32803","32819"]],["St. Petersburg",["33701","33704"]],["Hialeah",["33002","33018"]],["Tallahassee",["32301","32304"]],["Fort Lauderdale",["33301","33309"]],["Cape Coral",["33904","33914"]],["Boca Raton",["33431","33433"]]]},
+ {a:"GA",n:"佐治亚州",t:false,p:"应税州，州销售税 4%",ac:["404","470","678","706","770","912"],c:[["Atlanta",["30303","30308","30318"]],["Augusta",["30901","30904"]],["Columbus",["31901","31904"]],["Macon",["31201","31206"]],["Savannah",["31401","31405"]],["Athens",["30601","30606"]]]},
+ {a:"HI",n:"夏威夷州",t:false,p:"应税州，州销售税 4%（含地方可达 4.5%）",ac:["808"],c:[["Honolulu",["96813","96814","96815"]],["Hilo",["96720"]],["Kailua",["96734"]],["Kapolei",["96707"]],["Kahului",["96732"]]]},
+ {a:"ID",n:"爱达荷州",t:false,p:"应税州，州销售税 6%",ac:["208","986"],c:[["Boise",["83702","83704","83706"]],["Meridian",["83642","83646"]],["Nampa",["83651","83686"]],["Idaho Falls",["83402","83404"]],["Pocatello",["83201","83204"]],["Coeur d'Alene",["83814","83815"]]]},
+ {a:"IL",n:"伊利诺伊州",t:false,p:"应税州，综合税率约 6.25%–11%",ac:["217","224","309","312","331","447","464","505","618","630","708","730","773","779","815","847","861","872"],c:[["Chicago",["60602","60607","60614","60622"]],["Aurora",["60505","60502"]],["Naperville",["60540","60563"]],["Joliet",["60431","60436"]],["Rockford",["61101","61104"]],["Springfield",["62701","62704"]],["Elgin",["60120","60123"]],["Peoria",["61602","61604"]]]},
+ {a:"IN",n:"印第安纳州",t:false,p:"应税州，州销售税 7%",ac:["219","260","317","463","574","765","812","930"],c:[["Indianapolis",["46204","46208","46222"]],["Fort Wayne",["46802","46808"]],["Evansville",["47708","47711"]],["South Bend",["46601","46615"]],["Carmel",["46032","46033"]],["Bloomington",["47401","47404"]]]},
+ {a:"IA",n:"艾奥瓦州",t:false,p:"应税州，州销售税 7%",ac:["319","515","563","641","712"],c:[["Des Moines",["50309","50312"]],["Cedar Rapids",["52402","52404"]],["Davenport",["52801","52803"]],["Sioux City",["51101","51103"]],["Iowa City",["52240","52245"]],["Waterloo",["50701","50703"]]]},
+ {a:"KS",n:"堪萨斯州",t:false,p:"应税州，州销售税 6.5%",ac:["316","620","785","913"],c:[["Wichita",["67202","67211"]],["Overland Park",["66212","66221"]],["Kansas City",["66101","66109"]],["Topeka",["66603","66606"]],["Lawrence",["66044","66045"]],["Olathe",["66061","66062"]]]},
+ {a:"KY",n:"肯塔基州",t:false,p:"应税州，州销售税 6%",ac:["270","364","502","606","859"],c:[["Louisville",["40202","40208","40217"]],["Lexington",["40507","40511"]],["Bowling Green",["42101","42103"]],["Owensboro",["42301","42303"]],["Covington",["41011","41014"]]]},
+ {a:"LA",n:"路易斯安那州",t:false,p:"应税州，州销售税 4.45%（综合可达 11.45%）",ac:["225","318","337","457","504","985"],c:[["New Orleans",["70112","70115","70124"]],["Baton Rouge",["70802","70808"]],["Shreveport",["71101","71105"]],["Lafayette",["70501","70503"]],["Lake Charles",["70601","70605"]],["Kenner",["70062","70065"]]]},
+ {a:"ME",n:"缅因州",t:false,p:"应税州，州销售税 5.5%",ac:["207"],c:[["Portland",["04101","04102"]],["Lewiston",["04240","04241"]],["Bangor",["04401","04402"]],["South Portland",["04106"]],["Auburn",["04210"]]]},
+ {a:"MD",n:"马里兰州",t:false,p:"应税州，州销售税 6%",ac:["240","301","410","443","667"],c:[["Baltimore",["21201","21206","21218"]],["Frederick",["21701","21703"]],["Rockville",["20850","20852"]],["Gaithersburg",["20878","20879"]],["Annapolis",["21401","21403"]],["Hagerstown",["21740","21742"]]]},
+ {a:"MA",n:"马萨诸塞州",t:false,p:"应税州，州销售税 6.25%",ac:["339","351","413","508","617","774","781","857","978"],c:[["Boston",["02108","02118","02127"]],["Worcester",["01608","01604"]],["Springfield",["01103","01105"]],["Cambridge",["02139","02142"]],["Lowell",["01852","01854"]],["Brockton",["02401"]]]},
+ {a:"MI",n:"密歇根州",t:false,p:"应税州，州销售税 6%",ac:["231","248","269","313","517","616","734","810","906","947","989"],c:[["Detroit",["48226","48207","48209"]],["Grand Rapids",["49503","49507"]],["Warren",["48091","48093"]],["Sterling Heights",["48310","48312"]],["Ann Arbor",["48109","48104"]],["Lansing",["48933","48915"]],["Flint",["48502","48505"]]]},
+ {a:"MN",n:"明尼苏达州",t:false,p:"应税州，州销售税 6.875%",ac:["218","320","507","612","651","763","952"],c:[["Minneapolis",["55401","55408","55415"]],["Saint Paul",["55101","55105"]],["Rochester",["55902","55906"]],["Duluth",["55802","55804"]],["Bloomington",["55435","55431"]]]},
+ {a:"MS",n:"密西西比州",t:false,p:"应税州，州销售税 7%",ac:["228","601","662"],c:[["Jackson",["39201","39206"]],["Gulfport",["39501","39507"]],["Southaven",["38671","38672"]],["Hattiesburg",["39401","39403"]],["Biloxi",["39530","39531"]]]},
+ {a:"MO",n:"密苏里州",t:false,p:"应税州，州销售税 4.225%（综合可达 10%+，食品免税）",ac:["314","414","573","636","660","816"],c:[["Kansas City",["64108","64112"]],["St. Louis",["63101","63118"]],["Springfield",["65806","65804"]],["Columbia",["65201","65203"]],["Independence",["64050","64052"]],["Lee's Summit",["64063"]]]},
+ {a:"MT",n:"蒙大拿州",t:true,p:"免税州：全州无一般销售税",ac:["406"],c:[["Billings",["59101","59102"]],["Missoula",["59802","59801"]],["Great Falls",["59401","59405"]],["Bozeman",["59718","59715"]],["Helena",["59601"]],["Butte",["59701"]]]},
+ {a:"NE",n:"内布拉斯加州",t:false,p:"应税州，州销售税 5.5%",ac:["308","402","531"],c:[["Omaha",["68102","68104","68114"]],["Lincoln",["68508","68506"]],["Bellevue",["68005","68007"]],["Grand Island",["68801"]],["Kearney",["68847"]]]},
+ {a:"NV",n:"内华达州",t:false,p:"应税州，州销售税 6.85%",ac:["702","725","775"],c:[["Las Vegas",["89101","89109","89119"]],["Reno",["89501","89502"]],["Henderson",["89015","89002"]],["North Las Vegas",["89030","89031"]],["Sparks",["89431","89434"]]]},
+ {a:"NH",n:"新罕布什尔州",t:true,p:"免税州：无销售税（仅餐饮/住宿有 8.5% 税）",ac:["603"],c:[["Manchester",["03101","03109"]],["Nashua",["03060","03063"]],["Concord",["03301","03304"]],["Derry",["03038"]],["Dover",["03820","03824"]]]},
+ {a:"NJ",n:"新泽西州",t:false,p:"应税州，州销售税 6.625%（服装、食品杂货免税）",ac:["201","551","609","732","848","856","862","908","973"],c:[["Newark",["07102","07105"]],["Jersey City",["07302","07306"]],["Paterson",["07505","07501"]],["Elizabeth",["07201","07202"]],["Trenton",["08608","08611"]],["Camden",["08102","08104"]],["Atlantic City",["08401","08404"]]]},
+ {a:"NM",n:"新墨西哥州",t:false,p:"应税州，州销售税 5.125%（食品减按 1.875%）",ac:["505","575"],c:[["Albuquerque",["87102","87110","87121"]],["Las Cruces",["88001","88011"]],["Rio Rancho",["87124","87125"]],["Santa Fe",["87501","87505"]],["Roswell",["88201"]]]},
+ {a:"NY",n:"纽约州",t:false,p:"应税州，州销售税 4%（综合可达 8.875%）",ac:["212","315","332","347","516","518","585","607","631","646","716","718","845","914","917"],c:[["New York",["10001","10011","10019","10036"]],["Brooklyn",["11201","11215","11217"]],["Queens",["11101","11106","11375"]],["Buffalo",["14202","14215"]],["Rochester",["14604","14607"]],["Yonkers",["10701","10704"]],["Syracuse",["13202","13210"]],["Albany",["12207","12210"]]]},
+ {a:"NC",n:"北卡罗来纳州",t:false,p:"应税州，州销售税 4.75%",ac:["252","336","704","828","910","919","980","984"],c:[["Charlotte",["28202","28205","28216"]],["Raleigh",["27601","27607"]],["Greensboro",["27401","27410"]],["Durham",["27701","27704"]],["Winston-Salem",["27101","27104"]],["Fayetteville",["28301","28304"]],["Cary",["27513","27518"]]]},
+ {a:"ND",n:"北达科他州",t:false,p:"应税州，州销售税 5%",ac:["701"],c:[["Fargo",["58102","58103"]],["Bismarck",["58501","58503"]],["Grand Forks",["58201","58203"]],["Minot",["58701","58703"]]]},
+ {a:"OH",n:"俄亥俄州",t:false,p:"应税州，州销售税 5.75%",ac:["216","220","234","283","326","330","380","419","440","513","567","614","740","937"],c:[["Columbus",["43215","43206","43224"]],["Cleveland",["44114","44102","44103"]],["Cincinnati",["45202","45206","45209"]],["Toledo",["43604","43606"]],["Akron",["44308","44313"]],["Dayton",["45402","45409"]]]},
+ {a:"OK",n:"俄克拉何马州",t:false,p:"应税州，州销售税 4.5%（综合可达 10.1%）",ac:["405","539","580","918"],c:[["Oklahoma City",["73102","73109","73118"]],["Tulsa",["74103","74104","74119"]],["Norman",["73069","73071"]],["Edmond",["73003","73012"]],["Lawton",["73501","73505"]]]},
+ {a:"OR",n:"俄勒冈州",t:true,p:"免税州：全州无销售税",ac:["458","503","541","971"],c:[["Portland",["97204","97214","97230"]],["Salem",["97301","97302"]],["Eugene",["97401","97405"]],["Medford",["97501","97504"]],["Bend",["97701","97703"]],["Corvallis",["97330","97331"]],["Beaverton",["97005","97008"]],["Hillsboro",["97123","97124"]]]},
+ {a:"PA",n:"宾夕法尼亚州",t:false,p:"应税州，州销售税 6%（服装、食品杂货免税）",ac:["215","267","412","484","570","610","717","724","814","878"],c:[["Philadelphia",["19102","19103","19146"]],["Pittsburgh",["15219","15213","15206"]],["Allentown",["18101","18102"]],["Erie",["16507","16505"]],["Reading",["19601","19604"]],["Scranton",["18503","18505"]],["Harrisburg",["17101","17104"]]]},
+ {a:"RI",n:"罗得岛州",t:false,p:"应税州，州销售税 7%",ac:["401"],c:[["Providence",["02903","02906"]],["Warwick",["02886","02888"]],["Cranston",["02910","02921"]],["Pawtucket",["02860","02861"]]]},
+ {a:"SC",n:"南卡罗来纳州",t:false,p:"应税州，州销售税 6%",ac:["803","843","854","864"],c:[["Charleston",["29401","29403","29414"]],["Columbia",["29201","29205"]],["North Charleston",["29405","29418"]],["Mount Pleasant",["29464","29466"]],["Rock Hill",["29730","29733"]]]},
+ {a:"SD",n:"南达科他州",t:false,p:"应税州，州销售税 4.2%（食品免税）",ac:["605"],c:[["Sioux Falls",["57104","57106"]],["Rapid City",["57701","57702"]],["Aberdeen",["57401","57402"]]]},
+ {a:"TN",n:"田纳西州",t:false,p:"应税州，州销售税 7%（食品 4%）",ac:["423","615","731","865","901","931"],c:[["Nashville",["37203","37206","37212"]],["Memphis",["38103","38111","38117"]],["Knoxville",["37902","37917"]],["Chattanooga",["37402","37404"]],["Clarksville",["37040","37043"]],["Murfreesboro",["37130","37132"]]]},
+ {a:"TX",n:"德克萨斯州",t:false,p:"应税州，州销售税 6.25%（地方可达 2%）",ac:["210","214","254","281","325","346","361","409","430","432","469","512","682","713","737","806","817","830","832","903","915","936","940","956","972","979"],c:[["Houston",["77002","77006","77019","77057"]],["San Antonio",["78205","78212","78229"]],["Dallas",["75201","75204","75225"]],["Austin",["78701","78704","78741"]],["Fort Worth",["76102","76107","76110"]],["El Paso",["79901","79924","79936"]],["Arlington",["76010","76012"]],["Corpus Christi",["78401","78404"]],["Plano",["75024","75093"]],["Laredo",["78040","78045"]],["Lubbock",["79401","79416"]]]},
+ {a:"UT",n:"犹他州",t:false,p:"应税州，州销售税 6.1%（综合可达 8.1%）",ac:["385","435","801"],c:[["Salt Lake City",["84101","84111","84106"]],["West Valley City",["84119","84120"]],["Provo",["84601","84604"]],["West Jordan",["84084","84081"]],["Orem",["84057","84058"]],["St. George",["84770","84790"]]]},
+ {a:"VT",n:"佛蒙特州",t:false,p:"应税州，州销售税 6%（食品免税）",ac:["802"],c:[["Burlington",["05401","05402"]],["South Burlington",["05403","05407"]],["Rutland",["05701"]],["Barre",["05641"]]]},
+ {a:"VA",n:"弗吉尼亚州",t:false,p:"应税州，州销售税 5.3%",ac:["276","434","540","571","703","757","804","910"],c:[["Virginia Beach",["23452","23454"]],["Norfolk",["23510","23505"]],["Chesapeake",["23320","23323"]],["Richmond",["23219","23223"]],["Newport News",["23606","23601"]],["Alexandria",["22314","22311"]],["Roanoke",["24011","24016"]]]},
+ {a:"WA",n:"华盛顿州",t:false,p:"应税州，综合税率约 8%–10.6%（食品杂货免州税）",ac:["206","253","360","425","509","564"],c:[["Seattle",["98104","98122","98109"]],["Spokane",["99201","99205"]],["Tacoma",["98402","98409"]],["Vancouver",["98660","98661"]],["Bellevue",["98004","98007"]],["Everett",["98201","98203"]],["Kent",["98032","98030"]]]},
+ {a:"WV",n:"西弗吉尼亚州",t:false,p:"应税州，州销售税 6%",ac:["304","681"],c:[["Charleston",["25301","25304"]],["Huntington",["25701","25703"]],["Morgantown",["26505","26501"]],["Parkersburg",["26101","26104"]]]},
+ {a:"WI",n:"威斯康星州",t:false,p:"应税州，州销售税 5%（综合可达 5.5%）",ac:["262","414","608","715","920"],c:[["Milwaukee",["53202","53212","53206"]],["Madison",["53703","53705","53711"]],["Green Bay",["54301","54303"]],["Kenosha",["53140","53142"]],["Appleton",["54911","54915"]],["Eau Claire",["54701","54703"]]]},
+ {a:"WY",n:"怀俄明州",t:false,p:"应税州：无州销售税，但部分地方征收地方销售税（0%–2%）",ac:["307"],c:[["Cheyenne",["82001","82003"]],["Casper",["82601","82604"]],["Laramie",["82070","82072"]],["Gillette",["82716","82718"]],["Rock Springs",["82901"]]]},
+ {a:"DC",n:"华盛顿特区",t:false,p:"应税区，销售税 10%",ac:["202"],c:[["Washington",["20001","20005","20009","20011","20036"]]]}
+];
+
+var FIRST = ["James","Mary","John","Patricia","Robert","Jennifer","Michael","Linda","William","Elizabeth","David","Barbara","Richard","Susan","Joseph","Jessica","Thomas","Sarah","Charles","Karen","Christopher","Lisa","Daniel","Nancy","Matthew","Betty","Anthony","Margaret","Mark","Sandra","Donald","Ashley","Steven","Kimberly","Andrew","Emily","Paul","Donna","Joshua","Michelle","Kenneth","Carol","Kevin","Amanda","Brian","Melissa","George","Deborah","Timothy","Stephanie","Ronald","Rebecca","Jason","Laura","Edward","Sharon","Jeffrey","Cynthia","Ryan","Kathleen","Jacob","Amy","Gary","Angela","Nicholas","Shirley","Eric","Anna","Jonathan","Ruth","Stephen","Brenda","Larry","Pamela","Justin","Nicole","Scott","Katherine","Brandon","Samantha","Benjamin","Christine","Samuel","Catherine","Gregory","Virginia","Alexander","Rachel","Patrick","Janet","Frank","Maria","Raymond","Heather","Jack","Diane","Dennis","Julie","Jerry","Joyce","Tyler","Victoria","Aaron","Kelly","Jose","Christina","Adam","Joan","Henry","Evelyn","Nathan","Lauren","Zachary","Judith","Douglas","Megan","Peter","Cheryl","Kyle","Andrea","Ethan","Hannah","Jeremy","Martha","Walter","Jacqueline","Christian","Frances","Keith","Gloria","Terry","Ann","Austin","Teresa","Roger","Kathryn","Sean","Sophia","Gerald","Alice","Carl","Julia","Harold","Judy","Dylan","Abigail","Arthur","Grace","Lawrence","Denise","Jordan","Amber","Jesse","Doris","Bryan","Marilyn","Billy","Danielle","Bruce","Beverly","Gabriel","Isabella","Joe","Theresa","Logan","Diana","Alan","Natalie","Juan","Brittany","Albert","Charlotte","Willie","Marie","Elijah","Kayla","Wayne","Alexis","Randy","Lori"];
+var LAST = ["Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Rodriguez","Martinez","Hernandez","Lopez","Gonzalez","Wilson","Anderson","Thomas","Taylor","Moore","Jackson","Martin","Lee","Perez","Thompson","White","Harris","Sanchez","Clark","Ramirez","Lewis","Robinson","Walker","Young","Allen","King","Wright","Scott","Torres","Nguyen","Hill","Flores","Green","Adams","Nelson","Baker","Hall","Rivera","Campbell","Mitchell","Carter","Roberts","Gomez","Phillips","Evans","Turner","Diaz","Parker","Cruz","Edwards","Collins","Reyes","Stewart","Morris","Morales","Murphy","Cook","Rogers","Gutierrez","Ortiz","Morgan","Cooper","Peterson","Bailey","Reed","Kelly","Howard","Ramos","Kim","Cox","Ward","Richardson","Watson","Brooks","Chavez","Wood","James","Bennett","Gray","Mendoza","Ruiz","Hughes","Price","Alvarez","Castillo","Sanders","Patel","Myers","Long","Ross","Foster","Jimenez"];
+var SUFFIX = ["Street","Avenue","Boulevard","Road","Lane","Drive","Court","Place","Terrace","Way","Circle","Trail","Parkway","Alley"];
+var STATE_FULL = {AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",CT:"Connecticut",DE:"Delaware",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",IN:"Indiana",IA:"Iowa",KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",MA:"Massachusetts",MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",MT:"Montana",NE:"Nebraska",NV:"Nevada",NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NY:"New York",NC:"North Carolina",ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",VT:"Vermont",VA:"Virginia",WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming",DC:"District of Columbia"};
+var COUNTIES = {AL:["Jefferson County","Mobile County","Madison County"],AK:["Anchorage Municipality","Fairbanks North Star Borough","Juneau City and Borough"],AZ:["Maricopa County","Pima County","Pinal County"],AR:["Pulaski County","Benton County","Washington County"],CA:["Los Angeles County","San Diego County","Orange County","Alameda County","Sacramento County","Santa Clara County"],CO:["Denver County","El Paso County","Arapahoe County","Boulder County","Jefferson County"],CT:["Fairfield County","New Haven County","Hartford County"],DE:["New Castle County","Sussex County","Kent County"],FL:["Miami-Dade County","Broward County","Palm Beach County","Hillsborough County","Orange County","Duval County"],GA:["Fulton County","Gwinnett County","DeKalb County","Cobb County"],HI:["Honolulu County","Hawaii County","Maui County"],ID:["Ada County","Canyon County","Kootenai County"],IL:["Cook County","DuPage County","Lake County","Will County"],IN:["Marion County","Lake County","Allen County"],IA:["Polk County","Linn County","Scott County"],KS:["Johnson County","Sedgwick County","Shawnee County"],KY:["Jefferson County","Fayette County","Kenton County"],LA:["East Baton Rouge Parish","Orleans Parish","Jefferson Parish"],ME:["Cumberland County","Penobscot County","York County"],MD:["Montgomery County","Prince George's County","Baltimore County"],MA:["Middlesex County","Suffolk County","Essex County"],MI:["Wayne County","Oakland County","Kent County"],MN:["Hennepin County","Ramsey County","Dakota County"],MS:["Hinds County","Harrison County","DeSoto County"],MO:["St. Louis County","Jackson County","Greene County"],MT:["Yellowstone County","Missoula County","Gallatin County"],NE:["Douglas County","Lancaster County","Sarpy County"],NV:["Clark County","Washoe County","Carson City"],NH:["Hillsborough County","Rockingham County","Merrimack County"],NJ:["Bergen County","Middlesex County","Essex County"],NM:["Bernalillo County","Santa Fe County","Doña Ana County"],NY:["Kings County","Queens County","New York County","Suffolk County","Bronx County"],NC:["Mecklenburg County","Wake County","Guilford County"],ND:["Cass County","Burleigh County","Ward County"],OH:["Franklin County","Cuyahoga County","Hamilton County"],OK:["Oklahoma County","Tulsa County","Cleveland County"],OR:["Multnomah County","Washington County","Clackamas County"],PA:["Philadelphia County","Allegheny County","Montgomery County"],RI:["Providence County","Kent County","Washington County"],SC:["Greenville County","Charleston County","Richland County"],SD:["Minnehaha County","Pennington County","Lincoln County"],TN:["Shelby County","Davidson County","Knox County"],TX:["Harris County","Dallas County","Tarrant County","Bexar County","Travis County"],UT:["Salt Lake County","Utah County","Davis County"],VT:["Chittenden County","Washington County","Windsor County"],VA:["Fairfax County","Loudoun County","Richmond City"],WA:["King County","Pierce County","Snohomish County"],WV:["Kanawha County","Monongalia County","Cabell County"],WI:["Milwaukee County","Dane County","Waukesha County"],WY:["Laramie County","Natrona County","Albany County"],DC:["District of Columbia"]};
+var OCCUPATION = ["Software Engineer","Registered Nurse","Accountant","Elementary Teacher","Sales Manager","Graphic Designer","Chef","Electrician","Data Analyst","Project Manager","Marketing Specialist","Civil Engineer","Pharmacist","Dental Hygienist","Web Developer","Logistics Coordinator","HR Manager","Mechanical Engineer","Financial Analyst","Librarian","Photographer","Truck Driver","Retail Manager","Veterinarian"];
+var COMPANY = ["Acme Corp","Blue Ridge Technologies","Summit Logistics","Northwind Traders","Cedar & Pine Design","Lakeside Medical Group","Granite Peak Software","Harbor View Consulting","Ironwood Manufacturing","Silverline Media","Redwood Financial Group","Pioneer Agriculture Co.","Brightpath Education","Coastal Freight Inc.","Keystone Utilities","Canyon State Robotics","Evergreen Insurance","Trailhead Outfitters"];
+var CARDS = [["Visa","4",16],["Mastercard","51",16],["Mastercard","55",16],["American Express","37",15],["Discover","6011",16]];
+var EMAIL_DOMAIN = ["example.com","example.org","example.net"];
+var STREET = ["Maple","Oak","Main","Elm","Cedar","Pine","Washington","Lincoln","Park","Lake","Hill","Sunset","Brook","River","Church","Mill","School","North","South","East","West","Union","Market","Grand","High","Spring","Valley","Forest","Bridge","Chestnut","Walnut","Chestnut","Cherry","Willow","Magnolia","Sycamore","Dogwood","Aspen","Juniper","Holly","Ivy","Pearl","Crystal","Diamond","Golden","Silver","Liberty","Franklin","Jefferson","Madison","Monroe","Jackson","Adams","Harrison","Pearson","Ridge","Meadow","Orchard","Garden","Harbor","Bay","Shore","Canyon","Summit","Prairie","Creekside","Windmill","Heritage","Foundry","Depot","Station","Depot","Quarry","Millstone","Lighthouse","Beacon","Vine","Mulberry","Poplar","Birch","Fir","Spruce","Laurel","Azalea","Camellia","Dahlia","Rose","Lily","Violet","Iris","Harvest","Pioneer","Pilgrim","Colonial","Heritage"];
+
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function pad(n,w){var s=""+n;while(s.length<w)s="0"+s;return s}
+function luhn(prefix,len){
+  var d=[],i;
+  for(i=0;i<len-1;i++) d.push(i<prefix.length?+prefix.charAt(i):randInt(0,9));
+  var sum=0;
+  for(i=0;i<len-1;i++){var n=d[len-2-i];if(i%2===0){n*=2;if(n>9)n-=9;}sum+=n;}
+  d.push((10-(sum%10))%10);
+  return d.join("");
+}
+function fmtCardNum(n){
+  if(n.length===15) return n.slice(0,4)+" "+n.slice(4,10)+" "+n.slice(10);
+  return n.replace(/(.{4})/g,"$1 ").trim();
+}
+function makeSSN(){
+  var area=randInt(1,899);
+  if(area===666) area=665;
+  return pad(area,3)+"-"+pad(randInt(1,99),2)+"-"+pad(randInt(1,9999),4);
+}
+function makeBirthday(){
+  return randInt(1965,2005)+"-"+pad(randInt(1,12),2)+"-"+pad(randInt(1,28),2);
+}
+
+function eligibleStates(){
+  var onlyFree = document.getElementById("onlyFree").checked;
+  var sel = document.getElementById("stateSel").value;
+  if(sel==="ALL"){
+    return onlyFree ? STATES.filter(function(s){return s.t}) : STATES;
+  }
+  var one = STATES.filter(function(s){return s.a===sel})[0];
+  if(onlyFree && !one.t) return STATES.filter(function(s){return s.t});
+  return [one];
+}
+
+var current = null;
+
+function generate(){
+  var pool = eligibleStates();
+  var st = pick(pool);
+  var city = pick(st.c);
+  var street = randInt(10,9999)+" "+pick(STREET)+" "+pick(SUFFIX);
+  var zip = pick(city[1]);
+  var ac = pick(st.ac);
+  var phone = "("+ac+") "+randInt(200,999)+"-"+randInt(1000,9999);
+  var fax = "("+ac+") "+randInt(200,999)+"-"+randInt(1000,9999);
+  var fi = randInt(0, FIRST.length - 1);
+  var first = FIRST[fi], last = pick(LAST);
+  var gender = fi % 2 === 0 ? "男" : "女";
+  var card = pick(CARDS);
+  var yy = (new Date().getFullYear()+randInt(2,6))%100;
+  current = {
+    state:st,
+    city:city[0],
+    county:pick(COUNTIES[st.a]),
+    zip:zip,
+    street:street,
+    name:first+" "+last,
+    phone:phone,
+    fax:fax,
+    gender:gender,
+    birthday:makeBirthday(),
+    ssn:makeSSN(),
+    email:(first+"."+last).toLowerCase().replace(/[^a-z.]/g,"")+randInt(1,999)+"@"+pick(EMAIL_DOMAIN),
+    occupation:pick(OCCUPATION),
+    company:pick(COMPANY),
+    cardBrand:card[0],
+    cardNum:luhn(card[1],card[2]),
+    cardCvv:pad(randInt(100,999),3),
+    cardExp:pad(randInt(1,12),2)+"/"+pad(yy,2)
+  };
+  render();
+  pushHistory();
+}
+
+function fullAddress(){
+  if(!current) return "—";
+  var lines = [];
+  if(document.getElementById("withName").checked) lines.push(current.name);
+  lines.push(current.street+", "+current.city+", "+current.state.a+" "+current.zip);
+  if(document.getElementById("withPhone").checked) lines.push("Tel: "+current.phone);
+  return lines.join("\n");
+}
+
+function replay(el,cls){
+  el.className = el.className.split(/\s+/).filter(function(c){return c && c!==cls}).join(" ");
+  void el.offsetWidth;
+  el.className = (el.className+" "+cls).trim();
+}
+function showTab(name){
+  var setup = document.getElementById("pageSetup");
+  var res = document.getElementById("pageResult");
+  setup.className = "page"+(name==="setup"?" active":"");
+  res.className = "page"+(name==="result"?" active":"");
+  document.getElementById("tabSetup").className = "tab"+(name==="setup"?" active":"");
+  document.getElementById("tabResult").className = "tab"+(name==="result"?" active":"");
+  document.getElementById("tabInd").style.transform = name==="result" ? "translateX(100%)" : "";
+}
+function render(){
+  var st = current.state;
+  var withName = document.getElementById("withName").checked;
+  var withPhone = document.getElementById("withPhone").checked;
+  setField("street", current.street, true);
+  setField("city", current.city, true);
+  setField("county", current.county, true);
+  setField("state", st.n+" ("+st.a+") "+'<span class="badge '+(st.t?"free":"tax")+'">'+(st.t?"免税州":"应税州")+'</span>', true, true);
+  setField("stateFull", STATE_FULL[st.a], true);
+  setField("zip", current.zip, true);
+  setField("phone", current.phone, withPhone);
+  setField("fax", current.fax, true);
+  setField("name", current.name, withName);
+  setField("gender", current.gender, true);
+  setField("birthday", current.birthday, true);
+  setField("ssn", current.ssn, true);
+  setField("email", current.email, true);
+  setField("occupation", current.occupation, true);
+  setField("company", current.company, true);
+  setField("card", '<span class="badge plain">'+current.cardBrand+'</span> '+fmtCardNum(current.cardNum), true, true);
+  setField("cvv", current.cardCvv, true);
+  setField("exp", current.cardExp, true);
+  document.getElementById("fullAddr").textContent = fullAddress() || "—";
+  var note = document.getElementById("stateNote");
+  note.textContent = st.n+"："+st.p;
+  note.className = "state-note "+(st.t?"free":"tax");
+  var res = document.getElementById("result");
+  var i = 0;
+  for(var ch=res.firstElementChild; ch; ch=ch.nextElementSibling){
+    if(ch.style && ch.style.setProperty) ch.style.setProperty("--i", i);
+    i++;
+  }
+  replay(res,"animate");
+  replay(document.getElementById("fullAddr"),"flash");
+}
+
+function setField(key,val,show,isHtml){
+  var row = document.querySelector('.field-row[data-k="'+key+'"]');
+  row.hidden = !show;
+  var v = row.querySelector(".v");
+  if(isHtml) v.innerHTML = val; else v.textContent = val;
+}
+
+function toast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._tm);
+  t._tm = setTimeout(function(){t.classList.remove("show")},1500);
+}
+
+function copyText(text, btn){
+  var done = function(){
+    toast("已复制到剪贴板");
+    if(!btn) return;
+    var old = btn.textContent;
+    btn.textContent = "已复制";
+    setTimeout(function(){btn.textContent = old},1200);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done, function(){fallback(text);done();});
+  } else { fallback(text); done(); }
+}
+
+function fallback(text){
+  var ta = document.createElement("textarea");
+  ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.select();
+  try{document.execCommand("copy")}catch(e){}
+  document.body.removeChild(ta);
+}
+
+var addrHistory = [];
+
+function pushHistory(){
+  addrHistory.unshift({text:fullAddress(), data:current});
+  if(addrHistory.length>8) addrHistory.pop();
+  renderHistory();
+}
+
+function viewHistory(h){
+  current = h.data;
+  render();
+  showTab("result");
+}
+
+function renderHistory(){
+  var card = document.getElementById("histCard");
+  var list = document.getElementById("histList");
+  if(!addrHistory.length){card.hidden = true; return;}
+  card.hidden = false;
+  list.innerHTML = "";
+  addrHistory.forEach(function(h){
+    var item = document.createElement("div");
+    item.className = "hist-item";
+    item.tabIndex = 0;
+    item.setAttribute("role","button");
+    item.title = "点击查看详细信息";
+    var sp = document.createElement("span");
+    sp.textContent = h.text.replace(/\n/g," · ");
+    var go = document.createElement("span");
+    go.className = "hist-go";
+    go.textContent = "详情";
+    var btn = document.createElement("button");
+    btn.className = "copy"; btn.textContent = "复制";
+    btn.onclick = function(e){
+      if(e && e.stopPropagation) e.stopPropagation();
+      copyText(h.text, btn);
+    };
+    item.onclick = function(){viewHistory(h)};
+    item.onkeydown = function(e){
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        viewHistory(h);
+      }
+    };
+    item.appendChild(sp); item.appendChild(btn); item.appendChild(go);
+    list.appendChild(item);
+  });
+}
+
+function initSelects(){
+  var sel = document.getElementById("stateSel");
+  var opt = document.createElement("option");
+  opt.value = "ALL"; opt.textContent = "全部州（50 + DC）";
+  sel.appendChild(opt);
+  STATES.forEach(function(s){
+    var o = document.createElement("option");
+    o.value = s.a;
+    o.textContent = s.a+" "+s.n+(s.t?"（免税）":"");
+    sel.appendChild(o);
+  });
+  sel.onchange = function(){
+    var onlyFree = document.getElementById("onlyFree");
+    if(sel.value!=="ALL"){
+      var st = STATES.filter(function(x){return x.a===sel.value})[0];
+      onlyFree.checked = st.t;
+    }
+    current = null;
+    document.getElementById("fullAddr").textContent = "—";
+    var note = document.getElementById("stateNote");
+    note.textContent = "";
+    note.className = "state-note";
+  };
+}
+
+document.getElementById("genBtn").onclick = function(){ generate(); showTab("result"); };
+var aboutModal = document.getElementById("aboutModal");
+function openAbout(){
+  aboutModal.hidden = false;
+  document.body.style.overflow = "hidden";
+  document.getElementById("aboutClose").focus();
+}
+function closeAbout(){
+  aboutModal.hidden = true;
+  document.body.style.overflow = "";
+}
+document.getElementById("aboutBtn").onclick = openAbout;
+document.getElementById("aboutClose").onclick = closeAbout;
+document.getElementById("aboutMask").onclick = closeAbout;
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape" && !aboutModal.hidden) closeAbout();
+});
+document.getElementById("tabSetup").onclick = function(){ showTab("setup"); };
+document.getElementById("tabResult").onclick = function(){ showTab("result"); };
+document.querySelectorAll(".field-row .copy").forEach(function(btn){
+  btn.onclick = function(){
+    var row = btn.closest(".field-row");
+    if(!current || row.hidden) return;
+    var clone = row.querySelector(".v").cloneNode(true);
+    var badge = clone.querySelector(".badge");
+    if(badge) badge.remove();
+    copyText(clone.textContent.trim(), btn);
+  };
+});
+document.getElementById("previewCopy").onclick = function(){
+  copyText(current ? fullAddress() : "", this);
+};
+document.getElementById("withName").onchange = function(){if(current) render()};
+document.getElementById("withPhone").onchange = function(){if(current) render()};
+document.getElementById("onlyFree").onchange = function(){
+  document.getElementById("stateSel").value = "ALL";
+};
+
+initSelects();
+generate();
+</script>
+</body>
+</html>
