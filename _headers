@@ -1,27 +1,38 @@
 # Cloudflare Pages response headers
 # https://developers.cloudflare.com/pages/platform/headers/
+# Note: headers from every matching path are MERGED, so Cache-Control is
+# set per category (never in the catch-all) to avoid conflicting directives.
 
-# Default: revalidate everything (fast 304s, HTML/config always fresh)
+# Security defaults for every response
 /*
-  Cache-Control: no-cache, must-revalidate
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
 
-# Service worker must never be cached, or version bumps won't roll out
-/sw.js
+# HTML entry points and the service worker: always revalidate,
+# so a version bump (PATCH + ?v=) goes live on the next refresh
+/
   Cache-Control: no-cache, must-revalidate
 
-# HTML entry points: always fetch latest so ?v= references stay in sync
 /index.html
   Cache-Control: no-cache, must-revalidate
 
 /preferences.html
   Cache-Control: no-cache, must-revalidate
 
-/pages/address/index.html
+/pages/*
   Cache-Control: no-cache, must-revalidate
 
-# Versioned assets (?v=APP_VERSION in the HTML) can be cached for a week
+/sw.js
+  Cache-Control: no-cache, must-revalidate
+
+# Runtime data must never be served stale
+/homepage_config.json
+  Cache-Control: no-cache, must-revalidate
+
+/manifest.webmanifest
+  Cache-Control: no-cache, must-revalidate
+
+# Assets referenced with ?v=APP_VERSION can be cached for a week
 /css/*
   Cache-Control: public, max-age=604800, must-revalidate
 
