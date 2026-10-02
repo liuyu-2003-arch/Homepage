@@ -2,7 +2,7 @@
 
 一个极简、美观且功能强大的浏览器起始页，采用仿 iOS 的毛玻璃与圆角设计风格。现已全面升级，支持用户系统、云端同步、多页面管理等高级功能。
 
-纯静态 HTML/CSS/JS 实现，但通过集成 [Supabase](https://supabase.com/)，获得了强大的后端能力，同时保持了部署简单的优势。
+纯静态 HTML/CSS/JS 实现：前端是静态文件，登录与云同步由仓库自带的 **Cloudflare Pages Functions + D1** 提供，不依赖第三方后端，push 到 `main` 即自动上线。
 
 ![Project Preview](preview.jpg)
 
@@ -49,28 +49,32 @@
 
 也可继续使用 GitHub Pages：仓库 **Settings** -> **Pages** -> Source 选 `Deploy from a branch`，Branch 选 `main`。
 
-### 2. （可选）配置你自己的 Supabase 后端
+### 2. （可选）配置你自己的后端
 
-本项目默认连接到一个公共的 Supabase 实例，如果你想拥有自己的独立后端：
+登录、用户配置与收藏由仓库内的 Pages Functions（`functions/api/[[path]].js`）提供，数据存放在 D1；前端通过 `/api/*` 调用，不依赖任何第三方后端。
 
-1.  访问 [Supabase.io](https://supabase.io/) 并创建一个新项目。
-2.  在项目的 **SQL Editor** 中，运行以下 SQL 创建 `user_configs` 表：
-    ```sql
-    CREATE TABLE public.user_configs (
-      user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-      config_data JSONB,
-      updated_at TIMESTAMPTZ DEFAULT NOW()
-    );
-    
-    ALTER TABLE public.user_configs ENABLE ROW LEVEL SECURITY;
-    
-    CREATE POLICY "Allow individual access"
-    ON public.user_configs
-    FOR ALL
-    USING (auth.uid() = user_id);
+1.  创建 D1 数据库：
+
+    ```bash
+    wrangler d1 create homepage-auth
     ```
-3.  进入项目的 **Settings** -> **API**，找到 `Project URL` 和 `anon` `public` key。
-4.  在 `js/config.js` 文件中，替换 `SUPABASE_URL` 和 `SUPABASE_KEY` 为你自己的信息。
+
+2.  把命令返回的 `database_id` 填入根目录 `wrangler.toml` 的 `[[d1_databases]]`。
+3.  建表：
+
+    ```bash
+    wrangler d1 execute homepage-auth --remote --file=migrations/0001_init.sql
+    ```
+
+4.  （可选）启用 Google / GitHub 登录，在 Pages 项目里添加加密变量：
+
+    | 变量 | 说明 |
+    | --- | --- |
+    | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google Cloud Console 的 OAuth 客户端 |
+    | `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub OAuth App 的凭据 |
+
+    回调地址：`https://你的域名/api/auth/callback/google` 与 `https://你的域名/api/auth/callback/github`。未配置时对应按钮会提示 "not configured yet"，邮箱+密码登录始终可用。
+5.  密码使用 PBKDF2-SHA256（WebCrypto）存储，会话为 HttpOnly + Secure + SameSite=Lax 的随机令牌，存于 D1 的 `sessions` 表。
 
 ## 🛠️ 使用方法
 
