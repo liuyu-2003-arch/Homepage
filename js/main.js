@@ -1,17 +1,17 @@
-import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.56';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.56';
-import { i18n } from './i18n.js?v=2.9.56';
-import { logger } from './logger.js?v=2.9.56';
+import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.57';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.57';
+import { i18n } from './i18n.js?v=2.9.57';
+import { logger } from './logger.js?v=2.9.57';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
     openDockEditModal, closeDockEditModal, saveDockEditConfig,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
-} from './ui.js?v=2.9.56';
-import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.56';
-import { state, onDataReloaded } from './state.js?v=2.9.56';
-import { CONFIG } from './config.js?v=2.9.56';
+} from './ui.js?v=2.9.57';
+import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.57';
+import { state, onDataReloaded } from './state.js?v=2.9.57';
+import { CONFIG } from './config.js?v=2.9.57';
 
 async function loadTemplates() {
     const templates = [
@@ -222,12 +222,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     let resizeTimer;
-    window.addEventListener('resize', () => {
+    const scheduleResize = () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
             handleViewportResize();
         }, 150);
-    });
+    };
+    window.addEventListener('resize', scheduleResize);
+    // iOS Safari resizes the visual viewport (not the window) when its toolbar
+    // collapses/expands, so re-measure page capacity there too.
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', scheduleResize);
+    }
 
     // --- 事件委托：统一处理 data-action ---
     const ACTIONS = {
@@ -308,6 +314,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.56').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.57').catch(() => {});
     });
 }

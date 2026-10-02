@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.56';
-import { saveData } from './api.js?v=2.9.56';
-import { CONFIG } from './config.js?v=2.9.56';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.56';
+import { state, isDefaultAccount } from './state.js?v=2.9.57';
+import { saveData } from './api.js?v=2.9.57';
+import { CONFIG } from './config.js?v=2.9.57';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.57';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -730,7 +730,13 @@ function measurePageCapacity(wrapper) {
         const itemRect = probeItem.getBoundingClientRect();
         const itemTop = Math.max(0, itemRect.top - pageRect.top + page.scrollTop);
         const itemHeight = probeItem.offsetHeight || itemRect.height || 1;
-        const availableHeight = page.clientHeight - itemTop - paddingBottom;
+        // iOS Safari's 100vh can be taller than the visible viewport while the
+        // URL bar is shown, which makes the grid spill underneath the dock.
+        // Clamp the measurable height to the visual viewport.
+        const vv = window.visualViewport;
+        const visibleBottom = vv ? vv.offsetTop + vv.height : window.innerHeight;
+        const pageHeight = Math.min(page.clientHeight, visibleBottom - pageRect.top);
+        const availableHeight = pageHeight - itemTop - paddingBottom;
         const rows = Math.max(1, Math.floor((availableHeight + rowGap) / (itemHeight + rowGap)));
 
         return Math.max(1, columns * rows);
