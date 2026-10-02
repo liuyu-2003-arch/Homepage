@@ -1,9 +1,9 @@
-import { CONFIG } from './config.js?v=2.9.60';
-import { createCloudClient } from './cloud.js?v=2.9.60';
-import { state } from './state.js?v=2.9.60';
-import { showToast, t, safeUrl } from './utils.js?v=2.9.60';
-import { i18n } from './i18n.js?v=2.9.60';
-import { logger } from './logger.js?v=2.9.60';
+import { CONFIG } from './config.js?v=2.9.61';
+import { createCloudClient } from './cloud.js?v=2.9.61';
+import { state } from './state.js?v=2.9.61';
+import { showToast, t, safeUrl } from './utils.js?v=2.9.61';
+import { i18n } from './i18n.js?v=2.9.61';
+import { logger } from './logger.js?v=2.9.61';
 
 let supabaseClient = null;
 window.prefAvatarUrl = window.prefAvatarUrl || '';
@@ -16,6 +16,7 @@ const PREF_ACTIONS = {
     updatePrefNamePreview: (el) => window.updatePrefNamePreview(el.value),
     savePreferences: () => window.savePreferences(),
     changePassword: () => window.changePassword(),
+    toggleChangePassword: () => window.toggleChangePassword(),
     logoutPreferences: () => window.logoutPreferences(),
 };
 
@@ -272,10 +273,34 @@ window.changePassword = async function() {
         if (currentInput) currentInput.value = '';
         if (nextInput) nextInput.value = '';
         showToast(t('msg_password_changed'), 'success');
+        window.collapseChangePassword();
     } catch (e) {
         logger.error('Change password failed', e);
         showToast(e.message || t('msg_save_fail'), 'error');
     } finally {
-        if (btn) { btn.textContent = t('btn_change_password'); btn.disabled = false; }
+        if (btn) { btn.textContent = t('btn_save'); btn.disabled = false; }
+    }
+};
+
+window.collapseChangePassword = function() {
+    const panel = document.getElementById('security-panel');
+    const toggle = document.getElementById('btn-security-toggle');
+    if (panel) panel.setAttribute('hidden', '');
+    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+};
+
+window.toggleChangePassword = function() {
+    const panel = document.getElementById('security-panel');
+    const toggle = document.getElementById('btn-security-toggle');
+    if (!panel) return;
+
+    const willOpen = panel.hasAttribute('hidden');
+    if (willOpen) {
+        panel.removeAttribute('hidden');
+        if (toggle) toggle.setAttribute('aria-expanded', 'true');
+        const first = document.getElementById('pref-current-password');
+        if (first) first.focus();
+    } else {
+        window.collapseChangePassword();
     }
 };
