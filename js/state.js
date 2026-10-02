@@ -20,7 +20,8 @@ export const state = {
     animationID: null,
     dotsTimer: null,
     wheelTimeout: null,
-    isWheelScrolling: false
+    isWheelScrolling: false,
+    wheelPeakOffset: 0
 };
 
 const DEFAULT_ACCOUNT_EMAILS = ['jemchmi@gmail.com'];

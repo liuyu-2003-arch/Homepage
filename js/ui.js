@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.50';
-import { saveData } from './api.js?v=2.9.50';
-import { CONFIG } from './config.js?v=2.9.50';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.50';
+import { state, isDefaultAccount } from './state.js?v=2.9.51';
+import { saveData } from './api.js?v=2.9.51';
+import { CONFIG } from './config.js?v=2.9.51';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.51';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -1574,7 +1574,7 @@ function updateSwiperPosition(withTransition = true) {
     if (withTransition) swiperWrapper.style.transition = 'transform 0.2s ease-out';
     setSwiperPosition();
 }
-// 双指滑动（滚轮）复刻“按住拖拽”的手感：跟手位移、限制在一屏内、松手后按同一阈值翻页
+// 双指滑动（滚轮）复刻“按住拖拽”的手感：跟手位移、限制在一屏内、结束后按位移决定翻页
 function handleWheel(e) {
     // 纵向为主时，交给页面默认滚动
     if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
@@ -1589,6 +1589,7 @@ function handleWheel(e) {
     // 一次滚轮手势开始，与拖拽保持一致的初始状态
     if (!state.isWheelScrolling) {
         state.isWheelScrolling = true;
+        state.wheelPeakOffset = 0;
         swiperWrapper.style.transition = 'none';
     }
 
@@ -1604,21 +1605,27 @@ function handleWheel(e) {
     state.currentTranslate = nextTranslate;
     setSwiperPosition();
 
+    // 记录手势过程中到达过的最大位移，翻页判定用它，避免收尾回弹导致失败
+    const offset = state.currentTranslate - state.prevTranslate;
+    if (Math.abs(offset) > Math.abs(state.wheelPeakOffset)) state.wheelPeakOffset = offset;
+
     clearTimeout(state.wheelTimeout);
-    state.wheelTimeout = setTimeout(finishWheelScroll, 80);
+    state.wheelTimeout = setTimeout(finishWheelScroll, 120);
 }
 
-// 滚轮手势结束，翻页判定与 dragEnd 完全一致
+// 滚轮手势结束：按手势最大位移决定翻页，阈值比拖拽低（触控板行程更短）
 function finishWheelScroll() {
     if (!state.isWheelScrolling) return;
     state.isWheelScrolling = false;
 
     const swiper = document.getElementById('bookmark-swiper');
     const swiperWidth = swiper ? swiper.clientWidth : 1;
-    const movedBy = state.currentTranslate - state.prevTranslate;
+    const movedBy = state.wheelPeakOffset;
+    // 触控板水平位移与屏幕宽度无关，用固定像素上限，宽屏也不会因为阈值过大而翻页失败
+    const threshold = Math.min(swiperWidth * 0.08, 60);
     let targetPage = state.currentPage;
-    if (movedBy < -swiperWidth * 0.15 && state.currentPage < state.visualPages.length - 1) targetPage++;
-    else if (movedBy > swiperWidth * 0.15 && state.currentPage > 0) targetPage--;
+    if (movedBy < -threshold && state.currentPage < state.visualPages.length - 1) targetPage++;
+    else if (movedBy > threshold && state.currentPage > 0) targetPage--;
     state.currentPage = targetPage;
     updateSwiperPosition(true);
     renderPaginationDots();
