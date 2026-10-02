@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">My Homepage icon</title>
+  <desc id="desc">A flowing lowercase H made from two smooth black curves on a lime tile.</desc>
+  <rect x="28" y="28" width="456" height="456" rx="108" fill="#c8ff00"/>
+  <g fill="none" stroke="#111311" stroke-width="52" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M153 385C153 307 152 225 154 132"/>
+    <path d="M152 282C190 232 231 208 274 218C323 230 347 277 347 327C347 367 371 383 399 356"/>
+  </g>
+</svg>

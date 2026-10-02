@@ -1,4 +1,4 @@
-import { i18n } from './i18n.js?v=2.9.44';
+import { i18n } from './i18n.js?v=2.9.45';
 
 export function debounce(func, wait, { maxWait } = {}) {
     let timeout, maxTimeout, lastArgs, lastThis;
@@ -37,6 +37,9 @@ export function safeUrl(raw, fallback = '') {
     if (typeof raw !== 'string') return fallback;
     const trimmed = raw.trim();
     if (!trimmed) return fallback;
+    // Same-origin relative paths are allowed (e.g. self-hosted bookmark icons:
+    // "icons/<hash>.png"). Protocol-relative "//host" stays rejected.
+    if (/^\/(?!\/)/.test(trimmed) || /^\.{1,2}\//.test(trimmed)) return trimmed;
     try {
         const normalized = /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed) ? trimmed : 'https://' + trimmed;
         const u = new URL(normalized);

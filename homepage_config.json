@@ -1,776 +1,776 @@
 [
-  {
-    "title": "Favorites",
-    "bookmarks": [
-      {
-        "id": "mibooocggo4bac346wo",
-        "url": "https://app.notion.com/library/recents",
-        "icon": "https://manifest.im/icon/notion.so",
-        "style": "full",
-        "title": "Notion",
-        "note": "最近使用的 Notion 页面"
-      },
-      {
-        "id": "mibooocg6ifsz8svimu",
-        "url": "https://www.dedao.cn/bought",
-        "icon": "https://manifest.im/icon/www.dedao.cn",
-        "style": "full",
-        "title": "Dedao",
-        "note": "已购课程、电子书与听书"
-      },
-      {
-        "id": "mibooocgxukg2md4ees",
-        "url": "https://youtube.com/",
-        "icon": "https://manifest.im/icon/youtube.com",
-        "style": "fit",
-        "title": "Youtube",
-        "note": "在线视频与订阅频道"
-      },
-      {
-        "id": "mibooocgnkd4wlcily",
-        "url": "https://www.bilibili.com/",
-        "icon": "https://favicon.vemetric.com/www.bilibili.com",
-        "style": "full",
-        "title": "Bilibili",
-        "note": "视频、番剧与学习内容"
-      },
-      {
-        "id": "mibooocg4udfj48jcqn",
-        "url": "https://yt-dlp.324893.xyz/",
-        "icon": "https://manifest.im/icon/yt-dlp.324893.xyz",
-        "style": "full",
-        "title": "yt-dlp",
-        "note": "在线视频下载工具"
-      },
-      {
-        "id": "mibooocg3d08h37yjom",
-        "url": "https://www.subeasy.ai/?invite_code=4sk0qh",
-        "icon": "https://subeasy.ai/favicon.ico",
-        "style": "white",
-        "title": "Subeasy",
-        "note": "AI 字幕生成与翻译"
-      },
-      {
-        "id": "mibooocg6ksem70at97",
-        "url": "https://movie.douban.com/",
-        "icon": "https://cdn.brandfetch.io/movie.douban.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "fit",
-        "title": "Douban",
-        "note": "豆瓣电影资料与评分"
-      },
-      {
-        "id": "mibooocgctd6k15mfsq",
-        "url": "https://google.com/",
-        "icon": "https://cdn.brandfetch.io/google.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "white",
-        "title": "Google",
-        "note": "网页搜索"
-      },
-      {
-        "id": "mivpg1zworavb83cgq",
-        "url": "https://nytimes.324893.xyz/",
-        "icon": "https://favicon.vemetric.com/nytimes.324893.xyz",
-        "style": "full",
-        "title": "NY Times",
-        "note": "纽约时报中文网镜像入口"
-      },
-      {
-        "id": "mjpz3y419iudcfdn3fa",
-        "url": "https://uc.324893.xyz/",
-        "icon": "https://favicon.vemetric.com/uc.324893.xyz",
-        "style": "full",
-        "title": "UC",
-        "note": "UC 浏览器网页版入口"
-      },
-      {
-        "id": "mibooocg1p2kmlhqsbu",
-        "url": "https://gemini.google.com/app",
-        "icon": "https://manifest.im/icon/gemini.google.com",
-        "style": "fit",
-        "title": "Gemini",
-        "note": "Google Gemini AI 助手"
-      },
-      {
-        "id": "mid9okof7qugkre384m",
-        "url": "https://aistudio.google.com/",
-        "icon": "https://favicon.vemetric.com/aistudio.google.com",
-        "style": "full",
-        "title": "Ai Studio",
-        "note": "Google AI Studio 模型实验平台"
-      },
-      {
-        "id": "miepy2ln1a4dj0jx0wtg",
-        "url": "https://claude.ai/",
-        "icon": "https://manifest.im/icon/claude.ai",
-        "style": "fit",
-        "title": "Claude",
-        "note": "Anthropic Claude AI 助手"
-      },
-      {
-        "id": "mibooocgvnfgrg3hxed",
-        "url": "https://grok.com/",
-        "icon": "https://cdn.brandfetch.io/grok.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "title": "Grok",
-        "note": "xAI Grok AI 助手"
-      },
-      {
-        "id": "miepx4j9ab58h1vr5k6",
-        "url": "https://www.perplexity.ai/",
-        "icon": "https://cdn.brandfetch.io/www.perplexity.ai?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "title": "Perplexity",
-        "note": "AI 搜索与研究助手"
-      },
-      {
-        "id": "mibooocgw6rzqbut0o9",
-        "url": "https://chatgpt.com/",
-        "icon": "https://manifest.im/icon/chatgpt.com",
-        "style": "full",
-        "title": "Chatgpt",
-        "note": "OpenAI ChatGPT"
-      },
-      {
-        "id": "mibooocgiovtru2rogh",
-        "url": "https://github.com/liuyu-2003-arch",
-        "icon": "https://manifest.im/icon/github.com",
-        "style": "full",
-        "title": "GitHub",
-        "note": "个人 GitHub 主页与代码仓库"
-      },
-      {
-        "id": "mibooocgumwvwh70wn",
-        "url": "https://vercel.com/",
-        "icon": "https://manifest.im/icon/vercel.com",
-        "style": "full",
-        "title": "Vercel",
-        "note": "网站部署与托管平台"
-      },
-      {
-        "id": "mibooocgv5kxh73xmms",
-        "url": "https://mail.google.com/mail/u/0/",
-        "icon": "https://manifest.im/icon/mail.google.com",
-        "style": "white",
-        "title": "Gmail",
-        "note": "Google 邮箱"
-      },
-      {
-        "id": "mibooocgttju5attj7a",
-        "url": "https://dash.cloudflare.com/",
-        "icon": "https://manifest.im/icon/www.cloudflare.com",
-        "style": "fit",
-        "title": "Cloudflare",
-        "note": "DNS、CDN 与安全控制台"
-      },
-      {
-        "id": "mlcfgavqvxv8l58z31",
-        "url": "https://opal.google/app/1k9rVWM_m-h6MKN1MPm3yCcuh5wW2KZLA",
-        "icon": "https://api.dicebear.com/9.x/bottts/svg?seed=ondeuh",
-        "style": "full",
-        "title": "Opal",
-        "note": "Google Opal AI 应用"
-      },
-      {
-        "id": "mibooocgvqiaku0c1ai",
-        "url": "https://tingwu.aliyun.com/home",
-        "icon": "https://favicon.vemetric.com/tingwu.aliyun.com",
-        "style": "fit",
-        "title": "Tingwu",
-        "note": "阿里通义听悟音频转写"
-      },
-      {
-        "id": "mm3otgc1a2cw1pbbbhs",
-        "url": "https://chatgpt.com/codex/settings/usage",
-        "icon": "https://cdn.brandfetch.io/chatgpt.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "title": "Codex",
-        "note": "ChatGPT Codex 用量与设置"
-      },
-      {
-        "id": "mnizcvg03s1e803erwy",
-        "url": "https://platform.xiaomimimo.com/console/plan-manage",
-        "icon": "https://manifest.im/icon/platform.xiaomimimo.com",
-        "style": "full",
-        "title": "MIMO",
-        "note": "小米 MiMo 订阅管理"
-      },
-      {
-        "id": "moqnkcqi91gu08u0bb4",
-        "url": "https://pre.324893.xyz/",
-        "icon": "https://favicon.vemetric.com/pre.324893.xyz",
-        "style": "full",
-        "title": "Pre",
-        "note": "个人测试站点预览环境"
-      },
-      {
-        "id": "mrpos3uzr98r1bncad",
-        "url": "https://apply.jtw.beijing.gov.cn/apply/app/user/person/manage/01CCAn0Pnn1PCCCn2i8C821ACACi6Phe",
-        "icon": "https://manifest.im/icon/apply.jtw.beijing.gov.cn",
-        "style": "full",
-        "title": "Car",
-        "note": "北京小客车指标申请"
-      },
-      {
-        "id": "ml6q7ihddc5kxzdcga",
-        "url": "https://openrouter.ai/settings/credits",
-        "icon": "https://manifest.im/icon/openrouter.ai",
-        "style": "full",
-        "title": "Openrouter",
-        "note": "AI 模型 API 与额度管理"
-      },
-      {
-        "id": "moz4vha6lpyvstntvf",
-        "url": "https://sidhub.cc/",
-        "icon": "https://www.seedhub.cc/favicon.ico",
-        "style": "fit",
-        "title": "Seedhub",
-        "note": "影视资源索引"
-      },
-      {
-        "id": "ms01y8ye4gewrxuxojg",
-        "url": "https://www1.rarbg.tw/",
-        "icon": "https://manifest.im/icon/www1.rarbg.tw",
-        "style": "full",
-        "title": "RarBg",
-        "note": "影视种子资源站"
-      },
-      {
-        "id": "mu1glksdsrzj8zym6r",
-        "url": "https://opencode.ai/console/wrk_01KJ1MSX2AMHGATKMTKPE82A36/go",
-        "icon": "https://manifest.im/icon/opencode.ai",
-        "style": "full",
-        "title": "Opencode",
-        "note": "AI 编程工作台"
-      },
-      {
-        "id": "mui5nei4mt719pqv8vl",
-        "url": "https://artificialanalysis.ai/zh",
-        "icon": "https://img.logo.dev/artificialanalysis.ai?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "fit",
-        "title": "Artificialanalysis",
-        "note": "AI 模型性能与价格排行"
-      }
-    ]
-  },
-  {
-    "title": "Learning",
-    "bookmarks": [
-      {
-        "id": "miepvyzft0h6yv1eo6",
-        "url": "https://weread.qq.com/",
-        "icon": "https://manifest.im/icon/weread.qq.com",
-        "style": "full",
-        "title": "Weread",
-        "note": "微信读书网页版"
-      },
-      {
-        "id": "mibooocgrw5l7r8p99a",
-        "url": "https://z-library.sk/",
-        "icon": "https://manifest.im/icon/z-library.sk",
-        "style": "fit",
-        "title": "Z-library",
-        "note": "电子书资源库"
-      },
-      {
-        "id": "mier1cka1b7ultueupk",
-        "url": "https://www.coursera.org/",
-        "icon": "https://cdn.brandfetch.io/www.coursera.org?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "title": "Coursera",
-        "note": "在线课程平台"
-      },
-      {
-        "id": "mierexpald47s750ijg",
-        "url": "https://www.ted.com/",
-        "icon": "https://manifest.im/icon/www.ted.com",
-        "style": "full",
-        "title": "Ted",
-        "note": "TED 演讲视频"
-      },
-      {
-        "id": "mier00w64evkxux8ox1",
-        "url": "https://yixi.tv/",
-        "icon": "https://img.logo.dev/yixi.tv?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Yixi",
-        "note": "一席演讲视频"
-      },
-      {
-        "id": "mibooocgrih9u7wmtw",
-        "url": "https://zh.wikipedia.org/wiki/Wikipedia:%E9%A6%96%E9%A1%B5",
-        "icon": "https://manifest.im/icon/zh.wikipedia.org",
-        "style": "full",
-        "title": "Wikipedia",
-        "note": "中文维基百科"
-      },
-      {
-        "id": "mibooocgnga9eg221z",
-        "url": "https://artsandculture.google.com/",
-        "icon": "https://manifest.im/icon/artsandculture.google.com",
-        "style": "full",
-        "title": "Google Art",
-        "note": "Google 艺术与文化"
-      },
-      {
-        "id": "midbkac2i1z91czdrka",
-        "url": "https://app.leonardo.ai/",
-        "icon": "https://cdn.brandfetch.io/app.leonardo.ai?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "title": "Leonardo",
-        "note": "AI 图像生成工具"
-      },
-      {
-        "id": "mibooocguwmdw2mja1r",
-        "url": "https://grabcad.com/library",
-        "icon": "https://img.logo.dev/grabcad.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Grabcad",
-        "note": "3D 模型与工程图纸"
-      },
-      {
-        "id": "mibooocg1w4hodlnmca",
-        "url": "https://zh.ifixit.com/Teardown",
-        "icon": "https://img.logo.dev/zh.ifixit.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "fit",
-        "title": "iFixit",
-        "note": "设备拆解与维修指南"
-      },
-      {
-        "id": "mierd8xtx9xbyzlog49",
-        "url": "https://www.vistopia.com.cn/",
-        "icon": "https://img.logo.dev/www.vistopia.com.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "KLX",
-        "note": "看理想课程与音频节目"
-      },
-      {
-        "id": "midbmnvnqubzzyg6p",
-        "url": "https://www.hundun.cn/",
-        "icon": "https://img.logo.dev/www.hundun.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Hundun",
-        "note": "混沌学园课程"
-      },
-      {
-        "id": "mieq34u7fw4sgcx1ho",
-        "url": "https://makerworld.com/zh/3d-models",
-        "icon": "https://manifest.im/icon/makerworld.com",
-        "style": "full",
-        "title": "Makerworld",
-        "note": "3D 模型分享社区"
-      },
-      {
-        "id": "mier7s1fxwut51nfihe",
-        "url": "https://indeed.com/",
-        "icon": "https://img.logo.dev/indeed.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Indeed",
-        "note": "求职与招聘信息"
-      },
-      {
-        "id": "mibooocgrdyluefobsl",
-        "url": "https://cn.nytimes.com/zh-hant/",
-        "icon": "https://cdn.brandfetch.io/cn.nytimes.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "title": "NY Times",
-        "note": "纽约时报中文网"
-      },
-      {
-        "id": "mlvngm7xcfpt5z0fqk8",
-        "url": "https://notebooklm.google.com/",
-        "icon": "https://api.dicebear.com/9.x/bottts/svg?seed=rauule",
-        "style": "full",
-        "title": "Notebooklm",
-        "note": "Google NotebookLM AI 笔记与研究"
-      }
-    ]
-  },
-  {
-    "title": "Movies",
-    "bookmarks": [
-      {
-        "id": "mibooocgxj44jon0jy",
-        "url": "https://open.spotify.com/",
-        "icon": "https://img.logo.dev/open.spotify.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Spotify",
-        "note": "音乐与播客"
-      },
-      {
-        "id": "mierh5ixzlwjat320s8",
-        "url": "https://podcasts.apple.com/",
-        "icon": "https://favicon.vemetric.com/podcasts.apple.com",
-        "style": "full",
-        "title": "Podcasts",
-        "note": "Apple 播客"
-      },
-      {
-        "id": "miepihi6f38igqpkny7",
-        "url": "https://www.themoviedb.org/",
-        "icon": "https://favicon.vemetric.com/www.themoviedb.org",
-        "style": "full",
-        "title": "The Movie DB",
-        "note": "影视资料数据库"
-      },
-      {
-        "id": "miepe028guvn7z5j6p",
-        "url": "https://www.imdb.com/",
-        "icon": "https://img.logo.dev/www.imdb.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Imdb",
-        "note": "电影、剧集与演员资料"
-      },
-      {
-        "id": "mm79m513r52d6m1w4ak",
-        "url": "https://watch.plex.tv/zh/me",
-        "icon": "https://img.logo.dev/watch.plex.tv?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Plex",
-        "note": "个人媒体中心"
-      },
-      {
-        "id": "mibooocg9qj52goaju",
-        "url": "https://www.cilixiong.org/movie/",
-        "icon": "https://manifest.im/icon/www.cilixiong.org",
-        "style": "full",
-        "title": "Cilixiong",
-        "note": "影视资源索引"
-      },
-      {
-        "id": "mibooocgaaeujkkssn",
-        "url": "https://alipansou.com/",
-        "icon": "https://favicon.vemetric.com/alipansou.com",
-        "style": "fit",
-        "title": "Alipansou",
-        "note": "阿里云盘资源搜索"
-      },
-      {
-        "id": "mibooocgkq3nblf1gna",
-        "url": "https://www.upyunso.com/",
-        "icon": "https://img.logo.dev/www.upyunso.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "fit",
-        "title": "Upyunso",
-        "note": "云盘资源搜索"
-      },
-      {
-        "id": "mibooocgwqjkcliv0ed",
-        "url": "https://91panta.cn/",
-        "icon": "https://api.dicebear.com/9.x/identicon/svg?seed=nowf5",
-        "style": "full",
-        "title": "91panta",
-        "note": "网盘资源搜索"
-      },
-      {
-        "id": "miepmql63atcrh9hyhm",
-        "url": "https://www.google.com/search?q=https://www.aliyundrive.com+%E8%82%96%E7%94%B3%E5%85%8B%E7%9A%84%E6%95%91%E8%B5%8E&newwindow=1&sxsrf=AJOqlzVJfRSCMuz4Ah-SfKHmcjXjgivccw:1679122128936&ei=0F4VZNzSOKeNur8P3LWm-A4&ved=0ahUKEwjc-p2w8eT9AhWnhu4BHdyaCe8Q4dUDCBA&uact=5&oq=https://www.aliyundrive.com+%E8%82%96%E7%94%B3%E5%85%8B%E7%9A%84%E6%95%91%E8%B5%8E&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQyBQgAEKIESgQIQRgAUABY7iFgtydoAXAAeACAAZwCiAGOBJIBAzItMpgBAKABAqABAcABAQ&sclient=gws-wiz-serp",
-        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=qfl3v",
-        "style": "full",
-        "title": "Google Aliyun",
-        "note": "Google 搜索阿里云盘资源"
-      },
-      {
-        "id": "miepo5oz2u7te1vfafg",
-        "url": "https://www.google.com/search?q=magnet%3A%3Fxt%3D+%E9%98%BF%E4%B8%BD%E5%A1%94&newwindow=1&sca_esv=742aa62f8b445c9b&sxsrf=AE3TifPE9YmGGnR5OM3S-gYeC8E6WAl7iA%3A1764083296126&ei=YMYlac6zB82xhbIPyZuYuQg&ved=0ahUKEwjO4-Cxyo2RAxXNWEEAHckNJocQ4dUDCBE&uact=5&oq=magnet%3A%3Fxt%3D+%E9%98%BF%E4%B8%BD%E5%A1%94&gs_lp=Egxnd3Mtd2l6LXNlcnAiFW1hZ25ldDo_eHQ9IOmYv-S4veWhlEjyP1DKFFi-PXABeACQAQOYAbYIoAHOKaoBCzMtNC4xLjEuMi4xuAEDyAEA-AEBmAIAoAIAmAMAiAYBkgcAoAfLA7IHALgHAMIHAMgHAA&sclient=gws-wiz-serp",
-        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=ervqsq",
-        "style": "full",
-        "title": "Magnet",
-        "note": "Google 搜索磁力资源"
-      },
-      {
-        "id": "modqocrqok6qedcmvs",
-        "url": "https://t.me/s/ydypzyfx",
-        "icon": "https://favicon.vemetric.com/t.me",
-        "style": "fit",
-        "title": "T 139",
-        "note": "Telegram 影视资源频道"
-      },
-      {
-        "id": "mq28byrstu4l5detdb",
-        "url": "https://www.kdocs.cn/l/cpgviKFaTZF3",
-        "icon": "https://img.logo.dev/www.kdocs.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Kdocs",
-        "note": "金山文档共享资料"
-      },
-      {
-        "id": "msbz0mgru0zsp9ffhdc",
-        "url": "https://subhd.me/",
-        "icon": "https://manifest.im/icon/subhd.me",
-        "style": "fit",
-        "title": "Subhd",
-        "note": "字幕下载与匹配"
-      }
-    ]
-  },
-  {
-    "title": "Social",
-    "bookmarks": [
-      {
-        "id": "midbn4v8lri899hmq1p",
-        "url": "https://x.com/home",
-        "icon": "https://favicon.vemetric.com/x.com",
-        "style": "full",
-        "title": "X",
-        "note": "X / Twitter 社交平台"
-      },
-      {
-        "id": "midbnlfyt7tv9ul7im",
-        "url": "https://www.quora.com/",
-        "icon": "https://img.logo.dev/www.quora.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Quora",
-        "note": "问答社区"
-      },
-      {
-        "id": "midbojdqrj8sg41r0is",
-        "url": "https://www.tumblr.com/",
-        "icon": "https://cdn.brandfetch.io/www.tumblr.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "title": "Tumblr",
-        "note": "轻博客社区"
-      },
-      {
-        "id": "midbp7ge6h9l75ik51m",
-        "url": "https://www.instagram.com/",
-        "icon": "https://manifest.im/icon/www.instagram.com",
-        "style": "full",
-        "title": "Instagram",
-        "note": "图片与短视频社交"
-      },
-      {
-        "id": "midbpzg8nshztny6y9g",
-        "url": "https://pinterest.com/",
-        "icon": "https://cdn.brandfetch.io/pinterest.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "fit",
-        "title": "Pinterest",
-        "note": "图片灵感与收藏"
-      },
-      {
-        "id": "mieprd26n7b0gckwp8",
-        "url": "https://archive.org/",
-        "icon": "https://cdn.brandfetch.io/archive.org?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "title": "Archive",
-        "note": "互联网档案馆"
-      },
-      {
-        "id": "mibooocgnxpaibktu1o",
-        "url": "https://www.bbc.com/zhongwen/simp",
-        "icon": "https://cdn.brandfetch.io/www.bbc.com?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "title": "BBC",
-        "note": "BBC 中文新闻"
-      },
-      {
-        "id": "mieptqfyamvjno7268q",
-        "url": "https://www.snopes.com/",
-        "icon": "https://img.logo.dev/www.snopes.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Snopes",
-        "note": "事实核查网站"
-      },
-      {
-        "id": "micsydpfc4fivqf8npg",
-        "url": "https://web.telegram.org/a/",
-        "icon": "https://img.logo.dev/web.telegram.org?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Telegram",
-        "note": "Telegram 网页版"
-      }
-    ]
-  },
-  {
-    "title": "Code",
-    "bookmarks": [
-      {
-        "id": "midbjml0cwdmvbm878d",
-        "url": "https://colab.research.google.com/github/alembics/disco-diffusion/blob/main/Disco_Diffusion.ipynb#scrollTo=PromptsTop",
-        "icon": "https://favicon.vemetric.com/colab.research.google.com",
-        "style": "fit",
-        "title": "Colab",
-        "note": "Google Colab 云端笔记本"
-      },
-      {
-        "id": "mif9j57y2dhvyfldk1q",
-        "url": "https://supabase.com/",
-        "icon": "https://favicon.vemetric.com/supabase.com",
-        "style": "full",
-        "title": "Supabase",
-        "note": "后端数据库与云服务"
-      },
-      {
-        "id": "mijj74rlfqlqehzrpnm",
-        "url": "https://search.google.com/search-console?resource_id=sc-domain:324893.xyz",
-        "icon": "https://api.dicebear.com/9.x/bottts/svg?seed=dj2atj",
-        "style": "full",
-        "title": "Search",
-        "note": "Google Search Console 搜索表现"
-      },
-      {
-        "id": "mijsfcqrp0fv95jriq8",
-        "url": "https://realfavicongenerator.net/",
-        "icon": "https://cdn.brandfetch.io/realfavicongenerator.net?c=1idVW8VN57Jat7AexnZ",
-        "style": "full",
-        "title": "Favicon",
-        "note": "Favicon 生成工具"
-      },
-      {
-        "id": "mj4hu8edx0voiyu3yjc",
-        "url": "https://console.cloud.google.com/welcome/new?project=verlingo",
-        "icon": "https://img.logo.dev/console.cloud.google.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "fit",
-        "title": "Console",
-        "note": "Google Cloud 控制台"
-      },
-      {
-        "id": "mjlliw8mj5hjhsrxtg",
-        "url": "https://www.spaceship.com/",
-        "icon": "https://manifest.im/icon/www.spaceship.com",
-        "style": "full",
-        "title": "Spaceship",
-        "note": "域名注册与 DNS 管理"
-      },
-      {
-        "id": "mjis3hdv9fyvkscxxyg",
-        "url": "https://stitch.withgoogle.com/",
-        "icon": "https://favicon.vemetric.com/stitch.withgoogle.com",
-        "style": "full",
-        "title": "Stitch",
-        "note": "Google Stitch AI 界面设计"
-      },
-      {
-        "id": "mrglsf3doo9pj6o8hmh",
-        "url": "https://huggingface.co/spaces",
-        "icon": "https://manifest.im/icon/huggingface.co",
-        "style": "full",
-        "title": "Huggingface",
-        "note": "Hugging Face AI 模型与 Space"
-      }
-    ]
-  },
-  {
-    "title": "Others",
-    "bookmarks": [
-      {
-        "id": "mibooocg2z1qv5lcu7y",
-        "url": "https://secure.shadowsocks.au/aff.php?aff=78994",
-        "icon": "https://img.logo.dev/secure.shadowsocks.au?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Shadowsocks",
-        "note": "Shadowsocks 代理服务"
-      },
-      {
-        "id": "mibooocggle4a072qf6",
-        "url": "https://cobalt.tools/",
-        "icon": "https://manifest.im/icon/cobalt.tools",
-        "style": "full",
-        "title": "Cobalt",
-        "note": "在线媒体下载工具"
-      },
-      {
-        "id": "midbiokxdv5uxsy1mn",
-        "url": "https://meetings.feishu.cn/minutes/me",
-        "icon": "https://api.dicebear.com/9.x/fun-emoji/svg?seed=c8z6",
-        "style": "full",
-        "title": "Meetings",
-        "note": "飞书妙记会议记录"
-      },
-      {
-        "id": "mibooocg1asoj080xgu",
-        "url": "https://aliyundrive.com/",
-        "icon": "https://manifest.im/icon/aliyundrive.com",
-        "style": "full",
-        "title": "Aliyundrive",
-        "note": "阿里云盘网页版"
-      },
-      {
-        "id": "mieqrq52yyo8inlb9j",
-        "url": "https://www.icloud.com/",
-        "icon": "https://img.logo.dev/www.icloud.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "iCloud",
-        "note": "Apple iCloud 网页版"
-      },
-      {
-        "id": "midbsfzo5wxg064euv7",
-        "url": "https://drive.google.com/drive/my-drive",
-        "icon": "https://api.dicebear.com/9.x/bottts/svg?seed=kgnc2m",
-        "style": "fit",
-        "title": "Google Drive",
-        "note": "Google 云盘"
-      },
-      {
-        "id": "mibooocgomou5m0ra8c",
-        "url": "https://yun.139.com/",
-        "icon": "https://manifest.im/icon/yun.139.com",
-        "style": "full",
-        "title": "Yun",
-        "note": "中国移动云盘"
-      },
-      {
-        "id": "mibooocg96pozsobsnu",
-        "url": "https://appstorrent.ru/",
-        "icon": "https://manifest.im/icon/appstorrent.ru",
-        "style": "full",
-        "title": "Appstorrent",
-        "note": "Mac 软件资源"
-      },
-      {
-        "id": "mibooocgngqpn1mmbz",
-        "url": "https://macked.app/",
-        "icon": "https://manifest.im/icon/macked.app",
-        "style": "fit",
-        "title": "Macked",
-        "note": "Mac 应用下载"
-      },
-      {
-        "id": "midblx03va5dbtxzc8c",
-        "url": "https://www.feishu.cn/",
-        "icon": "https://img.logo.dev/www.feishu.cn?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "fit",
-        "title": "Feishu",
-        "note": "飞书协作平台"
-      },
-      {
-        "id": "mibooocgdf1559a699m",
-        "url": "https://earth.google.com/",
-        "icon": "https://manifest.im/icon/earth.google.com",
-        "style": "white",
-        "title": "Google Earth",
-        "note": "Google 地球"
-      },
-      {
-        "id": "mier91rpip3ylnctvxc",
-        "url": "https://www.taobao.com/",
-        "icon": "https://img.logo.dev/www.taobao.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "Taobao",
-        "note": "淘宝购物"
-      },
-      {
-        "id": "mier9ghssxaq8lpkbe",
-        "url": "https://www.jd.com/",
-        "icon": "https://img.logo.dev/www.jd.com?token=pk_CD4SuapcQDq1yZFMwSaYeA&size=100&format=png",
-        "style": "full",
-        "title": "JD",
-        "note": "京东购物"
-      },
-      {
-        "id": "mijnz88qk9z1s6mwj2",
-        "url": "https://mail.qq.com/",
-        "icon": "https://favicon.vemetric.com/mail.qq.com",
-        "style": "white",
-        "title": "Mail",
-        "note": "QQ 邮箱"
-      },
-      {
-        "id": "msjo3bkmvvwbrfzjr",
-        "url": "https://tailscale.com/download/mac",
-        "icon": "https://manifest.im/icon/tailscale.com",
-        "style": "full",
-        "title": "Tailscale",
-        "note": "Tailscale Mac 客户端下载"
-      }
-    ]
-  }
+    {
+        "title": "Favorites",
+        "bookmarks": [
+            {
+                "id": "mibooocggo4bac346wo",
+                "url": "https://app.notion.com/library/recents",
+                "icon": "icons/483846a85e43.png",
+                "style": "full",
+                "title": "Notion",
+                "note": "最近使用的 Notion 页面"
+            },
+            {
+                "id": "mibooocg6ifsz8svimu",
+                "url": "https://www.dedao.cn/bought",
+                "icon": "icons/70aa7d237f89.png",
+                "style": "full",
+                "title": "Dedao",
+                "note": "已购课程、电子书与听书"
+            },
+            {
+                "id": "mibooocgxukg2md4ees",
+                "url": "https://youtube.com/",
+                "icon": "icons/8bb54b1d8fd6.png",
+                "style": "fit",
+                "title": "Youtube",
+                "note": "在线视频与订阅频道"
+            },
+            {
+                "id": "mibooocgnkd4wlcily",
+                "url": "https://www.bilibili.com/",
+                "icon": "icons/e195d9315e3f.png",
+                "style": "full",
+                "title": "Bilibili",
+                "note": "视频、番剧与学习内容"
+            },
+            {
+                "id": "mibooocg4udfj48jcqn",
+                "url": "https://yt-dlp.324893.xyz/",
+                "icon": "icons/58811475b773.png",
+                "style": "full",
+                "title": "yt-dlp",
+                "note": "在线视频下载工具"
+            },
+            {
+                "id": "mibooocg3d08h37yjom",
+                "url": "https://www.subeasy.ai/?invite_code=4sk0qh",
+                "icon": "icons/4ccc32f644f5.ico",
+                "style": "white",
+                "title": "Subeasy",
+                "note": "AI 字幕生成与翻译"
+            },
+            {
+                "id": "mibooocg6ksem70at97",
+                "url": "https://movie.douban.com/",
+                "icon": "icons/6a9fc28179f8.webp",
+                "style": "fit",
+                "title": "Douban",
+                "note": "豆瓣电影资料与评分"
+            },
+            {
+                "id": "mibooocgctd6k15mfsq",
+                "url": "https://google.com/",
+                "icon": "icons/b00778163d6f.webp",
+                "style": "white",
+                "title": "Google",
+                "note": "网页搜索"
+            },
+            {
+                "id": "mivpg1zworavb83cgq",
+                "url": "https://nytimes.324893.xyz/",
+                "icon": "icons/9341d53057a0.png",
+                "style": "full",
+                "title": "NY Times",
+                "note": "纽约时报中文网镜像入口"
+            },
+            {
+                "id": "mjpz3y419iudcfdn3fa",
+                "url": "https://uc.324893.xyz/",
+                "icon": "icons/0ac743f92589.svg",
+                "style": "full",
+                "title": "UC",
+                "note": "UC 浏览器网页版入口"
+            },
+            {
+                "id": "mibooocg1p2kmlhqsbu",
+                "url": "https://gemini.google.com/app",
+                "icon": "icons/21ecd15d93cc.png",
+                "style": "fit",
+                "title": "Gemini",
+                "note": "Google Gemini AI 助手"
+            },
+            {
+                "id": "mid9okof7qugkre384m",
+                "url": "https://aistudio.google.com/",
+                "icon": "icons/f67e285e30b2.png",
+                "style": "full",
+                "title": "Ai Studio",
+                "note": "Google AI Studio 模型实验平台"
+            },
+            {
+                "id": "miepy2ln1a4dj0jx0wtg",
+                "url": "https://claude.ai/",
+                "icon": "icons/816a55828bef.ico",
+                "style": "fit",
+                "title": "Claude",
+                "note": "Anthropic Claude AI 助手"
+            },
+            {
+                "id": "mibooocgvnfgrg3hxed",
+                "url": "https://grok.com/",
+                "icon": "icons/99ff20366142.webp",
+                "style": "full",
+                "title": "Grok",
+                "note": "xAI Grok AI 助手"
+            },
+            {
+                "id": "miepx4j9ab58h1vr5k6",
+                "url": "https://www.perplexity.ai/",
+                "icon": "icons/0c539d34351c.webp",
+                "style": "full",
+                "title": "Perplexity",
+                "note": "AI 搜索与研究助手"
+            },
+            {
+                "id": "mibooocgw6rzqbut0o9",
+                "url": "https://chatgpt.com/",
+                "icon": "icons/91b60e952ab0.png",
+                "style": "full",
+                "title": "Chatgpt",
+                "note": "OpenAI ChatGPT"
+            },
+            {
+                "id": "mibooocgiovtru2rogh",
+                "url": "https://github.com/liuyu-2003-arch",
+                "icon": "icons/e6eeca5fee72.png",
+                "style": "full",
+                "title": "GitHub",
+                "note": "个人 GitHub 主页与代码仓库"
+            },
+            {
+                "id": "mibooocgumwvwh70wn",
+                "url": "https://vercel.com/",
+                "icon": "icons/a4f37fa638bf.png",
+                "style": "full",
+                "title": "Vercel",
+                "note": "网站部署与托管平台"
+            },
+            {
+                "id": "mibooocgv5kxh73xmms",
+                "url": "https://mail.google.com/mail/u/0/",
+                "icon": "icons/2a5c83dd7f46.ico",
+                "style": "white",
+                "title": "Gmail",
+                "note": "Google 邮箱"
+            },
+            {
+                "id": "mibooocgttju5attj7a",
+                "url": "https://dash.cloudflare.com/",
+                "icon": "icons/0f84307ad691.ico",
+                "style": "fit",
+                "title": "Cloudflare",
+                "note": "DNS、CDN 与安全控制台"
+            },
+            {
+                "id": "mlcfgavqvxv8l58z31",
+                "url": "https://opal.google/app/1k9rVWM_m-h6MKN1MPm3yCcuh5wW2KZLA",
+                "icon": "icons/0d9c54da9019.svg",
+                "style": "full",
+                "title": "Opal",
+                "note": "Google Opal AI 应用"
+            },
+            {
+                "id": "mibooocgvqiaku0c1ai",
+                "url": "https://tingwu.aliyun.com/home",
+                "icon": "icons/e83d5e71c18d.png",
+                "style": "fit",
+                "title": "Tingwu",
+                "note": "阿里通义听悟音频转写"
+            },
+            {
+                "id": "mm3otgc1a2cw1pbbbhs",
+                "url": "https://chatgpt.com/codex/settings/usage",
+                "icon": "icons/9ae5613c7f3d.webp",
+                "style": "full",
+                "title": "Codex",
+                "note": "ChatGPT Codex 用量与设置"
+            },
+            {
+                "id": "mnizcvg03s1e803erwy",
+                "url": "https://platform.xiaomimimo.com/console/plan-manage",
+                "icon": "icons/30f5305380e8.png",
+                "style": "full",
+                "title": "MIMO",
+                "note": "小米 MiMo 订阅管理"
+            },
+            {
+                "id": "moqnkcqi91gu08u0bb4",
+                "url": "https://pre.324893.xyz/",
+                "icon": "icons/7e648c623b71.svg",
+                "style": "full",
+                "title": "Pre",
+                "note": "个人测试站点预览环境"
+            },
+            {
+                "id": "mrpos3uzr98r1bncad",
+                "url": "https://apply.jtw.beijing.gov.cn/apply/app/user/person/manage/01CCAn0Pnn1PCCCn2i8C821ACACi6Phe",
+                "icon": "icons/3b1e1408d234.svg",
+                "style": "full",
+                "title": "Car",
+                "note": "北京小客车指标申请"
+            },
+            {
+                "id": "ml6q7ihddc5kxzdcga",
+                "url": "https://openrouter.ai/settings/credits",
+                "icon": "icons/6efec27e034f.png",
+                "style": "full",
+                "title": "Openrouter",
+                "note": "AI 模型 API 与额度管理"
+            },
+            {
+                "id": "moz4vha6lpyvstntvf",
+                "url": "https://sidhub.cc/",
+                "icon": "icons/17a5b32bf701.ico",
+                "style": "fit",
+                "title": "Seedhub",
+                "note": "影视资源索引"
+            },
+            {
+                "id": "ms01y8ye4gewrxuxojg",
+                "url": "https://www1.rarbg.tw/",
+                "icon": "icons/3b1e1408d234.svg",
+                "style": "full",
+                "title": "RarBg",
+                "note": "影视种子资源站"
+            },
+            {
+                "id": "mu1glksdsrzj8zym6r",
+                "url": "https://opencode.ai/console/wrk_01KJ1MSX2AMHGATKMTKPE82A36/go",
+                "icon": "icons/2f2d5687a641.png",
+                "style": "full",
+                "title": "Opencode",
+                "note": "AI 编程工作台"
+            },
+            {
+                "id": "mui5nei4mt719pqv8vl",
+                "url": "https://artificialanalysis.ai/zh",
+                "icon": "icons/c1aae50e7a91.png",
+                "style": "fit",
+                "title": "Artificialanalysis",
+                "note": "AI 模型性能与价格排行"
+            }
+        ]
+    },
+    {
+        "title": "Learning",
+        "bookmarks": [
+            {
+                "id": "miepvyzft0h6yv1eo6",
+                "url": "https://weread.qq.com/",
+                "icon": "icons/5efea9625562.png",
+                "style": "full",
+                "title": "Weread",
+                "note": "微信读书网页版"
+            },
+            {
+                "id": "mibooocgrw5l7r8p99a",
+                "url": "https://z-library.sk/",
+                "icon": "icons/ea98f0cc0d3e.png",
+                "style": "fit",
+                "title": "Z-library",
+                "note": "电子书资源库"
+            },
+            {
+                "id": "mier1cka1b7ultueupk",
+                "url": "https://www.coursera.org/",
+                "icon": "icons/b706aea9ed5f.webp",
+                "style": "full",
+                "title": "Coursera",
+                "note": "在线课程平台"
+            },
+            {
+                "id": "mierexpald47s750ijg",
+                "url": "https://www.ted.com/",
+                "icon": "icons/585b4a93a819.png",
+                "style": "full",
+                "title": "Ted",
+                "note": "TED 演讲视频"
+            },
+            {
+                "id": "mier00w64evkxux8ox1",
+                "url": "https://yixi.tv/",
+                "icon": "icons/dc1e21ecac57.png",
+                "style": "full",
+                "title": "Yixi",
+                "note": "一席演讲视频"
+            },
+            {
+                "id": "mibooocgrih9u7wmtw",
+                "url": "https://zh.wikipedia.org/wiki/Wikipedia:%E9%A6%96%E9%A1%B5",
+                "icon": "icons/4c8bf96d667f.png",
+                "style": "full",
+                "title": "Wikipedia",
+                "note": "中文维基百科"
+            },
+            {
+                "id": "mibooocgnga9eg221z",
+                "url": "https://artsandculture.google.com/",
+                "icon": "icons/1f779369be71.png",
+                "style": "full",
+                "title": "Google Art",
+                "note": "Google 艺术与文化"
+            },
+            {
+                "id": "midbkac2i1z91czdrka",
+                "url": "https://app.leonardo.ai/",
+                "icon": "icons/f93332c956ea.webp",
+                "style": "full",
+                "title": "Leonardo",
+                "note": "AI 图像生成工具"
+            },
+            {
+                "id": "mibooocguwmdw2mja1r",
+                "url": "https://grabcad.com/library",
+                "icon": "icons/d302988230ed.png",
+                "style": "full",
+                "title": "Grabcad",
+                "note": "3D 模型与工程图纸"
+            },
+            {
+                "id": "mibooocg1w4hodlnmca",
+                "url": "https://zh.ifixit.com/Teardown",
+                "icon": "icons/b28a981694b9.png",
+                "style": "fit",
+                "title": "iFixit",
+                "note": "设备拆解与维修指南"
+            },
+            {
+                "id": "mierd8xtx9xbyzlog49",
+                "url": "https://www.vistopia.com.cn/",
+                "icon": "icons/3d58ae676b53.png",
+                "style": "full",
+                "title": "KLX",
+                "note": "看理想课程与音频节目"
+            },
+            {
+                "id": "midbmnvnqubzzyg6p",
+                "url": "https://www.hundun.cn/",
+                "icon": "icons/6dbf20758d29.png",
+                "style": "full",
+                "title": "Hundun",
+                "note": "混沌学园课程"
+            },
+            {
+                "id": "mieq34u7fw4sgcx1ho",
+                "url": "https://makerworld.com/zh/3d-models",
+                "icon": "icons/a56b42dd59f3.png",
+                "style": "full",
+                "title": "Makerworld",
+                "note": "3D 模型分享社区"
+            },
+            {
+                "id": "mier7s1fxwut51nfihe",
+                "url": "https://indeed.com/",
+                "icon": "icons/2dd6154d11dd.png",
+                "style": "full",
+                "title": "Indeed",
+                "note": "求职与招聘信息"
+            },
+            {
+                "id": "mibooocgrdyluefobsl",
+                "url": "https://cn.nytimes.com/zh-hant/",
+                "icon": "icons/f9953068a232.webp",
+                "style": "full",
+                "title": "NY Times",
+                "note": "纽约时报中文网"
+            },
+            {
+                "id": "mlvngm7xcfpt5z0fqk8",
+                "url": "https://notebooklm.google.com/",
+                "icon": "icons/678f72e14934.svg",
+                "style": "full",
+                "title": "Notebooklm",
+                "note": "Google NotebookLM AI 笔记与研究"
+            }
+        ]
+    },
+    {
+        "title": "Movies",
+        "bookmarks": [
+            {
+                "id": "mibooocgxj44jon0jy",
+                "url": "https://open.spotify.com/",
+                "icon": "icons/495c96f676c2.png",
+                "style": "full",
+                "title": "Spotify",
+                "note": "音乐与播客"
+            },
+            {
+                "id": "mierh5ixzlwjat320s8",
+                "url": "https://podcasts.apple.com/",
+                "icon": "icons/ee82c425f229.png",
+                "style": "full",
+                "title": "Podcasts",
+                "note": "Apple 播客"
+            },
+            {
+                "id": "miepihi6f38igqpkny7",
+                "url": "https://www.themoviedb.org/",
+                "icon": "icons/b49a9ee2c702.png",
+                "style": "full",
+                "title": "The Movie DB",
+                "note": "影视资料数据库"
+            },
+            {
+                "id": "miepe028guvn7z5j6p",
+                "url": "https://www.imdb.com/",
+                "icon": "icons/4d38fd6d11d3.png",
+                "style": "full",
+                "title": "Imdb",
+                "note": "电影、剧集与演员资料"
+            },
+            {
+                "id": "mm79m513r52d6m1w4ak",
+                "url": "https://watch.plex.tv/zh/me",
+                "icon": "icons/05f4b4a1720c.png",
+                "style": "full",
+                "title": "Plex",
+                "note": "个人媒体中心"
+            },
+            {
+                "id": "mibooocg9qj52goaju",
+                "url": "https://www.cilixiong.org/movie/",
+                "icon": "icons/46ecccacf68f.png",
+                "style": "full",
+                "title": "Cilixiong",
+                "note": "影视资源索引"
+            },
+            {
+                "id": "mibooocgaaeujkkssn",
+                "url": "https://alipansou.com/",
+                "icon": "icons/c0b747a0aada.png",
+                "style": "fit",
+                "title": "Alipansou",
+                "note": "阿里云盘资源搜索"
+            },
+            {
+                "id": "mibooocgkq3nblf1gna",
+                "url": "https://www.upyunso.com/",
+                "icon": "icons/349e8fa32152.png",
+                "style": "fit",
+                "title": "Upyunso",
+                "note": "云盘资源搜索"
+            },
+            {
+                "id": "mibooocgwqjkcliv0ed",
+                "url": "https://91panta.cn/",
+                "icon": "icons/221aff78b17d.svg",
+                "style": "full",
+                "title": "91panta",
+                "note": "网盘资源搜索"
+            },
+            {
+                "id": "miepmql63atcrh9hyhm",
+                "url": "https://www.google.com/search?q=https://www.aliyundrive.com+%E8%82%96%E7%94%B3%E5%85%8B%E7%9A%84%E6%95%91%E8%B5%8E&newwindow=1&sxsrf=AJOqlzVJfRSCMuz4Ah-SfKHmcjXjgivccw:1679122128936&ei=0F4VZNzSOKeNur8P3LWm-A4&ved=0ahUKEwjc-p2w8eT9AhWnhu4BHdyaCe8Q4dUDCBA&uact=5&oq=https://www.aliyundrive.com+%E8%82%96%E7%94%B3%E5%85%8B%E7%9A%84%E6%95%91%E8%B5%8E&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQyBQgAEKIESgQIQRgAUABY7iFgtydoAXAAeACAAZwCiAGOBJIBAzItMpgBAKABAqABAcABAQ&sclient=gws-wiz-serp",
+                "icon": "icons/8f03cfcd5a0b.svg",
+                "style": "full",
+                "title": "Google Aliyun",
+                "note": "Google 搜索阿里云盘资源"
+            },
+            {
+                "id": "miepo5oz2u7te1vfafg",
+                "url": "https://www.google.com/search?q=magnet%3A%3Fxt%3D+%E9%98%BF%E4%B8%BD%E5%A1%94&newwindow=1&sca_esv=742aa62f8b445c9b&sxsrf=AE3TifPE9YmGGnR5OM3S-gYeC8E6WAl7iA%3A1764083296126&ei=YMYlac6zB82xhbIPyZuYuQg&ved=0ahUKEwjO4-Cxyo2RAxXNWEEAHckNJocQ4dUDCBE&uact=5&oq=magnet%3A%3Fxt%3D+%E9%98%BF%E4%B8%BD%E5%A1%94&gs_lp=Egxnd3Mtd2l6LXNlcnAiFW1hZ25ldDo_eHQ9IOmYv-S4veWhlEjyP1DKFFi-PXABeACQAQOYAbYIoAHOKaoBCzMtNC4xLjEuMi4xuAEDyAEA-AEBmAIAoAIAmAMAiAYBkgcAoAfLA7IHALgHAMIHAMgHAA&sclient=gws-wiz-serp",
+                "icon": "icons/1deb1000a8f7.svg",
+                "style": "full",
+                "title": "Magnet",
+                "note": "Google 搜索磁力资源"
+            },
+            {
+                "id": "modqocrqok6qedcmvs",
+                "url": "https://t.me/s/ydypzyfx",
+                "icon": "icons/0019255c610c.svg",
+                "style": "fit",
+                "title": "T 139",
+                "note": "Telegram 影视资源频道"
+            },
+            {
+                "id": "mq28byrstu4l5detdb",
+                "url": "https://www.kdocs.cn/l/cpgviKFaTZF3",
+                "icon": "icons/9090057a14ee.png",
+                "style": "full",
+                "title": "Kdocs",
+                "note": "金山文档共享资料"
+            },
+            {
+                "id": "msbz0mgru0zsp9ffhdc",
+                "url": "https://subhd.me/",
+                "icon": "icons/7db5e06a443d.png",
+                "style": "fit",
+                "title": "Subhd",
+                "note": "字幕下载与匹配"
+            }
+        ]
+    },
+    {
+        "title": "Social",
+        "bookmarks": [
+            {
+                "id": "midbn4v8lri899hmq1p",
+                "url": "https://x.com/home",
+                "icon": "icons/a62e882ffd50.png",
+                "style": "full",
+                "title": "X",
+                "note": "X / Twitter 社交平台"
+            },
+            {
+                "id": "midbnlfyt7tv9ul7im",
+                "url": "https://www.quora.com/",
+                "icon": "icons/ca3f58df7b2f.png",
+                "style": "full",
+                "title": "Quora",
+                "note": "问答社区"
+            },
+            {
+                "id": "midbojdqrj8sg41r0is",
+                "url": "https://www.tumblr.com/",
+                "icon": "icons/f0c219221aea.webp",
+                "style": "full",
+                "title": "Tumblr",
+                "note": "轻博客社区"
+            },
+            {
+                "id": "midbp7ge6h9l75ik51m",
+                "url": "https://www.instagram.com/",
+                "icon": "icons/6712c21bd09f.png",
+                "style": "full",
+                "title": "Instagram",
+                "note": "图片与短视频社交"
+            },
+            {
+                "id": "midbpzg8nshztny6y9g",
+                "url": "https://pinterest.com/",
+                "icon": "icons/0b417063b498.webp",
+                "style": "fit",
+                "title": "Pinterest",
+                "note": "图片灵感与收藏"
+            },
+            {
+                "id": "mieprd26n7b0gckwp8",
+                "url": "https://archive.org/",
+                "icon": "icons/809a5dc4f96f.webp",
+                "style": "full",
+                "title": "Archive",
+                "note": "互联网档案馆"
+            },
+            {
+                "id": "mibooocgnxpaibktu1o",
+                "url": "https://www.bbc.com/zhongwen/simp",
+                "icon": "icons/104497153b98.webp",
+                "style": "full",
+                "title": "BBC",
+                "note": "BBC 中文新闻"
+            },
+            {
+                "id": "mieptqfyamvjno7268q",
+                "url": "https://www.snopes.com/",
+                "icon": "icons/1fe86211cb40.png",
+                "style": "full",
+                "title": "Snopes",
+                "note": "事实核查网站"
+            },
+            {
+                "id": "micsydpfc4fivqf8npg",
+                "url": "https://web.telegram.org/a/",
+                "icon": "icons/f54a56ddac1f.png",
+                "style": "full",
+                "title": "Telegram",
+                "note": "Telegram 网页版"
+            }
+        ]
+    },
+    {
+        "title": "Code",
+        "bookmarks": [
+            {
+                "id": "midbjml0cwdmvbm878d",
+                "url": "https://colab.research.google.com/github/alembics/disco-diffusion/blob/main/Disco_Diffusion.ipynb#scrollTo=PromptsTop",
+                "icon": "icons/2a93c17cbf5e.svg",
+                "style": "fit",
+                "title": "Colab",
+                "note": "Google Colab 云端笔记本"
+            },
+            {
+                "id": "mif9j57y2dhvyfldk1q",
+                "url": "https://supabase.com/",
+                "icon": "icons/824a5d11e267.png",
+                "style": "full",
+                "title": "Supabase",
+                "note": "后端数据库与云服务"
+            },
+            {
+                "id": "mijj74rlfqlqehzrpnm",
+                "url": "https://search.google.com/search-console?resource_id=sc-domain:324893.xyz",
+                "icon": "icons/2d35a8d76db2.svg",
+                "style": "full",
+                "title": "Search",
+                "note": "Google Search Console 搜索表现"
+            },
+            {
+                "id": "mijsfcqrp0fv95jriq8",
+                "url": "https://realfavicongenerator.net/",
+                "icon": "icons/0c52264d2e07.webp",
+                "style": "full",
+                "title": "Favicon",
+                "note": "Favicon 生成工具"
+            },
+            {
+                "id": "mj4hu8edx0voiyu3yjc",
+                "url": "https://console.cloud.google.com/welcome/new?project=verlingo",
+                "icon": "icons/f5b303e069a5.png",
+                "style": "fit",
+                "title": "Console",
+                "note": "Google Cloud 控制台"
+            },
+            {
+                "id": "mjlliw8mj5hjhsrxtg",
+                "url": "https://www.spaceship.com/",
+                "icon": "icons/a5f04b9fca90.png",
+                "style": "full",
+                "title": "Spaceship",
+                "note": "域名注册与 DNS 管理"
+            },
+            {
+                "id": "mjis3hdv9fyvkscxxyg",
+                "url": "https://stitch.withgoogle.com/",
+                "icon": "icons/2a93c17cbf5e.svg",
+                "style": "full",
+                "title": "Stitch",
+                "note": "Google Stitch AI 界面设计"
+            },
+            {
+                "id": "mrglsf3doo9pj6o8hmh",
+                "url": "https://huggingface.co/spaces",
+                "icon": "icons/bd845f3018a6.ico",
+                "style": "full",
+                "title": "Huggingface",
+                "note": "Hugging Face AI 模型与 Space"
+            }
+        ]
+    },
+    {
+        "title": "Others",
+        "bookmarks": [
+            {
+                "id": "mibooocg2z1qv5lcu7y",
+                "url": "https://secure.shadowsocks.au/aff.php?aff=78994",
+                "icon": "icons/3988e488c01f.png",
+                "style": "full",
+                "title": "Shadowsocks",
+                "note": "Shadowsocks 代理服务"
+            },
+            {
+                "id": "mibooocggle4a072qf6",
+                "url": "https://cobalt.tools/",
+                "icon": "icons/868d32d6df4d.png",
+                "style": "full",
+                "title": "Cobalt",
+                "note": "在线媒体下载工具"
+            },
+            {
+                "id": "midbiokxdv5uxsy1mn",
+                "url": "https://meetings.feishu.cn/minutes/me",
+                "icon": "icons/ac10d138f8c9.svg",
+                "style": "full",
+                "title": "Meetings",
+                "note": "飞书妙记会议记录"
+            },
+            {
+                "id": "mibooocg1asoj080xgu",
+                "url": "https://aliyundrive.com/",
+                "icon": "icons/264a392c7a0a.png",
+                "style": "full",
+                "title": "Aliyundrive",
+                "note": "阿里云盘网页版"
+            },
+            {
+                "id": "mieqrq52yyo8inlb9j",
+                "url": "https://www.icloud.com/",
+                "icon": "icons/c4cbf947065e.png",
+                "style": "full",
+                "title": "iCloud",
+                "note": "Apple iCloud 网页版"
+            },
+            {
+                "id": "midbsfzo5wxg064euv7",
+                "url": "https://drive.google.com/drive/my-drive",
+                "icon": "icons/232638064e5a.svg",
+                "style": "fit",
+                "title": "Google Drive",
+                "note": "Google 云盘"
+            },
+            {
+                "id": "mibooocgomou5m0ra8c",
+                "url": "https://yun.139.com/",
+                "icon": "icons/5b16f8b9b6c5.png",
+                "style": "full",
+                "title": "Yun",
+                "note": "中国移动云盘"
+            },
+            {
+                "id": "mibooocg96pozsobsnu",
+                "url": "https://appstorrent.ru/",
+                "icon": "icons/01b43397c298.png",
+                "style": "full",
+                "title": "Appstorrent",
+                "note": "Mac 软件资源"
+            },
+            {
+                "id": "mibooocgngqpn1mmbz",
+                "url": "https://macked.app/",
+                "icon": "icons/7ec350f71745.png",
+                "style": "fit",
+                "title": "Macked",
+                "note": "Mac 应用下载"
+            },
+            {
+                "id": "midblx03va5dbtxzc8c",
+                "url": "https://www.feishu.cn/",
+                "icon": "icons/9933c743a7a2.png",
+                "style": "fit",
+                "title": "Feishu",
+                "note": "飞书协作平台"
+            },
+            {
+                "id": "mibooocgdf1559a699m",
+                "url": "https://earth.google.com/",
+                "icon": "icons/bb1dd5d8c697.ico",
+                "style": "white",
+                "title": "Google Earth",
+                "note": "Google 地球"
+            },
+            {
+                "id": "mier91rpip3ylnctvxc",
+                "url": "https://www.taobao.com/",
+                "icon": "icons/0af265cabf5e.png",
+                "style": "full",
+                "title": "Taobao",
+                "note": "淘宝购物"
+            },
+            {
+                "id": "mier9ghssxaq8lpkbe",
+                "url": "https://www.jd.com/",
+                "icon": "icons/a23e91589c44.png",
+                "style": "full",
+                "title": "JD",
+                "note": "京东购物"
+            },
+            {
+                "id": "mijnz88qk9z1s6mwj2",
+                "url": "https://mail.qq.com/",
+                "icon": "icons/0498e0c92e88.png",
+                "style": "white",
+                "title": "Mail",
+                "note": "QQ 邮箱"
+            },
+            {
+                "id": "msjo3bkmvvwbrfzjr",
+                "url": "https://tailscale.com/download/mac",
+                "icon": "icons/680570c9090b.png",
+                "style": "full",
+                "title": "Tailscale",
+                "note": "Tailscale Mac 客户端下载"
+            }
+        ]
+    }
 ]

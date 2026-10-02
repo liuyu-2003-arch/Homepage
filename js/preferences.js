@@ -1,9 +1,9 @@
-import { CONFIG } from './config.js?v=2.9.44';
-import { createCloudClient } from './cloud.js?v=2.9.44';
-import { state } from './state.js?v=2.9.44';
-import { showToast, t, safeUrl } from './utils.js?v=2.9.44';
-import { i18n } from './i18n.js?v=2.9.44';
-import { logger } from './logger.js?v=2.9.44';
+import { CONFIG } from './config.js?v=2.9.45';
+import { createCloudClient } from './cloud.js?v=2.9.45';
+import { state } from './state.js?v=2.9.45';
+import { showToast, t, safeUrl } from './utils.js?v=2.9.45';
+import { i18n } from './i18n.js?v=2.9.45';
+import { logger } from './logger.js?v=2.9.45';
 
 let supabaseClient = null;
 window.prefAvatarUrl = window.prefAvatarUrl || '';

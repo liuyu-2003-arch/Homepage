@@ -1,4 +1,4 @@
-const APP_VERSION = '2.9.44';
+const APP_VERSION = '2.9.45';
 const CACHE_NAME = `homepage-v${APP_VERSION}`;
 const APP_SCOPE = self.registration.scope;
 const STATIC_ASSETS = [
@@ -33,6 +33,11 @@ function networkFirst(request) {
         .catch(() => caches.match(request, { ignoreSearch: true }));
 }
 
+function cacheFirst(request) {
+    return caches.match(request, { ignoreSearch: false })
+        .then((cached) => cached || fetch(request).then((response) => cacheSuccessfulResponse(request, response)));
+}
+
 // Install: pre-cache core assets (resilient — one failure won't abort the install)
 self.addEventListener('install', (event) => {
     event.waitUntil(
@@ -63,6 +68,13 @@ self.addEventListener('fetch', (event) => {
 
     // Never cache third-party icons, avatars, or API requests.
     if (event.request.method !== 'GET' || url.origin !== self.location.origin) {
+        return;
+    }
+
+    // Self-hosted bookmark icons are content-addressed (icons/<hash>.<ext>), so
+    // cache-first is safe and keeps them available offline.
+    if (url.pathname.startsWith(new URL('icons/', APP_SCOPE).pathname)) {
+        event.respondWith(cacheFirst(event.request));
         return;
     }
 
