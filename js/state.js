@@ -21,7 +21,7 @@ export const state = {
     dotsTimer: null,
     wheelTimeout: null,
     isWheelScrolling: false,
-    wheelPeakOffset: 0
+    wheelPointerX: 0
 };
 
 const DEFAULT_ACCOUNT_EMAILS = ['jemchmi@gmail.com'];

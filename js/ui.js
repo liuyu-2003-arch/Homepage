@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.51';
-import { saveData } from './api.js?v=2.9.51';
-import { CONFIG } from './config.js?v=2.9.51';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.51';
+import { state, isDefaultAccount } from './state.js?v=2.9.52';
+import { saveData } from './api.js?v=2.9.52';
+import { CONFIG } from './config.js?v=2.9.52';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.52';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -1461,13 +1461,24 @@ function triggerKeyboardBounce(offset) {
 function getPositionX(e) { return e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; }
 function getPositionY(e) { return e.type.includes('mouse') ? e.clientY : e.touches[0].clientY; }
 
-function dragStart(e) {
+// 构造一个与鼠标事件同形的对象，让滚轮手势直接复用拖拽逻辑
+function makePointerEvent(type, x, y, target) {
+    return {
+        type, clientX: x, clientY: y, target,
+        cancelable: true,
+        preventDefault() {}, stopPropagation() {}
+    };
+}
+
+function dragStart(e, fromWheel = false) {
     // 编辑模式下点书签，交给 Sortable，我们不管
     if (state.isEditing && e.target.closest('.bookmark-item')) { state.isDragging = false; return; }
 
-    // 真实拖拽接管时，结束可能仍在进行的滚轮手势，避免重复翻页
-    clearTimeout(state.wheelTimeout);
-    state.isWheelScrolling = false;
+    // 真实鼠标/触摸拖拽接管时，结束可能仍在进行的滚轮手势，避免重复翻页
+    if (!fromWheel) {
+        clearTimeout(state.wheelTimeout);
+        state.isWheelScrolling = false;
+    }
 
     state.isDragging = true;
     state.hasDragged = false;
@@ -1574,61 +1585,35 @@ function updateSwiperPosition(withTransition = true) {
     if (withTransition) swiperWrapper.style.transition = 'transform 0.2s ease-out';
     setSwiperPosition();
 }
-// 双指滑动（滚轮）复刻“按住拖拽”的手感：跟手位移、限制在一屏内、结束后按位移决定翻页
+// 双指滑动（滚轮）：把横向滚动量合成为一个虚拟指针的拖动，
+// 直接复用 dragStart/drag/dragEnd，手感和鼠标按住拖动完全一致。
 function handleWheel(e) {
     // 纵向为主时，交给页面默认滚动
     if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
 
-    const swiperWrapper = document.getElementById('bookmark-swiper-wrapper');
     const swiper = document.getElementById('bookmark-swiper');
-    if (!swiperWrapper || !swiper) return;
+    if (!swiper) return;
     e.preventDefault();
 
-    const swiperWidth = swiper.clientWidth;
-
-    // 一次滚轮手势开始，与拖拽保持一致的初始状态
+    // 一个滚轮手势对应一次完整的“按下 → 移动 → 松开”
     if (!state.isWheelScrolling) {
         state.isWheelScrolling = true;
-        state.wheelPeakOffset = 0;
-        swiperWrapper.style.transition = 'none';
+        state.wheelPointerX = 0;
+        dragStart(makePointerEvent('mousedown', 0, 0, swiper), true);
     }
 
-    // 跟手累积水平位移，但最多只移动一屏，越界做阻尼，避免惯性把内容甩出去
-    let nextTranslate = state.currentTranslate - e.deltaX;
-    const prevBound = -state.currentPage * swiperWidth + swiperWidth;
-    const nextBound = -(state.currentPage + 1) * swiperWidth;
-    if (nextTranslate > prevBound) {
-        nextTranslate = prevBound + (nextTranslate - prevBound) * 0.3;
-    } else if (nextTranslate < nextBound) {
-        nextTranslate = nextBound + (nextTranslate - nextBound) * 0.3;
-    }
-    state.currentTranslate = nextTranslate;
-    setSwiperPosition();
+    // 虚拟指针最多移动一屏，等价于鼠标在窗口内能拖动的最大距离，避免惯性无限加速
+    const maxTravel = swiper.clientWidth || window.innerWidth;
+    state.wheelPointerX -= e.deltaX;
+    state.wheelPointerX = Math.max(-maxTravel, Math.min(maxTravel, state.wheelPointerX));
+    drag(makePointerEvent('mousemove', state.wheelPointerX, 0, swiper));
 
-    // 记录手势过程中到达过的最大位移，翻页判定用它，避免收尾回弹导致失败
-    const offset = state.currentTranslate - state.prevTranslate;
-    if (Math.abs(offset) > Math.abs(state.wheelPeakOffset)) state.wheelPeakOffset = offset;
-
+    // 事件停歇即视为松手，交给与鼠标相同的 dragEnd 判定翻页
     clearTimeout(state.wheelTimeout);
-    state.wheelTimeout = setTimeout(finishWheelScroll, 120);
-}
-
-// 滚轮手势结束：按手势最大位移决定翻页，阈值比拖拽低（触控板行程更短）
-function finishWheelScroll() {
-    if (!state.isWheelScrolling) return;
-    state.isWheelScrolling = false;
-
-    const swiper = document.getElementById('bookmark-swiper');
-    const swiperWidth = swiper ? swiper.clientWidth : 1;
-    const movedBy = state.wheelPeakOffset;
-    // 触控板水平位移与屏幕宽度无关，用固定像素上限，宽屏也不会因为阈值过大而翻页失败
-    const threshold = Math.min(swiperWidth * 0.08, 60);
-    let targetPage = state.currentPage;
-    if (movedBy < -threshold && state.currentPage < state.visualPages.length - 1) targetPage++;
-    else if (movedBy > threshold && state.currentPage > 0) targetPage--;
-    state.currentPage = targetPage;
-    updateSwiperPosition(true);
-    renderPaginationDots();
+    state.wheelTimeout = setTimeout(() => {
+        state.isWheelScrolling = false;
+        dragEnd(makePointerEvent('mouseup', state.wheelPointerX, 0, swiper));
+    }, 120);
 }
 
 function renderPaginationDots() {
