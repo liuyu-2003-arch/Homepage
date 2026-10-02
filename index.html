@@ -17,17 +17,17 @@
     <meta property="og:url" content="https://324893.xyz/">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="icon" type="image/svg+xml" href="icon.svg?v=2.9.43">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=2.9.43">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png?v=2.9.43">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2.9.43">
+    <link rel="icon" type="image/svg+xml" href="icon.svg?v=2.9.44">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=2.9.44">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png?v=2.9.44">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2.9.44">
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e4d0e5">
     <meta name="apple-mobile-web-app-title" content="My Homepage">
-    <meta name="app-version" content="2.9.43">
+    <meta name="app-version" content="2.9.44">
 
     <!-- Static application metadata for crawlers and OAuth provider reviews -->
     <script type="application/ld+json">
@@ -55,12 +55,12 @@
     <link rel="dns-prefetch" href="//img.logo.dev">
     <link rel="dns-prefetch" href="//cdn.brandfetch.io">
 
-    <link rel="stylesheet" href="css/base.css?v=2.9.43">
-    <link rel="stylesheet" href="css/bookmark.css?v=2.9.43">
-    <link rel="stylesheet" href="css/modal.css?v=2.9.43">
-    <link rel="stylesheet" href="css/controls.css?v=2.9.43">
-    <link rel="stylesheet" href="css/user.css?v=2.9.43">
-    <link rel="stylesheet" href="css/responsive.css?v=2.9.43">
+    <link rel="stylesheet" href="css/base.css?v=2.9.44">
+    <link rel="stylesheet" href="css/bookmark.css?v=2.9.44">
+    <link rel="stylesheet" href="css/modal.css?v=2.9.44">
+    <link rel="stylesheet" href="css/controls.css?v=2.9.44">
+    <link rel="stylesheet" href="css/user.css?v=2.9.44">
+    <link rel="stylesheet" href="css/responsive.css?v=2.9.44">
 
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"
             integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM"
@@ -75,9 +75,14 @@
       app name and purpose without signing in. visibility:visible deliberately
       overrides the boot-time body { visibility: hidden } rule below.
     -->
-    <header class="app-intro" id="app-intro">
-        <button id="intro-dismiss" class="app-intro-dismiss" type="button" aria-label="Hide description" title="隐藏说明 / Hide">×</button>
-        <h1>My Homepage</h1>
+    <!--
+      App description. The text stays in the static HTML (so crawlers and OAuth
+      provider reviewers can read it) but is only shown when the visitor taps the
+      round "!" button in the bottom-right corner.
+    -->
+    <div id="app-intro" class="app-intro" hidden>
+        <button id="intro-dismiss" class="app-intro-dismiss" type="button" aria-label="Close">×</button>
+        <h1 id="app-intro-title">My Homepage</h1>
         <p>
             可自定义的浏览器起始页：多页书签、拖拽整理、自动获取图标，登录后可跨设备云同步。<br>
             A customizable browser start page: multi-page bookmarks, drag-and-drop organisation, automatic favicon lookup and optional cross-device cloud sync.
@@ -90,7 +95,10 @@
         <noscript>
             <p class="app-intro-noscript">未登录也可直接使用；JavaScript 被禁用时书签网格无法渲染。 / Works without an account; the grid needs JavaScript to render.</p>
         </noscript>
-    </header>
+    </div>
+    <button id="intro-toggle" class="intro-toggle" type="button"
+            aria-label="关于本应用 / About this app" aria-controls="app-intro"
+            title="关于本应用 / About this app">!</button>
 
     <div id="toast-container" class="toast-container" role="status" aria-live="polite" aria-atomic="false"></div>
     <div id="sync-status" class="sync-status" role="status" aria-live="polite"></div>
@@ -170,6 +178,6 @@
 
     <input type="file" id="import-file-input" style="display: none;" accept=".json">
 
-    <script type="module" src="js/main.js?v=2.9.43"></script>
+    <script type="module" src="js/main.js?v=2.9.44"></script>
 </body>
 </html>

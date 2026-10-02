@@ -1,17 +1,17 @@
-import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.43';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.43';
-import { i18n } from './i18n.js?v=2.9.43';
-import { logger } from './logger.js?v=2.9.43';
+import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.44';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.44';
+import { i18n } from './i18n.js?v=2.9.44';
+import { logger } from './logger.js?v=2.9.44';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
     openDockEditModal, closeDockEditModal, saveDockEditConfig,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
-} from './ui.js?v=2.9.43';
-import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.43';
-import { state, onDataReloaded } from './state.js?v=2.9.43';
-import { CONFIG } from './config.js?v=2.9.43';
+} from './ui.js?v=2.9.44';
+import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.44';
+import { state, onDataReloaded } from './state.js?v=2.9.44';
+import { CONFIG } from './config.js?v=2.9.44';
 
 async function loadTemplates() {
     const templates = [
@@ -48,19 +48,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
     initSwiper();
 
-    // 可关闭的应用说明块：为通过 OAuth 提供方的品牌审核而保留在 HTML 中，
-    // 访客可以隐藏它（选择记录在本地，刷新后依然隐藏）。
+    // 应用说明：默认隐藏，点右下角圆形 “!” 按钮打开（点外部/Esc/× 关闭）。
+    // 文字始终保留在静态 HTML 中，供搜索引擎与 OAuth 提供方审核读取。
     try {
         const intro = document.getElementById('app-intro');
-        if (intro) {
-            if (localStorage.getItem('hp_intro_dismissed') === '1') intro.classList.add('dismissed');
-            const dismiss = document.getElementById('intro-dismiss');
-            if (dismiss) {
-                dismiss.addEventListener('click', () => {
-                    intro.classList.add('dismissed');
-                    try { localStorage.setItem('hp_intro_dismissed', '1'); } catch (e) { logger.error(e); }
-                });
-            }
+        const toggle = document.getElementById('intro-toggle');
+        if (intro && toggle) {
+            const setIntroOpen = (open) => {
+                if (open) intro.removeAttribute('hidden');
+                else intro.setAttribute('hidden', '');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            };
+            setIntroOpen(false);
+
+            toggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                setIntroOpen(intro.hasAttribute('hidden'));
+            });
+
+            const dismissBtn = document.getElementById('intro-dismiss');
+            if (dismissBtn) dismissBtn.addEventListener('click', () => setIntroOpen(false));
+
+            document.addEventListener('click', (event) => {
+                if (intro.hasAttribute('hidden')) return;
+                if (intro.contains(event.target) || toggle.contains(event.target)) return;
+                setIntroOpen(false);
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') setIntroOpen(false);
+            });
         }
     } catch (e) { logger.error('Intro init failed', e); }
 
@@ -279,6 +295,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.43').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.44').catch(() => {});
     });
 }
