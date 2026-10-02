@@ -1,9 +1,9 @@
-import { CONFIG } from './config.js?v=2.9.61';
-import { createCloudClient } from './cloud.js?v=2.9.61';
-import { state } from './state.js?v=2.9.61';
-import { showToast, t, safeUrl } from './utils.js?v=2.9.61';
-import { i18n } from './i18n.js?v=2.9.61';
-import { logger } from './logger.js?v=2.9.61';
+import { CONFIG } from './config.js?v=2.9.62';
+import { createCloudClient } from './cloud.js?v=2.9.62';
+import { state } from './state.js?v=2.9.62';
+import { showToast, t, safeUrl } from './utils.js?v=2.9.62';
+import { i18n } from './i18n.js?v=2.9.62';
+import { logger } from './logger.js?v=2.9.62';
 
 let supabaseClient = null;
 window.prefAvatarUrl = window.prefAvatarUrl || '';
@@ -16,7 +16,8 @@ const PREF_ACTIONS = {
     updatePrefNamePreview: (el) => window.updatePrefNamePreview(el.value),
     savePreferences: () => window.savePreferences(),
     changePassword: () => window.changePassword(),
-    toggleChangePassword: () => window.toggleChangePassword(),
+    toggleChangePassword: () => window.openChangePassword(),
+    closeChangePassword: () => window.closeChangePassword(),
     logoutPreferences: () => window.logoutPreferences(),
 };
 
@@ -71,10 +72,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             location.href = 'index.html';
         }
-    } catch (e) {
-        logger.error('Auth check failed', e);
-        location.href = 'index.html';
-    }
+      } catch (e) {
+          logger.error('Auth check failed', e);
+          location.href = 'index.html';
+      }
+
+      // 修改密码浮窗：点遮罩或按 Esc 关闭
+      const passwordModal = document.getElementById('password-modal');
+      if (passwordModal) {
+          passwordModal.addEventListener('click', (event) => {
+              if (event.target === passwordModal) window.closeChangePassword();
+          });
+          document.addEventListener('keydown', (event) => {
+              if (event.key === 'Escape' && !passwordModal.hasAttribute('hidden')) {
+                  window.closeChangePassword();
+              }
+          });
+      }
 });
 
 function populateForm(user) {
@@ -273,7 +287,7 @@ window.changePassword = async function() {
         if (currentInput) currentInput.value = '';
         if (nextInput) nextInput.value = '';
         showToast(t('msg_password_changed'), 'success');
-        window.collapseChangePassword();
+        window.closeChangePassword();
     } catch (e) {
         logger.error('Change password failed', e);
         showToast(e.message || t('msg_save_fail'), 'error');
@@ -282,25 +296,19 @@ window.changePassword = async function() {
     }
 };
 
-window.collapseChangePassword = function() {
-    const panel = document.getElementById('security-panel');
-    const toggle = document.getElementById('btn-security-toggle');
-    if (panel) panel.setAttribute('hidden', '');
-    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+window.openChangePassword = function() {
+    const modal = document.getElementById('password-modal');
+    if (!modal) return;
+    modal.removeAttribute('hidden');
+    const first = document.getElementById('pref-current-password');
+    if (first) first.focus();
 };
 
-window.toggleChangePassword = function() {
-    const panel = document.getElementById('security-panel');
-    const toggle = document.getElementById('btn-security-toggle');
-    if (!panel) return;
-
-    const willOpen = panel.hasAttribute('hidden');
-    if (willOpen) {
-        panel.removeAttribute('hidden');
-        if (toggle) toggle.setAttribute('aria-expanded', 'true');
-        const first = document.getElementById('pref-current-password');
-        if (first) first.focus();
-    } else {
-        window.collapseChangePassword();
-    }
+window.closeChangePassword = function() {
+    const modal = document.getElementById('password-modal');
+    if (modal) modal.setAttribute('hidden', '');
+    const cur = document.getElementById('pref-current-password');
+    const nxt = document.getElementById('pref-new-password');
+    if (cur) cur.value = '';
+    if (nxt) nxt.value = '';
 };

@@ -1,5 +1,5 @@
-import { logger } from './logger.js?v=2.9.61';
-import { CONFIG } from './config.js?v=2.9.61';
+import { logger } from './logger.js?v=2.9.62';
+import { CONFIG } from './config.js?v=2.9.62';
 
 let enTranslations = {};
 let currentTranslations = {};
