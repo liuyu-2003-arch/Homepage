@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'">
     <title>隐私政策 · Privacy Policy · My Homepage</title>
-    <meta name="description" content="My Homepage 隐私政策：我们收集哪些数据、如何使用与删除。">
-    <link rel="icon" type="image/svg+xml" href="icon.svg?v=2.9.38">
+    <meta name="description" content="My Homepage 隐私政策：我们收集哪些数据、如何使用、保存多久、与谁共享，以及如何访问或删除你的数据。">
+    <link rel="icon" type="image/svg+xml" href="icon.svg?v=2.9.39">
     <style>
         :root { color-scheme: light; }
         * { box-sizing: border-box; }
@@ -17,67 +17,120 @@
             color: #2b2b33; line-height: 1.75;
         }
         main {
-            width: min(100%, 760px); margin: 0 auto; padding: 40px 32px 48px;
-            background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(255, 255, 255, 0.6);
+            width: min(100%, 820px); margin: 0 auto; padding: 40px 34px 48px;
+            background: rgba(255, 255, 255, 0.86); border: 1px solid rgba(255, 255, 255, 0.6);
             border-radius: 22px; box-shadow: 0 18px 48px rgba(60, 40, 80, 0.16);
             backdrop-filter: blur(18px);
         }
         h1 { margin: 0 0 6px; font-size: 26px; }
         h2 { margin: 30px 0 8px; font-size: 17px; }
+        h3 { margin: 20px 0 6px; font-size: 14.5px; }
         p, li { font-size: 14.5px; }
-        .meta { margin: 0 0 22px; font-size: 13px; color: #6b6b78; }
-        ul { margin: 8px 0; padding-left: 20px; }
+        .meta { margin: 0 0 18px; font-size: 13px; color: #6b6b78; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13.5px; }
+        th, td { border: 1px solid rgba(0,0,0,0.1); padding: 7px 9px; text-align: left; vertical-align: top; }
+        th { background: rgba(0,0,0,0.04); font-weight: 600; }
+        ul, ol { margin: 8px 0; padding-left: 22px; }
+        code { background: rgba(0,0,0,0.06); padding: 1px 4px; border-radius: 4px; font-size: 12.5px; }
+        .callout { margin: 14px 0; padding: 12px 14px; border-left: 3px solid #007aff; background: rgba(0,122,255,0.07); border-radius: 6px; }
         a { color: #007aff; text-decoration: none; }
         a:hover { text-decoration: underline; }
         .en { color: #55555f; }
         .en h2 { font-size: 15px; }
+        .en li, .en p { font-size: 13.5px; }
         footer { margin-top: 34px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.08); font-size: 13px; color: #6b6b78; }
     </style>
 </head>
 <body>
 <main>
     <h1>隐私政策</h1>
-    <p class="meta">最近更新：2026-10-02 · <a href="/">返回首页</a> · <a href="/terms">服务条款</a></p>
+    <p class="meta">
+        生效日期：2026-10-02 · 最近更新：2026-10-02 ·
+        <a href="/">返回首页</a> · <a href="/terms">服务条款</a>
+    </p>
 
-    <h2>我们收集的信息</h2>
+    <p>本隐私政策适用于 “My Homepage”（以下简称“本服务”），一个托管于 <a href="https://324893.xyz/">https://324893.xyz/</a> 的自定义浏览器起始页。我们只收集为提供书签云同步所必需的最少信息，不作广告用途，也不出售你的数据。</p>
+
+    <h2>1. 我们收集哪些数据、为什么收集</h2>
+    <table>
+        <thead><tr><th>数据类别</th><th>具体内容</th><th>用途</th></tr></thead>
+        <tbody>
+            <tr><td>账户数据</td><td>邮箱地址；密码（仅保存为加盐的 PBKDF2-SHA256 哈希，服务端无法还原明文）</td><td>创建账户、登录验证</td></tr>
+            <tr><td>你保存的内容</td><td>书签页面配置（页面标题与书签的网址、名称、图标地址、备注）与收藏记录</td><td>在你登录的设备之间同步你的配置</td></tr>
+            <tr><td>会话数据</td><td>随机会话令牌、创建/过期时间、浏览器 User-Agent</td><td>保持登录状态、会话安全（30 天过期）</td></tr>
+            <tr><td>第三方登录数据</td><td>当你选择使用 Google 或 GitHub 登录时，由该平台返回的用户 ID、邮箱、昵称、头像地址</td><td>识别你的账户并与既有账户关联</td></tr>
+            <tr><td>安全日志</td><td>登录失败的次数与时间窗口（按邮箱聚合，15 分钟内最多 10 次）</td><td>防止暴力破解与滥用</td></tr>
+        </tbody>
+    </table>
+    <p>我们不收集：精确地理位置、通讯录、短信、相册、设备唯一标识、广告标识符，也不使用分析/追踪类 Cookie。</p>
+
+    <h2>2. 使用 Google API 数据的方式（Limited Use 声明）</h2>
+    <div class="callout">
+        <p><strong>My Homepage 对通过 Google API 获得的信息的使用，将遵守 <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener">Google API Services User Data Policy</a>，包括其 Limited Use（有限使用）要求。</strong></p>
+        <p>My Homepage's use of information received from Google APIs will adhere to the Google API Services User Data Policy, including the Limited Use requirements.</p>
+    </div>
+    <p>具体而言：</p>
     <ul>
-        <li><strong>账户信息</strong>：你的邮箱地址。密码只保存为加盐的 PBKDF2-SHA256 哈希，无法还原出明文。</li>
-        <li><strong>你保存的内容</strong>：书签页面配置与收藏数据（用于跨设备同步）。</li>
-        <li><strong>登录会话</strong>：一个随机会话令牌，保存在服务端数据库与浏览器中的 HttpOnly Cookie（<code>hp_session</code>）。</li>
-        <li><strong>第三方登录</strong>：若你选择使用 Google 或 GitHub 登录，我们会收到该平台返回的用户 ID、邮箱与头像地址。</li>
+        <li>我们仅在你主动点击「Google 登录」时请求 <code>openid</code>、<code>email</code>、<code>profile</code> 三个范围，仅用于识别你的身份并在你的账户名下保存书签配置。</li>
+        <li>我们<strong>不保存</strong> Google 的访问令牌或刷新令牌；授权完成后仅在当次请求中读取上述资料。</li>
+        <li>Google 用户数据<strong>不会</strong>被用于广告、用户画像、信用评估、借贷，<strong>不会</strong>被出售或转让给第三方，<strong>不会</strong>被用于训练或改进任何人工智能/机器学习模型，<strong>不会</strong>被用于生成任何 AI 内容（包括但不限于 AI 生成的非自愿亲密影像，AI NCII）。</li>
+        <li>人类（开发者本人）仅在处理你主动提交的支持请求或法律合规要求时，才会访问与你账户直接相关的数据。</li>
     </ul>
 
-    <h2>我们不做的事</h2>
+    <h2>3. 数据存储与安全</h2>
     <ul>
-        <li>不投放广告、不做用户画像，不出售或共享你的数据（本页列出的服务商除外）。</li>
-        <li>不使用分析或追踪类 Cookie。</li>
+        <li>账户与内容数据存储在 <strong>Cloudflare D1</strong> 数据库，应用逻辑运行于 <strong>Cloudflare Pages Functions</strong>；全部流量通过 HTTPS/TLS 传输。</li>
+        <li>密码使用 PBKDF2-SHA256（WebCrypto）加盐哈希存储；会话使用 32 字节随机令牌，仅以 SHA-256 哈希形式落库，并通过 <code>HttpOnly</code> + <code>Secure</code> + <code>SameSite=Lax</code> 的 Cookie 传递，防止脚本读取。</li>
+        <li>Cloudflare 的数据中心分布于全球，因此你的数据可能被传输并存储在你所在国家/地区以外的服务器（当前数据库区域为欧洲西部）。</li>
     </ul>
 
-    <h2>存储与处理</h2>
+    <h2>4. 数据共享与第三方</h2>
+    <p>我们不会出售或出租你的个人数据。仅在以下情形与第三方交互：</p>
     <ul>
-        <li>数据存储在 Cloudflare（D1 数据库与 Pages Functions），全程通过 HTTPS 传输。</li>
-        <li>登录失败次数按邮箱做 15 分钟窗口计数，仅用于防止暴力破解。</li>
+        <li><strong>Cloudflare</strong>（主机、数据库与网络防护，我们的数据处理服务商）。</li>
+        <li><strong>Google / GitHub</strong>：仅当你选择使用其账号登录时；分别适用其各自隐私政策。</li>
+        <li><strong>图标/头像来源</strong>（DiceBear、Manifest.im、Brandfetch、Logo.dev、Vemetric favicon）：仅在你加载页面时按需请求图片，不会向其发送你的账户资料。</li>
+        <li><strong>法律要求</strong>：在收到有效的法律程序要求时，我们可能依法律义务提供所掌握的数据。</li>
     </ul>
 
-    <h2>保留与删除</h2>
-    <p>数据保留至你请求删除。你可以通过下方联系方式请求导出或删除账户及其全部数据。</p>
+    <h2>5. Cookie</h2>
+    <ul>
+        <li><code>hp_session</code>：登录会话票据（HttpOnly，30 天）。</li>
+        <li><code>hp_oauth_state</code>：第三方登录流程中用于防止 CSRF 的临时票据，10 分钟自动过期。</li>
+    </ul>
+    <p>除此之外，本服务不使用任何广告或分析 Cookie，也不使用本地存储之外的追踪技术（<code>localStorage</code> 仅用于缓存你自己的书签配置）。</p>
 
-    <h2>第三方服务</h2>
-    <p>Google、GitHub（仅用于你选择的第三方登录）、DiceBear / Manifest / Brandfetch / Logo.dev（页面加载时用于获取图标与头像图片）。</p>
+    <h2>6. 数据保留与删除</h2>
+    <ul>
+        <li>账户数据与书签配置：保留至你请求删除。</li>
+        <li>会话记录：30 天过期，或在你登出时立即删除。</li>
+        <li>登录失败计数：15 分钟后自动失效。</li>
+        <li><strong>删除方式</strong>：通过下方联系方式提交删除请求，我们将在 <strong>30 天内</strong>删除你的账户及其全部关联数据（书签配置、收藏、会话）。你也可以随时使用站内的「导出配置」自行导出数据备份。</li>
+    </ul>
 
-    <h2>儿童</h2>
-    <p>本服务不面向 13 岁以下儿童，我们不会有意收集其个人信息。</p>
+    <h2>7. 你的权利</h2>
+    <p>你可以请求：访问我们持有的关于你的数据、更正不准确的数据、导出数据（站内导出或向我们索取）、删除账户与数据、撤回对第三方登录的授权（在 Google/GitHub 的授权管理页面撤销即可）。我们将在合理期限内（通常 30 天内）响应。</p>
 
-    <h2>政策变更</h2>
-    <p>本政策如有更新将在本页公示，并同步更新顶部的日期。</p>
+    <h2>8. 儿童</h2>
+    <p>本服务不面向 13 岁以下儿童，我们不会有意收集儿童的个人信息。若你发现此类情况，请联系我们删除。</p>
+
+    <h2>9. 政策变更</h2>
+    <p>若本政策发生实质变更，我们会更新本页顶部的日期；继续使用本服务即表示你接受更新后的政策。</p>
+
+    <h2>10. 联系方式</h2>
+    <p>数据控制者：My Homepage 开发者 · 邮箱：<a href="mailto:jemchmi@gmail.com">jemchmi@gmail.com</a> · 或通过 <a href="https://github.com/liuyu-2003-arch/Homepage/issues" rel="noopener">GitHub Issues</a> 提交请求。</p>
 
     <div class="en">
-        <h2>Privacy Policy (English summary)</h2>
-        <p>We store your email address, a salted PBKDF2-SHA256 hash of your password (never the password itself), the bookmark configuration and favorites you save, and a random session token (server-side plus an HttpOnly cookie). If you sign in with Google or GitHub we receive your user ID, email and avatar URL from that provider. Data is stored on Cloudflare (D1 + Pages Functions) over HTTPS. No ads, no profiling, no analytics cookies, and we never sell your data. Data is kept until you ask us to delete it. Contact us via GitHub Issues to export or delete your account. Not directed at children under 13.</p>
+        <h2>Privacy Policy — English</h2>
+        <p><strong>Effective 2026-10-02.</strong> My Homepage (https://324893.xyz/) collects only what is needed to sync your bookmarks: your email address; a salted PBKDF2-SHA256 hash of your password (never the plaintext); the bookmark configuration and favourites you save; a random session token (stored hashed server-side and delivered in an HttpOnly, Secure, SameSite=Lax cookie, expiring after 30 days); and, if you choose to sign in with Google or GitHub, the user ID, email, name and avatar URL returned by that provider. Login failures are counted per email for 15 minutes for brute-force protection.</p>
+        <p>Data is stored on Cloudflare (D1 database, Pages Functions) and transmitted over HTTPS. We show no ads, run no analytics or tracking cookies, create no user profiles, and never sell or rent your data. We do not store Google or GitHub access tokens — they are used only during the sign-in request itself.</p>
+        <p><strong>Our use of information received from Google APIs will adhere to the Google API Services User Data Policy, including the Limited Use requirements.</strong> Google user data is never used for advertising, profiling, credit/lending assessment, sold or transferred to third parties, used to train or improve AI/ML models, or used to generate AI content of any kind, including AI-generated non-consensual intimate imagery (NCII).</p>
+        <p>You can request access, correction, export or deletion of your data at any time by emailing jemchmi@gmail.com or opening a GitHub issue; we delete accounts and all associated data within 30 days. Sessions expire after 30 days. The service is not directed at children under 13. Material changes to this policy will be posted on this page with an updated date.</p>
     </div>
 
     <footer>
-        联系方式 / Contact: <a href="https://github.com/liuyu-2003-arch/Homepage/issues" rel="noopener">GitHub Issues</a>
+        联系方式 / Contact: <a href="mailto:jemchmi@gmail.com">jemchmi@gmail.com</a> ·
+        <a href="https://github.com/liuyu-2003-arch/Homepage/issues" rel="noopener">GitHub Issues</a>
     </footer>
 </main>
 </body>
