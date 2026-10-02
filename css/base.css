@@ -325,6 +325,8 @@ body.dark-mode #user-icon-svg {
 }
 .intro-toggle:hover { background: rgba(255, 255, 255, 0.82); color: rgba(0, 0, 0, 0.8); }
 .intro-toggle:active { transform: scale(0.94); }
+/* display:flex above would otherwise beat the UA [hidden] rule */
+.intro-toggle[hidden] { display: none; }
 
 .app-intro {
     position: fixed; right: 16px; bottom: 58px;

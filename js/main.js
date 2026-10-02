@@ -48,18 +48,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
     initSwiper();
 
-    // 应用说明：默认隐藏，点右下角圆形 “!” 按钮打开（点外部/Esc/× 关闭）。
-    // 文字始终保留在静态 HTML 中，供搜索引擎与 OAuth 提供方审核读取。
+    // 应用说明：默认隐藏，点右下角圆形 “!” 按钮打开。点 “×” 后永久不再显示
+    // （记录在 localStorage；全新会话——例如审核方——仍能看到按钮与说明）。
     try {
         const intro = document.getElementById('app-intro');
         const toggle = document.getElementById('intro-toggle');
         if (intro && toggle) {
+            const INTRO_DISMISSED_KEY = 'hp_intro_dismissed';
+            const isDismissed = () => {
+                try { return localStorage.getItem(INTRO_DISMISSED_KEY) === '1'; } catch (e) { return false; }
+            };
+
             const setIntroOpen = (open) => {
                 if (open) intro.removeAttribute('hidden');
                 else intro.setAttribute('hidden', '');
                 toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
             };
+
             setIntroOpen(false);
+            if (isDismissed()) toggle.setAttribute('hidden', '');
 
             toggle.addEventListener('click', (event) => {
                 event.stopPropagation();
@@ -67,7 +74,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             const dismissBtn = document.getElementById('intro-dismiss');
-            if (dismissBtn) dismissBtn.addEventListener('click', () => setIntroOpen(false));
+            if (dismissBtn) {
+                dismissBtn.addEventListener('click', () => {
+                    setIntroOpen(false);
+                    toggle.setAttribute('hidden', '');
+                    try { localStorage.setItem(INTRO_DISMISSED_KEY, '1'); } catch (e) { logger.error(e); }
+                });
+            }
 
             document.addEventListener('click', (event) => {
                 if (intro.hasAttribute('hidden')) return;
