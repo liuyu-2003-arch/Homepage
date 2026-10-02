@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.52';
-import { saveData } from './api.js?v=2.9.52';
-import { CONFIG } from './config.js?v=2.9.52';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.52';
+import { state, isDefaultAccount } from './state.js?v=2.9.53';
+import { saveData } from './api.js?v=2.9.53';
+import { CONFIG } from './config.js?v=2.9.53';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.53';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -1588,32 +1588,52 @@ function updateSwiperPosition(withTransition = true) {
 // 双指滑动（滚轮）：把横向滚动量合成为一个虚拟指针的拖动，
 // 直接复用 dragStart/drag/dragEnd，手感和鼠标按住拖动完全一致。
 function handleWheel(e) {
-    // 纵向为主时，交给页面默认滚动
-    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
-
     const swiper = document.getElementById('bookmark-swiper');
     if (!swiper) return;
-    e.preventDefault();
 
     // 一个滚轮手势对应一次完整的“按下 → 移动 → 松开”
     if (!state.isWheelScrolling) {
         state.isWheelScrolling = true;
         state.wheelPointerX = 0;
-        dragStart(makePointerEvent('mousedown', 0, 0, swiper), true);
+        state.wheelDirX = 0;
+        state.wheelDirY = 0;
+        state.wheelDirectionLocked = false;
+        state.wheelIsVertical = false;
     }
+
+    state.wheelDirX += Math.abs(e.deltaX);
+    state.wheelDirY += Math.abs(e.deltaY);
+
+    // 事件停歇即视为“松手”，交给与鼠标相同的 dragEnd 判定翻页
+    clearTimeout(state.wheelTimeout);
+    state.wheelTimeout = setTimeout(() => {
+        const wasHorizontal = state.isWheelScrolling && state.wheelDirectionLocked && !state.wheelIsVertical;
+        state.isWheelScrolling = false;
+        state.wheelDirectionLocked = false;
+        if (wasHorizontal) dragEnd(makePointerEvent('mouseup', state.wheelPointerX, 0, swiper));
+    }, 80);
+
+    // 手势开始只判定一次主方向：横向接管拖拽，纵向交还原生滚动。
+    // 锁定后不再逐帧过滤，避免快速滑动时抖动事件被丢弃而卡顿。
+    if (!state.wheelDirectionLocked) {
+        if (state.wheelDirX > 10 || state.wheelDirY > 10) {
+            state.wheelDirectionLocked = true;
+            state.wheelIsVertical = state.wheelDirY > state.wheelDirX;
+            if (state.wheelIsVertical) return;
+            dragStart(makePointerEvent('mousedown', 0, 0, swiper), true);
+        } else {
+            return;
+        }
+    }
+
+    if (state.wheelIsVertical) return;
+    e.preventDefault();
 
     // 虚拟指针最多移动一屏，等价于鼠标在窗口内能拖动的最大距离，避免惯性无限加速
     const maxTravel = swiper.clientWidth || window.innerWidth;
     state.wheelPointerX -= e.deltaX;
     state.wheelPointerX = Math.max(-maxTravel, Math.min(maxTravel, state.wheelPointerX));
     drag(makePointerEvent('mousemove', state.wheelPointerX, 0, swiper));
-
-    // 事件停歇即视为松手，交给与鼠标相同的 dragEnd 判定翻页
-    clearTimeout(state.wheelTimeout);
-    state.wheelTimeout = setTimeout(() => {
-        state.isWheelScrolling = false;
-        dragEnd(makePointerEvent('mouseup', state.wheelPointerX, 0, swiper));
-    }, 120);
 }
 
 function renderPaginationDots() {

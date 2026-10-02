@@ -21,7 +21,11 @@ export const state = {
     dotsTimer: null,
     wheelTimeout: null,
     isWheelScrolling: false,
-    wheelPointerX: 0
+    wheelPointerX: 0,
+    wheelDirX: 0,
+    wheelDirY: 0,
+    wheelDirectionLocked: false,
+    wheelIsVertical: false
 };
 
 const DEFAULT_ACCOUNT_EMAILS = ['jemchmi@gmail.com'];
