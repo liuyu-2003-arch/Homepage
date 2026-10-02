@@ -1,0 +1,35 @@
+# Cloudflare Pages response headers
+# https://developers.cloudflare.com/pages/platform/headers/
+
+# Default: revalidate everything (fast 304s, HTML/config always fresh)
+/*
+  Cache-Control: no-cache, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Service worker must never be cached, or version bumps won't roll out
+/sw.js
+  Cache-Control: no-cache, must-revalidate
+
+# HTML entry points: always fetch latest so ?v= references stay in sync
+/index.html
+  Cache-Control: no-cache, must-revalidate
+
+/preferences.html
+  Cache-Control: no-cache, must-revalidate
+
+/pages/address/index.html
+  Cache-Control: no-cache, must-revalidate
+
+# Versioned assets (?v=APP_VERSION in the HTML) can be cached for a week
+/css/*
+  Cache-Control: public, max-age=604800, must-revalidate
+
+/js/*
+  Cache-Control: public, max-age=604800, must-revalidate
+
+/locales/*
+  Cache-Control: public, max-age=604800, must-revalidate
+
+/templates/*
+  Cache-Control: public, max-age=604800, must-revalidate

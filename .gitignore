@@ -11,3 +11,6 @@ node_modules/
 # Local browser test artifacts
 .playwright-cli/
 output/
+
+# Cloudflare Wrangler local state
+.wrangler/

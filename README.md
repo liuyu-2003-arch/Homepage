@@ -38,14 +38,16 @@
 
 ### 1. 部署
 
-最简单的方式是直接使用托管在 GitHub Pages 上的版本：[https://yuliu.love/Homepage/](https://yuliu.love/Homepage/)
+最简单的方式是直接使用已部署的版本：[https://324893.xyz/](https://324893.xyz/)
 
-如果你想自行部署：
+如果你想自行部署（Cloudflare Pages，push 到 `main` 自动上线）：
 
 1.  **Fork** 本仓库到你的 GitHub 账号。
-2.  进入仓库的 **Settings** -> **Pages**。
-3.  在 **Build and deployment** 下，将 **Source** 设置为 `Deploy from a branch`，并将 **Branch** 设置为 `main` (或 `master`)，保存。
-4.  等待几分钟，GitHub 会生成你的专属链接，例如：`https://你的用户名.github.io/Homepage/`。
+2.  打开 Cloudflare Dashboard -> **Workers & Pages** -> **Create** -> **Pages** -> **Connect to Git**，选择该仓库。
+3.  构建配置：Framework preset 选 **None**，Build command 留空，Build output directory 填 `/`。
+4.  部署完成后在 **Custom domains** 绑定自己的域名（仓库根目录的 `_headers` 会控制缓存策略）。
+
+也可继续使用 GitHub Pages：仓库 **Settings** -> **Pages** -> Source 选 `Deploy from a branch`，Branch 选 `main`。
 
 ### 2. （可选）配置你自己的 Supabase 后端
 
