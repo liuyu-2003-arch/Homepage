@@ -1,8 +1,9 @@
-import { CONFIG } from './config.js?v=2.9.33';
-import { state } from './state.js?v=2.9.33';
-import { showToast, t, safeUrl } from './utils.js?v=2.9.33';
-import { i18n } from './i18n.js?v=2.9.33';
-import { logger } from './logger.js?v=2.9.33';
+import { CONFIG } from './config.js?v=2.9.34';
+import { createCloudClient } from './cloud.js?v=2.9.34';
+import { state } from './state.js?v=2.9.34';
+import { showToast, t, safeUrl } from './utils.js?v=2.9.34';
+import { i18n } from './i18n.js?v=2.9.34';
+import { logger } from './logger.js?v=2.9.34';
 
 let supabaseClient = null;
 window.prefAvatarUrl = window.prefAvatarUrl || '';
@@ -52,12 +53,10 @@ renderAvatarGrid();
 document.addEventListener('DOMContentLoaded', async () => {
     await i18n.loadTranslations(i18n.currentLang);
 
-    if (window.supabase && window.supabase.createClient) {
-        try {
-            supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
-        } catch (e) {
-            logger.error('Supabase init error', e);
-        }
+    try {
+        supabaseClient = createCloudClient();
+    } catch (e) {
+        logger.error('Cloud client init error', e);
     }
 
     if (!supabaseClient) { location.href = 'index.html'; return; }

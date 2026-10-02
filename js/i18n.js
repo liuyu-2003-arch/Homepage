@@ -1,4 +1,4 @@
-import { logger } from './logger.js?v=2.9.33';
+import { logger } from './logger.js?v=2.9.34';
 
 let enTranslations = {};
 let currentTranslations = {};

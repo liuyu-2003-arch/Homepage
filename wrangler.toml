@@ -1,0 +1,14 @@
+name = "homepage"
+pages_build_output_dir = "."
+compatibility_date = "2026-10-01"
+
+# D1 database backing the auth + per-user config API (functions/api/[[path]].js)
+[[d1_databases]]
+binding = "DB"
+database_name = "homepage-auth"
+database_id = "f7a40fbc-b792-49b6-8708-a559666222c6"
+
+# Non-secret configuration. OAuth client ids / secrets and SESSION_SECRET are
+# stored as encrypted Pages secrets, never in this file.
+[vars]
+AUTH_BACKEND = "d1"

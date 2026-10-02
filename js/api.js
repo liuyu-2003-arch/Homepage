@@ -1,9 +1,10 @@
-import { CONFIG } from './config.js?v=2.9.33';
-import { state, emit, isDefaultAccount } from './state.js?v=2.9.33';
-import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.33';
-import { logger } from './logger.js?v=2.9.33';
+import { CONFIG } from './config.js?v=2.9.34';
+import { state, emit, isDefaultAccount } from './state.js?v=2.9.34';
+import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.34';
+import { logger } from './logger.js?v=2.9.34';
+import { createCloudClient } from './cloud.js?v=2.9.34';
 
-let supabaseClient = null;
+let cloudClient = null;
 let saveQueue = Promise.resolve();
 let latestSaveVersion = 0;
 let defaultBookmarkNotesPromise = null;
@@ -75,18 +76,18 @@ async function preparePages(rawPages) {
 }
 
 export function initSupabase() {
-    if (window.supabase && window.supabase.createClient) {
+    if (!cloudClient) {
         try {
-            supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+            cloudClient = createCloudClient();
         } catch (e) {
-            logger.error("Supabase Init Error", e);
+            logger.error("Cloud client init error", e);
         }
     }
-    return supabaseClient;
+    return cloudClient;
 }
 
 export function getSupabase() {
-    return supabaseClient;
+    return cloudClient || initSupabase();
 }
 
 export async function loadData() {
@@ -111,16 +112,13 @@ export async function loadData() {
         } catch (e) { logger.error("Config load error", e); }
     }
 
-    if (state.currentUser && supabaseClient) {
+    if (state.currentUser && cloudClient) {
         try {
-            const { data } = await supabaseClient
-                .from('user_configs')
-                .select('config_data')
-                .eq('user_id', state.currentUser.id)
-                .maybeSingle();
+            const { data: configData, error } = await cloudClient.config.load();
+            if (error) throw error;
 
-            if (data && data.config_data) {
-                state.pages = await preparePages(data.config_data);
+            if (configData) {
+                state.pages = await preparePages(configData);
                 writeCachedPages(getStorageKey(state.currentUser.id), state.pages);
                 emit('dataReloaded');
             }
@@ -134,7 +132,7 @@ export async function saveData() {
     const pagesSnapshot = JSON.parse(snapshotStr);
     writeCachedPages(getStorageKey(userId), snapshotStr);
 
-    if (!userId || !supabaseClient) return;
+    if (!userId || !cloudClient) return;
 
     const version = ++latestSaveVersion;
     updateSyncStatus('saving');
@@ -142,13 +140,7 @@ export async function saveData() {
         // A queued older snapshot must never overwrite a newer edit.
         if (version !== latestSaveVersion) return;
 
-        const { error } = await supabaseClient
-            .from('user_configs')
-            .upsert({
-                user_id: userId,
-                config_data: pagesSnapshot,
-                updated_at: new Date().toISOString()
-            }, { onConflict: 'user_id' });
+        const { error } = await cloudClient.config.save(pagesSnapshot);
 
         if (error) throw error;
         if (version === latestSaveVersion) updateSyncStatus('saved');

@@ -1,10 +1,9 @@
 export const CONFIG = {
     // App version — bump on release
-    APP_VERSION: '2.9.33',
+    APP_VERSION: '2.9.34',
 
-    // Supabase (anon key is safe to expose when RLS is enabled)
-    SUPABASE_URL: 'https://ossrsfyqbrzeauzksvpv.supabase.co',
-    SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zc3JzZnlxYnJ6ZWF1emtzdnB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxMDgwMDksImV4cCI6MjA3OTY4NDAwOX0.IwEfjxM_wNBf2DXDC9ue8X6ztSOJV2rEN1vrQqv7eqI',
+    // Auth + data are served by this site's own Pages Functions (/api/*), which
+    // talk to the D1 database binding. No third-party backend keys live here.
 
     // Third-party icon providers (publishable keys — rotate via this single file)
     LOGO_DEV_TOKEN: 'pk_CD4SuapcQDq1yZFMwSaYeA',
