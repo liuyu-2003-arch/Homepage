@@ -1,17 +1,17 @@
-import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.57';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.57';
-import { i18n } from './i18n.js?v=2.9.57';
-import { logger } from './logger.js?v=2.9.57';
+import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.59';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.59';
+import { i18n } from './i18n.js?v=2.9.59';
+import { logger } from './logger.js?v=2.9.59';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
     openDockEditModal, closeDockEditModal, saveDockEditConfig,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
-} from './ui.js?v=2.9.57';
-import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.57';
-import { state, onDataReloaded } from './state.js?v=2.9.57';
-import { CONFIG } from './config.js?v=2.9.57';
+} from './ui.js?v=2.9.59';
+import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.59';
+import { state, onDataReloaded } from './state.js?v=2.9.59';
+import { CONFIG } from './config.js?v=2.9.59';
 
 async function loadTemplates() {
     const templates = [
@@ -298,7 +298,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // --- 关闭用户下拉菜单 ---
-    document.addEventListener('click', (e) => {
+    // 使用 pointerdown 而非 click：iPadOS/iOS 对非交互的空白区域通常不会派发
+    // click 事件，导致点击空白处无法收起菜单。pointerdown 对触摸和鼠标都会触发。
+    document.addEventListener('pointerdown', (e) => {
         const menu = document.getElementById('user-dropdown');
         const pill = document.getElementById('user-pill');
 
@@ -308,12 +310,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 startPillAnimation();
             }
         }
-    });
+    }, { passive: true });
 });
 
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.57').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.59').catch(() => {});
     });
 }
