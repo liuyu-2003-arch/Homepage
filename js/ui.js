@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.62';
-import { saveData } from './api.js?v=2.9.62';
-import { CONFIG } from './config.js?v=2.9.62';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.62';
+import { state, isDefaultAccount } from './state.js?v=2.9.64';
+import { saveData } from './api.js?v=2.9.64';
+import { CONFIG } from './config.js?v=2.9.64';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.64';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -1576,8 +1576,8 @@ function updateSwiperPosition(withTransition = true) {
     if (withTransition) swiperWrapper.style.transition = 'transform 0.2s ease-out';
     setSwiperPosition();
 }
-// 页面左右边缘翻页：鼠标悬停淡入箭头（范围内任意位置可点），
-// 触屏没有 hover，则在存在相邻页时常显箭头并让箭头本身可直接点按。
+// 页面左右边缘翻页：鼠标悬停淡入箭头（范围内任意位置可点）。
+// 触屏设备隐藏箭头，继续使用滑动与分页圆点翻页。
 let syncPageNav = () => {};
 
 function initPageNav() {
@@ -1627,10 +1627,8 @@ function initPageNav() {
     const refresh = () => {
         prev.hidden = !canPrev();
         next.hidden = !canNext();
-        if (isTouch) {
-            prev.classList.toggle('visible', canPrev());
-            next.classList.toggle('visible', canNext());
-        }
+        prev.classList.remove('visible');
+        next.classList.remove('visible');
     };
     syncPageNav = refresh;
 

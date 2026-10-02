@@ -44,8 +44,7 @@
     width: 1px; height: 24px; background: #eee; margin: 0 5px;
 }
 
-/* 左右边缘翻页箭头：默认淡出，悬停到热区时淡入，点击翻页。
-   保持可点击（含透明状态），这样触屏点按也有真实的命中目标。 */
+/* 左右边缘翻页箭头：默认淡出，悬停到热区时淡入，点击翻页。 */
 .page-nav {
     position: fixed; top: 50%; transform: translateY(-50%);
     z-index: 500;
@@ -66,9 +65,9 @@
     fill: none; stroke: currentColor;
     stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
 }
-/* 触屏设备没有 hover：只要存在相邻页就常显箭头 */
-@media (hover: none) {
-    .page-nav.visible { opacity: 0.7; }
+/* 触屏设备依赖滑动与分页圆点翻页，隐藏箭头以免常显并压到图标。 */
+@media (hover: none), (pointer: coarse) {
+    .page-nav { display: none; }
 }
 
 .theme-patterns {
