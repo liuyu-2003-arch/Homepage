@@ -1,17 +1,17 @@
-import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.55';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.55';
-import { i18n } from './i18n.js?v=2.9.55';
-import { logger } from './logger.js?v=2.9.55';
+import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.56';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.56';
+import { i18n } from './i18n.js?v=2.9.56';
+import { logger } from './logger.js?v=2.9.56';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
     openDockEditModal, closeDockEditModal, saveDockEditConfig,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
-} from './ui.js?v=2.9.55';
-import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.55';
-import { state, onDataReloaded } from './state.js?v=2.9.55';
-import { CONFIG } from './config.js?v=2.9.55';
+} from './ui.js?v=2.9.56';
+import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.56';
+import { state, onDataReloaded } from './state.js?v=2.9.56';
+import { CONFIG } from './config.js?v=2.9.56';
 
 async function loadTemplates() {
     const templates = [
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.handleFeedback = () => {
         const subject = encodeURIComponent("Homepage Feedback");
         const body = encodeURIComponent("Hi Developer,\n\nI have some feedback:");
-        window.location.href = `mailto:jemchmi@gmail.com?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:support@324893.xyz?subject=${subject}&body=${body}`;
     };
 
     window.handleDonate = () => {
@@ -308,6 +308,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.55').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.56').catch(() => {});
     });
 }
