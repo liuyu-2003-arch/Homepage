@@ -323,12 +323,21 @@ async function oauthUser(provider, tokenJson, accessToken) {
 async function handleOAuthStart(provider, request, env) {
   const cfg = OAUTH[provider];
   if (!cfg) return json({ error: 'unknown_provider' }, 404);
+
+  // OAuth only works on the canonical apex host: the provider callback URL is
+  // registered for it and the state cookie must land on the same host.
+  const reqUrl = new URL(request.url);
+  if (reqUrl.hostname.startsWith('www.')) {
+    const apex = reqUrl.hostname.replace(/^www\./, '');
+    return Response.redirect(`${reqUrl.protocol}//${apex}${reqUrl.pathname}${reqUrl.search}`, 302);
+  }
+
   const clientId = env[cfg.idVar];
   const clientSecret = env[cfg.secretVar];
   if (!clientId || !clientSecret) {
     return json({ error: 'oauth_not_configured', message: `${provider} login is not configured yet` }, 501);
   }
-  const origin = new URL(request.url).origin;
+  const origin = reqUrl.origin;
   const state = randomToken(16);
   const params = new URLSearchParams({
     client_id: clientId,
