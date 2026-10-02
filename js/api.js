@@ -1,8 +1,8 @@
-import { CONFIG } from './config.js?v=2.9.47';
-import { state, emit, isDefaultAccount } from './state.js?v=2.9.47';
-import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.47';
-import { logger } from './logger.js?v=2.9.47';
-import { createCloudClient } from './cloud.js?v=2.9.47';
+import { CONFIG } from './config.js?v=2.9.48';
+import { state, emit, isDefaultAccount } from './state.js?v=2.9.48';
+import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.48';
+import { logger } from './logger.js?v=2.9.48';
+import { createCloudClient } from './cloud.js?v=2.9.48';
 
 let cloudClient = null;
 let saveQueue = Promise.resolve();

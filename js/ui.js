@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.47';
-import { saveData } from './api.js?v=2.9.47';
-import { CONFIG } from './config.js?v=2.9.47';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.47';
+import { state, isDefaultAccount } from './state.js?v=2.9.48';
+import { saveData } from './api.js?v=2.9.48';
+import { CONFIG } from './config.js?v=2.9.48';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.48';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -1115,7 +1115,7 @@ export function generateIconCandidates(urlVal) {
     const sources = [
         { name: 'Manifest', url: `https://manifest.im/icon/${domain}` },
         { name: 'Vemetric', url: `https://favicon.vemetric.com/${domain}` },
-        { name: 'Logo.dev', url: `https://img.logo.dev/${domain}?token=${CONFIG.LOGO_DEV_TOKEN}&size=100&format=png` },
+        { name: 'Logo.dev', url: `https://img.logo.dev/${domain}?token=${CONFIG.LOGO_DEV_TOKEN}&size=256&format=png` },
         { name: 'Brandfetch', url: `https://cdn.brandfetch.io/${domain}?c=${CONFIG.BRANDFETCH_CID}` },
         { name: 'Direct', url: `${protocol}//${domain}/favicon.ico` }
     ];
