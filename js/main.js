@@ -1,17 +1,20 @@
-import { initSupabase, loadData, exportConfig, importConfig, handleImport } from './api.js?v=2.9.64';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.64';
-import { i18n } from './i18n.js?v=2.9.64';
-import { logger } from './logger.js?v=2.9.64';
+import {
+    initSupabase, loadData, exportConfig, importConfig,
+    exportBrowserBookmarks, importBrowserBookmarks, handleImport
+} from './api.js?v=2.9.65';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.65';
+import { i18n } from './i18n.js?v=2.9.65';
+import { logger } from './logger.js?v=2.9.65';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
     openDockEditModal, closeDockEditModal, saveDockEditConfig,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
-} from './ui.js?v=2.9.64';
-import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.64';
-import { state, onDataReloaded } from './state.js?v=2.9.64';
-import { CONFIG } from './config.js?v=2.9.64';
+} from './ui.js?v=2.9.65';
+import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.65';
+import { state, onDataReloaded } from './state.js?v=2.9.65';
+import { CONFIG } from './config.js?v=2.9.65';
 
 async function loadTemplates() {
     const templates = [
@@ -226,6 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
             handleViewportResize();
+            repositionOpenTransferMenus();
         }, 150);
     };
     window.addEventListener('resize', scheduleResize);
@@ -234,6 +238,46 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', scheduleResize);
     }
+
+    const closeTransferMenus = () => {
+        document.querySelectorAll('[data-transfer-menu]').forEach((menu) => {
+            menu.hidden = true;
+        });
+        document.querySelectorAll('[data-action="toggleTransferMenu"]').forEach((button) => {
+            button.setAttribute('aria-expanded', 'false');
+        });
+    };
+
+    const positionTransferMenu = (menu) => {
+        const trigger = menu.previousElementSibling;
+        const parentRect = trigger.parentElement.getBoundingClientRect();
+        const triggerRect = trigger.getBoundingClientRect();
+        const menuRect = menu.getBoundingClientRect();
+        const viewportWidth = document.documentElement.clientWidth;
+        const edgeMargin = 16;
+        const preferredLeft = menu.dataset.transferMenu === 'export'
+            ? triggerRect.right - menuRect.width
+            : triggerRect.left;
+        const maxLeft = Math.max(edgeMargin, viewportWidth - edgeMargin - menuRect.width);
+        const left = Math.min(Math.max(preferredLeft, edgeMargin), maxLeft);
+
+        menu.style.left = `${left - parentRect.left}px`;
+        menu.style.right = 'auto';
+    };
+
+    const repositionOpenTransferMenus = () => {
+        document.querySelectorAll('[data-transfer-menu]:not([hidden])').forEach(positionTransferMenu);
+    };
+
+    const toggleTransferMenu = (button) => {
+        const menu = document.querySelector(`[data-transfer-menu="${button.dataset.arg}"]`);
+        if (!menu) return;
+        const willOpen = menu.hidden;
+        closeTransferMenus();
+        menu.hidden = !willOpen;
+        button.setAttribute('aria-expanded', String(willOpen));
+        if (willOpen) positionTransferMenu(menu);
+    };
 
     // --- 事件委托：统一处理 data-action ---
     const ACTIONS = {
@@ -259,6 +303,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         handleDonate: () => window.handleDonate(),
         importConfig: () => importConfig(),
         exportConfig: () => exportConfig(),
+        importBrowserBookmarks: () => importBrowserBookmarks(),
+        exportBrowserBookmarks: () => exportBrowserBookmarks(),
+        toggleTransferMenu: (el) => toggleTransferMenu(el),
         addPage: () => addPage(),
         toggleAuthModal: () => window.toggleAuthModal(),
         toggleEditMode: () => toggleEditMode(false),
@@ -277,7 +324,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const el = e.target.closest('[data-action]');
         if (!el) return;
         const action = el.dataset.action;
-        if (ACTIONS[action]) { e.preventDefault(); ACTIONS[action](el, e); }
+        if (ACTIONS[action]) {
+            e.preventDefault();
+            ACTIONS[action](el, e);
+            if (el.closest('.transfer-menu') && action !== 'toggleTransferMenu') closeTransferMenus();
+        }
+    });
+
+    document.addEventListener('pointerdown', (event) => {
+        if (!event.target.closest('.transfer-menu')) closeTransferMenus();
+    }, { passive: true });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeTransferMenus();
     });
 
     // Input delegation
@@ -316,6 +374,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.64').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.65').catch(() => {});
     });
 }

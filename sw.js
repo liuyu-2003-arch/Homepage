@@ -1,4 +1,4 @@
-const APP_VERSION = '2.9.64';
+const APP_VERSION = '2.9.65';
 const CACHE_NAME = `homepage-v${APP_VERSION}`;
 const APP_SCOPE = self.registration.scope;
 const STATIC_ASSETS = [
@@ -8,6 +8,7 @@ const STATIC_ASSETS = [
     `js/main.js?v=${APP_VERSION}`, `js/ui.js?v=${APP_VERSION}`, `js/api.js?v=${APP_VERSION}`, `js/auth.js?v=${APP_VERSION}`,
     `js/state.js?v=${APP_VERSION}`, `js/utils.js?v=${APP_VERSION}`, `js/i18n.js?v=${APP_VERSION}`, `js/config.js?v=${APP_VERSION}`,
     `js/logger.js?v=${APP_VERSION}`, `js/preferences.js?v=${APP_VERSION}`, `js/cloud.js?v=${APP_VERSION}`,
+    `js/bookmarks.js?v=${APP_VERSION}`,
     'templates/user_dropdown.html', 'templates/bookmark_modal.html', 'templates/page_edit_modal.html', 'templates/dock_edit_modal.html',
     'templates/auth_modal.html', 'templates/help_modal.html', 'templates/confirm_modal.html',
     'homepage_config.json', 'manifest.webmanifest', 'icon.svg', 'icon.png',

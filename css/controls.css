@@ -25,6 +25,37 @@
 .edit-controls .done-btn { background: #007AFF; color: white; padding: 10px 20px; }
 .edit-controls .done-btn:hover { background: #0066d6; box-shadow: 0 4px 10px rgba(0,122,255,0.3); }
 
+.transfer-menu { position: relative; }
+.transfer-menu-trigger { display: inline-flex; align-items: center; gap: 6px; }
+.transfer-menu-chevron { font-size: 12px; transition: transform 0.2s ease; }
+.transfer-menu-trigger[aria-expanded="true"] .transfer-menu-chevron { transform: rotate(180deg); }
+.transfer-menu-popover {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    z-index: 1002;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: min(260px, calc(100vw - 32px));
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(34, 28, 40, 0.2);
+    backdrop-filter: blur(18px) saturate(1.25);
+}
+.transfer-menu-popover[hidden] { display: none; }
+.transfer-menu-popover[data-transfer-menu="import"] { left: 0; }
+.transfer-menu-popover[data-transfer-menu="export"] { right: 0; }
+.transfer-menu-popover button {
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 11px;
+    text-align: left;
+    white-space: normal;
+}
+
 .theme-swatches { display: flex; gap: 8px; margin-right: 5px; }
 .swatch {
     width: 24px; height: 24px;

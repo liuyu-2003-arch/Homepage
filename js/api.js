@@ -1,8 +1,9 @@
-import { CONFIG } from './config.js?v=2.9.64';
-import { state, emit, isDefaultAccount } from './state.js?v=2.9.64';
-import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.64';
-import { logger } from './logger.js?v=2.9.64';
-import { createCloudClient } from './cloud.js?v=2.9.64';
+import { CONFIG } from './config.js?v=2.9.65';
+import { state, emit, isDefaultAccount } from './state.js?v=2.9.65';
+import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.65';
+import { logger } from './logger.js?v=2.9.65';
+import { createCloudClient } from './cloud.js?v=2.9.65';
+import { parseBrowserBookmarksHtml, mergeBookmarkPages, serializeBrowserBookmarks } from './bookmarks.js?v=2.9.65';
 
 let cloudClient = null;
 let saveQueue = Promise.resolve();
@@ -166,33 +167,67 @@ export function exportConfig() {
     URL.revokeObjectURL(url);
 }
 
-export function importConfig() {
-    document.getElementById('import-file-input').click();
+export function exportBrowserBookmarks() {
+    const html = serializeBrowserBookmarks(state.pages);
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'homepage_bookmarks.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
-export function handleImport(event) {
-    const file = event.target.files[0];
+function openImportFile(mode) {
+    const input = document.getElementById('import-file-input');
+    if (!input) return;
+    input.dataset.importMode = mode;
+    input.accept = mode === 'browser' ? '.html,.htm' : '.json';
+    input.value = '';
+    input.click();
+}
+
+export function importConfig() {
+    openImportFile('config');
+}
+
+export function importBrowserBookmarks() {
+    openImportFile('browser');
+}
+
+export async function handleImport(event) {
+    const input = event.target;
+    const file = input.files[0];
     if (!file) return;
-    if (file.size > CONFIG.MAX_IMPORT_SIZE) {
+
+    const mode = input.dataset.importMode || 'config';
+    const maxSize = mode === 'browser' ? CONFIG.MAX_BROWSER_BOOKMARK_IMPORT_SIZE : CONFIG.MAX_IMPORT_SIZE;
+    if (file.size > maxSize) {
         showToast(t('msg_import_fail'), 'error');
-        event.target.value = '';
+        input.value = '';
         return;
     }
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            let importedData = JSON.parse(e.target.result);
+
+    try {
+        const content = await file.text();
+        if (mode === 'browser') {
+            const importedPages = parseBrowserBookmarksHtml(content, t('msg_imported_bookmarks'));
+            state.pages = ensureBookmarkIds(sanitizePages(mergeBookmarkPages(state.pages, importedPages)));
+        } else {
+            const importedData = JSON.parse(content);
             state.pages = ensureBookmarkIds(sanitizePages(migrateData(importedData)));
-            saveData();
-            emit('dataReloaded');
-            showToast(t('msg_import_success'), "success");
-        } catch (err) {
-            showToast(t('msg_import_fail'), "error");
-        } finally {
-            event.target.value = '';
         }
-    };
-    reader.readAsText(file);
+        saveData();
+        emit('dataReloaded');
+        showToast(t('msg_import_success'), 'success');
+    } catch (error) {
+        logger.error('Bookmark import failed', error);
+        showToast(t('msg_import_fail'), 'error');
+    } finally {
+        input.value = '';
+    }
 }
 
 // Helper functions

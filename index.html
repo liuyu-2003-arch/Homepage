@@ -17,17 +17,17 @@
     <meta property="og:url" content="https://324893.xyz/">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="icon" type="image/svg+xml" href="icon.svg?v=2.9.64">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=2.9.64">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png?v=2.9.64">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2.9.64">
+    <link rel="icon" type="image/svg+xml" href="icon.svg?v=2.9.65">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=2.9.65">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png?v=2.9.65">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2.9.65">
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e4d0e5">
     <meta name="apple-mobile-web-app-title" content="My Homepage">
-    <meta name="app-version" content="2.9.64">
+    <meta name="app-version" content="2.9.65">
 
     <!-- Static application metadata for crawlers and OAuth provider reviews -->
     <script type="application/ld+json">
@@ -55,12 +55,12 @@
     <link rel="dns-prefetch" href="//img.logo.dev">
     <link rel="dns-prefetch" href="//cdn.brandfetch.io">
 
-    <link rel="stylesheet" href="css/base.css?v=2.9.64">
-    <link rel="stylesheet" href="css/bookmark.css?v=2.9.64">
-    <link rel="stylesheet" href="css/modal.css?v=2.9.64">
-    <link rel="stylesheet" href="css/controls.css?v=2.9.64">
-    <link rel="stylesheet" href="css/user.css?v=2.9.64">
-    <link rel="stylesheet" href="css/responsive.css?v=2.9.64">
+    <link rel="stylesheet" href="css/base.css?v=2.9.65">
+    <link rel="stylesheet" href="css/bookmark.css?v=2.9.65">
+    <link rel="stylesheet" href="css/modal.css?v=2.9.65">
+    <link rel="stylesheet" href="css/controls.css?v=2.9.65">
+    <link rel="stylesheet" href="css/user.css?v=2.9.65">
+    <link rel="stylesheet" href="css/responsive.css?v=2.9.65">
 
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"
             integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM"
@@ -148,8 +148,36 @@
         <button data-action="openModal" data-i18n="btn_add_bookmark">➕ Add Bookmark</button>
         <button data-action="openPageEditModal" data-i18n="btn_edit_page">📝 Edit Pages</button>
         <button data-action="openDockEditModal" data-i18n="btn_edit_dock">Edit Dock</button>
-        <button data-action="importConfig" data-i18n="btn_import">📥 Import</button>
-        <button data-action="exportConfig" data-i18n="btn_export">📤 Export</button>
+        <div class="transfer-menu">
+            <button type="button" class="transfer-menu-trigger" data-action="toggleTransferMenu" data-arg="import"
+                    aria-haspopup="menu" aria-expanded="false">
+                <span data-i18n="btn_import">📥 Import</span>
+                <span class="transfer-menu-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div class="transfer-menu-popover" data-transfer-menu="import" role="menu" hidden>
+                <button type="button" role="menuitem" data-action="importConfig">
+                    <span data-i18n="option_json_config">JSON configuration</span>
+                </button>
+                <button type="button" role="menuitem" data-action="importBrowserBookmarks">
+                    <span data-i18n="option_browser_bookmarks">Browser bookmarks (HTML)</span>
+                </button>
+            </div>
+        </div>
+        <div class="transfer-menu">
+            <button type="button" class="transfer-menu-trigger" data-action="toggleTransferMenu" data-arg="export"
+                    aria-haspopup="menu" aria-expanded="false">
+                <span data-i18n="btn_export">📤 Export</span>
+                <span class="transfer-menu-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div class="transfer-menu-popover" data-transfer-menu="export" role="menu" hidden>
+                <button type="button" role="menuitem" data-action="exportConfig">
+                    <span data-i18n="option_json_config">JSON configuration</span>
+                </button>
+                <button type="button" role="menuitem" data-action="exportBrowserBookmarks">
+                    <span data-i18n="option_browser_bookmarks">Browser bookmarks (HTML)</span>
+                </button>
+            </div>
+        </div>
         <button class="done-btn" data-action="toggleEditMode" data-i18n="btn_done">Done</button>
     </div>
 
@@ -186,8 +214,8 @@
     <div id="confirm-modal-placeholder"></div>
 
 
-    <input type="file" id="import-file-input" style="display: none;" accept=".json">
+    <input type="file" id="import-file-input" style="display: none;" accept=".json" data-import-mode="config">
 
-    <script type="module" src="js/main.js?v=2.9.64"></script>
+    <script type="module" src="js/main.js?v=2.9.65"></script>
 </body>
 </html>
