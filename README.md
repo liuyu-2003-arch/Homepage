@@ -84,6 +84,7 @@ workers/      www 域名跳转 Worker
 
     ```bash
     wrangler d1 execute homepage-auth --remote --file=migrations/0001_init.sql
+    wrangler d1 execute homepage-auth --remote --file=migrations/0002_password_resets.sql
     ```
 
 4.  （可选）启用 Google / GitHub 登录，在 Pages 项目里添加加密变量：
@@ -92,9 +93,12 @@ workers/      www 域名跳转 Worker
     | --- | --- |
     | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google Cloud Console 的 OAuth 客户端 |
     | `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub OAuth App 的凭据 |
+    | `RESEND_API_KEY` | Resend API 密钥；仅在启用“忘记密码”邮件时需要 |
+    | `RESEND_FROM` | Resend 中已验证的发件地址，例如 `My Homepage <reset@你的域名>` |
 
     回调地址：`https://你的域名/api/auth/callback/google` 与 `https://你的域名/api/auth/callback/github`。未配置时对应按钮会提示 "not configured yet"，邮箱+密码登录始终可用。
-5.  密码使用 PBKDF2-SHA256（WebCrypto）存储，会话为 HttpOnly + Secure + SameSite=Lax 的随机令牌，存于 D1 的 `sessions` 表。
+5.  （可选）启用“忘记密码”：先执行上面的 `0002_password_resets.sql`，再在 Pages 项目中添加 `RESEND_API_KEY` 加密变量与 `RESEND_FROM` 环境变量；发件地址必须已在 Resend 验证。重置链接 30 分钟内有效且只能使用一次。两项均未配置时，请求会明确返回 `mail_not_configured`，不会声称邮件已发送。
+6.  密码使用 PBKDF2-SHA256（WebCrypto）存储，会话为 HttpOnly + Secure + SameSite=Lax 的随机令牌，存于 D1 的 `sessions` 表；密码重置令牌仅以 SHA-256 哈希存于 D1。
 
 ### 3. （可选）把 www 跳转到主域名
 

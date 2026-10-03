@@ -1,8 +1,8 @@
-import { getSupabase, loadData } from './api.js?v=2.9.72';
-import { state } from './state.js?v=2.9.72';
-import { showToast, t, startPillAnimation } from './utils.js?v=2.9.72';
-import { CONFIG } from './config.js?v=2.9.72';
-import { logger } from './logger.js?v=2.9.72';
+import { getSupabase, loadData } from './api.js?v=2.9.73';
+import { state } from './state.js?v=2.9.73';
+import { showToast, t, startPillAnimation } from './utils.js?v=2.9.73';
+import { CONFIG } from './config.js?v=2.9.73';
+import { logger } from './logger.js?v=2.9.73';
 
 export async function initAuth() {
     const sb = getSupabase();
@@ -173,6 +173,115 @@ export async function handleRegister() {
             if (data && data.user && data.session) updateUserStatus(data.user, true, false);
         }
     } catch(e) { showToast(e.message, "error"); }
+}
+
+const AUTH_ERROR_KEYS = {
+    invalid_email: 'msg_input_req',
+    missing_confirmation: 'msg_password_confirm_req',
+    password_mismatch: 'msg_password_mismatch',
+    weak_password: 'ph_new_password',
+    mail_not_configured: 'msg_reset_mail_not_configured',
+    mail_send_failed: 'msg_reset_email_failed',
+    invalid_token: 'msg_reset_invalid',
+    expired_token: 'msg_reset_invalid',
+    token_used: 'msg_reset_invalid',
+    too_many_requests: 'msg_too_many_requests',
+};
+
+function showAuthError(error) {
+    const key = AUTH_ERROR_KEYS[error?.code];
+    showToast(key ? t(key) : (error?.message || t('msg_sdk_error')), 'error');
+}
+
+export async function handleForgotPassword() {
+    const input = document.getElementById('auth-email');
+    const email = input ? input.value.trim() : '';
+    if (!email) {
+        showToast(t('msg_input_req'), 'error');
+        return;
+    }
+
+    const sb = getSupabase();
+    if (!sb) {
+        showToast(t('msg_sdk_error'), 'error');
+        return;
+    }
+
+    const button = document.querySelector('#forgot-actions button');
+    if (button) {
+        button.disabled = true;
+        button.textContent = t('msg_sending');
+    }
+
+    try {
+        const { error } = await sb.auth.requestPasswordReset({ email });
+        if (error) throw error;
+        if (input) input.value = '';
+        showToast(t('msg_forgot_sent'), 'success');
+    } catch (error) {
+        showAuthError(error);
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = t('btn_send_reset_link');
+        }
+    }
+}
+
+export async function handleResetPassword(token) {
+    const passwordInput = document.getElementById('auth-password');
+    const confirmInput = document.getElementById('auth-confirm-password');
+    const password = passwordInput ? passwordInput.value : '';
+    const confirmation = confirmInput ? confirmInput.value : '';
+
+    if (!token) {
+        showToast(t('msg_reset_invalid'), 'error');
+        return;
+    }
+    if (!password || !confirmation) {
+        showToast(t('msg_password_confirm_req'), 'error');
+        return;
+    }
+    if (password.length < 6) {
+        showToast(t('ph_new_password'), 'error');
+        return;
+    }
+    if (password !== confirmation) {
+        showToast(t('msg_password_mismatch'), 'error');
+        return;
+    }
+
+    const sb = getSupabase();
+    if (!sb) {
+        showToast(t('msg_sdk_error'), 'error');
+        return;
+    }
+
+    const button = document.querySelector('#reset-actions button');
+    if (button) {
+        button.disabled = true;
+        button.textContent = t('msg_saving');
+    }
+
+    try {
+        const { error } = await sb.auth.resetPassword({
+            token,
+            newPassword: password,
+            confirmPassword: confirmation,
+        });
+        if (error) throw error;
+        if (passwordInput) passwordInput.value = '';
+        if (confirmInput) confirmInput.value = '';
+        showToast(t('msg_reset_success'), 'success');
+        if (window.switchToLoginView) window.switchToLoginView();
+    } catch (error) {
+        showAuthError(error);
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = t('btn_reset_password');
+        }
+    }
 }
 
 

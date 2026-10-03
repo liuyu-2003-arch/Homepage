@@ -1,20 +1,25 @@
 import {
     initSupabase, loadData, exportConfig, importConfig,
     exportBrowserBookmarks, importBrowserBookmarks, handleImport
-} from './api.js?v=2.9.72';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.72';
-import { i18n } from './i18n.js?v=2.9.72';
-import { logger } from './logger.js?v=2.9.72';
+} from './api.js?v=2.9.73';
+import {
+    initAuth, handleLogin, handleRegister, handleForgotPassword, handleResetPassword,
+    handleLogout, handleOAuthLogin
+} from './auth.js?v=2.9.73';
+import { i18n } from './i18n.js?v=2.9.73';
+import { logger } from './logger.js?v=2.9.73';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
     openDockEditModal, closeDockEditModal, saveDockEditConfig,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
-} from './ui.js?v=2.9.72';
-import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.72';
-import { state, onDataReloaded } from './state.js?v=2.9.72';
-import { CONFIG } from './config.js?v=2.9.72';
+} from './ui.js?v=2.9.73';
+import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.73';
+import { state, onDataReloaded } from './state.js?v=2.9.73';
+import { CONFIG } from './config.js?v=2.9.73';
+
+let passwordResetToken = '';
 
 async function loadTemplates() {
     const templates = [
@@ -154,6 +159,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ============================================================
     window.handleLogin = handleLogin;
     window.handleRegister = handleRegister;
+    window.handleForgotPassword = handleForgotPassword;
+    window.handleResetPassword = handleResetPassword;
     window.handleLogout = handleLogout;
     window.handleOAuthLogin = handleOAuthLogin;
     window.openModal = openModal;
@@ -200,24 +207,105 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     window.closeAuthModal = () => {
         document.getElementById('auth-modal').classList.add('hidden');
+        passwordResetToken = '';
         startPillAnimation();
     };
+
+    const setAuthFieldVisibility = ({ email, password, confirmation }) => {
+        const fields = {
+            'auth-email-field': email,
+            'auth-password-field': password,
+            'auth-confirm-password-field': confirmation,
+        };
+        for (const id of Object.keys(fields)) {
+            const element = document.getElementById(id);
+            if (element) element.classList.toggle('hidden', !fields[id]);
+        }
+    };
+
+    const setAuthSectionVisibility = (sectionIds, visibleId) => {
+        for (const id of sectionIds) {
+            const element = document.getElementById(id);
+            if (element) element.classList.toggle('hidden', id !== visibleId);
+        }
+    };
+
+    const prepareAuthMode = ({ title, subtitle, fields, action, footer }) => {
+        const titleElement = document.getElementById('auth-title');
+        const subtitleElement = document.getElementById('auth-subtitle');
+        if (titleElement) {
+            titleElement.setAttribute('data-i18n', title);
+            titleElement.textContent = t(title);
+        }
+        if (subtitleElement) {
+            subtitleElement.setAttribute('data-i18n', subtitle);
+            subtitleElement.textContent = t(subtitle);
+        }
+        setAuthFieldVisibility(fields);
+        document.getElementById('user-info-panel')?.classList.add('hidden');
+        setAuthSectionVisibility(
+            ['login-actions', 'register-actions', 'forgot-actions', 'reset-actions'],
+            action,
+        );
+        setAuthSectionVisibility(
+            ['login-footer', 'register-footer', 'forgot-footer', 'reset-footer'],
+            footer,
+        );
+        const social = document.getElementById('social-login-container');
+        if (social) social.classList.toggle('hidden', action !== 'login-actions' && action !== 'register-actions');
+    };
+
     window.switchToSignUpView = () => {
-        document.getElementById('auth-title').textContent = t('btn_register');
-        document.getElementById('login-actions').classList.add('hidden');
-        document.getElementById('register-actions').classList.remove('hidden');
-        document.getElementById('social-login-container').classList.remove('hidden');
-        document.getElementById('login-footer').classList.add('hidden');
-        document.getElementById('register-footer').classList.remove('hidden');
+        prepareAuthMode({
+            title: 'btn_register',
+            subtitle: 'modal_auth_subtitle',
+            fields: { email: true, password: true, confirmation: false },
+            action: 'register-actions',
+            footer: 'register-footer',
+        });
+        document.getElementById('auth-email')?.focus();
     };
     window.switchToLoginView = () => {
-        document.getElementById('auth-title').textContent = t('btn_login');
-        document.getElementById('login-actions').classList.remove('hidden');
-        document.getElementById('register-actions').classList.add('hidden');
-        document.getElementById('social-login-container').classList.remove('hidden');
-        document.getElementById('login-footer').classList.remove('hidden');
-        document.getElementById('register-footer').classList.add('hidden');
+        prepareAuthMode({
+            title: 'btn_login',
+            subtitle: 'modal_auth_subtitle',
+            fields: { email: true, password: true, confirmation: false },
+            action: 'login-actions',
+            footer: 'login-footer',
+        });
+        document.getElementById('auth-email')?.focus();
     };
+    window.switchToForgotView = () => {
+        prepareAuthMode({
+            title: 'auth_forgot_title',
+            subtitle: 'auth_forgot_subtitle',
+            fields: { email: true, password: false, confirmation: false },
+            action: 'forgot-actions',
+            footer: 'forgot-footer',
+        });
+        document.getElementById('auth-email')?.focus();
+    };
+    window.switchToResetView = (token = passwordResetToken) => {
+        passwordResetToken = token || '';
+        prepareAuthMode({
+            title: 'btn_reset_password',
+            subtitle: 'auth_reset_subtitle',
+            fields: { email: false, password: true, confirmation: true },
+            action: 'reset-actions',
+            footer: 'reset-footer',
+        });
+        document.getElementById('auth-password')?.focus();
+    };
+
+    const pageParams = new URLSearchParams(window.location.search);
+    const linkedResetToken = pageParams.get('reset_password') || '';
+    const forgotRequested = pageParams.get('forgot_password') === '1';
+    if (linkedResetToken || forgotRequested) {
+        history.replaceState(null, '', window.location.pathname);
+        openDialog('auth-modal');
+        if (linkedResetToken) window.switchToResetView(linkedResetToken);
+        else window.switchToForgotView();
+    }
 
 
     // --- 数据保存兜底：关页/切后台时立即 flush ---
@@ -299,6 +387,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         saveDockEditConfig: () => saveDockEditConfig(),
         handleLogin: () => handleLogin(),
         handleRegister: () => handleRegister(),
+        handleForgotPassword: () => handleForgotPassword(),
+        handleResetPassword: () => handleResetPassword(passwordResetToken),
         handleLogout: () => handleLogout(),
         handleMenuEdit: () => window.handleMenuEdit(),
         handleFeedback: () => window.handleFeedback(),
@@ -313,6 +403,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         toggleEditMode: () => toggleEditMode(false),
         switchToSignUpView: () => window.switchToSignUpView(),
         switchToLoginView: () => window.switchToLoginView(),
+        switchToForgotView: () => window.switchToForgotView(),
+        switchToResetView: () => window.switchToResetView(passwordResetToken),
         updatePreview: () => updatePreview(),
         changeLanguage: (el) => window.changeLanguage(el.dataset.arg),
         handleOAuthLogin: (el) => handleOAuthLogin(el.dataset.arg),
@@ -376,6 +468,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.72').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.73').catch(() => {});
     });
 }

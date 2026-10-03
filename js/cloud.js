@@ -101,11 +101,38 @@ export function createCloudClient() {
             return { data: { user }, error: null };
         },
 
-        async changePassword(currentPassword, newPassword) {
+        async changePassword(currentPassword, newPassword, confirmPassword = newPassword) {
             return request('/auth/password', {
                 method: 'POST',
-                body: { current_password: currentPassword, new_password: newPassword },
+                body: {
+                    current_password: currentPassword,
+                    new_password: newPassword,
+                    confirm_password: confirmPassword,
+                },
             });
+        },
+
+        async requestPasswordReset({ email }) {
+            return request('/auth/password/forgot', {
+                method: 'POST',
+                body: { email },
+            });
+        },
+
+        async resetPassword({ token, newPassword, confirmPassword }) {
+            const result = await request('/auth/password/reset', {
+                method: 'POST',
+                body: {
+                    token,
+                    new_password: newPassword,
+                    confirm_password: confirmPassword,
+                },
+            });
+            if (!result.error) {
+                session = null;
+                emit('SIGNED_OUT');
+            }
+            return result;
         },
 
         async signInWithOAuth({ provider }) {

@@ -2,19 +2,27 @@
     <div class="modal-content" style="max-width: 350px; position: relative;">
         <button class="close-modal-btn" data-action="closeAuthModal">×</button>
 
-        <h3 id="auth-title">Sign in</h3>
-        <div class="auth-divider" style="margin-top: -10px; margin-bottom: 10px;" data-i18n="modal_auth_subtitle">Login to edit and sync bookmarks</div>
+        <h3 id="auth-title" data-i18n="btn_login">Sign in</h3>
+        <div class="auth-divider" id="auth-subtitle" style="margin-top: -10px; margin-bottom: 10px;"
+             data-i18n="modal_auth_subtitle">Login to edit and sync bookmarks</div>
 
         <div class="form-group">
-            <div class="input-wrapper">
+            <div class="input-wrapper" id="auth-email-field">
                 <label for="auth-email" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;">EMAIL</label>
                 <div style="height: 8px;"></div>
                 <input type="email" id="auth-email" placeholder="hello@example.com">
             </div>
-            <div class="input-wrapper">
+            <div class="input-wrapper" id="auth-password-field">
                 <label for="auth-password" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;">PASSWORD</label>
                 <div style="height: 8px;"></div>
                 <input type="password" id="auth-password" placeholder="••••••••">
+            </div>
+            <div class="input-wrapper hidden" id="auth-confirm-password-field">
+                <label for="auth-confirm-password" style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: 700;"
+                       data-i18n="label_confirm_password">Confirm new password</label>
+                <div style="height: 8px;"></div>
+                <input type="password" id="auth-confirm-password" autocomplete="new-password"
+                       data-i18n-placeholder="ph_confirm_password" placeholder="Confirm new password">
             </div>
         </div>
 
@@ -24,6 +32,14 @@
         </div>
         <div id="register-actions" class="modal-actions hidden">
             <button class="primary" data-action="handleRegister" data-i18n="btn_register" style="height: 57px; font-size: 16px;">Sign up</button>
+        </div>
+        <div id="forgot-actions" class="modal-actions hidden">
+            <button data-action="handleForgotPassword" data-i18n="btn_send_reset_link"
+                    style="height: 57px; font-size: 16px;">Send reset link</button>
+        </div>
+        <div id="reset-actions" class="modal-actions hidden">
+            <button data-action="handleResetPassword" data-i18n="btn_reset_password"
+                    style="height: 57px; font-size: 16px;">Reset password</button>
         </div>
 
         <div id="user-info-panel" class="hidden" style="text-align: center; width: 100%;">
@@ -50,9 +66,19 @@
         <!-- Footer link to switch modes -->
         <div id="login-footer" style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
             Don't have an account? <a href="#" data-action="switchToSignUpView" style="color: #fa2d48; text-decoration: none;">Sign up</a>
+            <div style="margin-top: 8px;">
+                <button type="button" class="auth-link-button" data-action="switchToForgotView"
+                        data-i18n="btn_forgot_password">Forgot password?</button>
+            </div>
         </div>
         <div id="register-footer" class="hidden" style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
             Already have an account? <a href="#" data-action="switchToLoginView" style="color: #fa2d48; text-decoration: none;">Log in</a>
+        </div>
+        <div id="forgot-footer" class="hidden" style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
+            <a href="#" data-action="switchToLoginView" data-i18n="btn_login">Sign in</a>
+        </div>
+        <div id="reset-footer" class="hidden" style="text-align: center; margin-top: 20px; font-size: 12px; color: #666;">
+            <a href="#" data-action="switchToLoginView" data-i18n="btn_login">Sign in</a>
         </div>
 
         <!-- Legal links shown to OAuth providers during app verification -->

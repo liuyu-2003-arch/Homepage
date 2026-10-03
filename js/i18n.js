@@ -1,5 +1,5 @@
-import { logger } from './logger.js?v=2.9.72';
-import { CONFIG } from './config.js?v=2.9.72';
+import { logger } from './logger.js?v=2.9.73';
+import { CONFIG } from './config.js?v=2.9.73';
 
 let enTranslations = {};
 let currentTranslations = {};
@@ -70,11 +70,16 @@ export const i18n = {
                 el.textContent = this.t(key);
             }
         });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (key) el.placeholder = this.t(key);
+        });
 
         const placeholderElements = {
             'input-url': 'ph_url', 'input-title': 'ph_title', 'input-note': 'ph_note', 'input-icon': 'ph_icon',
             'pref-name': 'label_display_name',
-            'pref-current-password': 'label_current_password', 'pref-new-password': 'ph_new_password'
+            'pref-current-password': 'label_current_password', 'pref-new-password': 'ph_new_password',
+            'pref-confirm-password': 'ph_confirm_password'
         };
         for (const [id, key] of Object.entries(placeholderElements)) {
             const el = document.getElementById(id);

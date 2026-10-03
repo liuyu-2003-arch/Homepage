@@ -1,9 +1,9 @@
-import { CONFIG } from './config.js?v=2.9.72';
-import { createCloudClient } from './cloud.js?v=2.9.72';
-import { state } from './state.js?v=2.9.72';
-import { showToast, t, safeUrl } from './utils.js?v=2.9.72';
-import { i18n } from './i18n.js?v=2.9.72';
-import { logger } from './logger.js?v=2.9.72';
+import { CONFIG } from './config.js?v=2.9.73';
+import { createCloudClient } from './cloud.js?v=2.9.73';
+import { state } from './state.js?v=2.9.73';
+import { showToast, t, safeUrl } from './utils.js?v=2.9.73';
+import { i18n } from './i18n.js?v=2.9.73';
+import { logger } from './logger.js?v=2.9.73';
 
 let supabaseClient = null;
 window.prefAvatarUrl = window.prefAvatarUrl || '';
@@ -18,6 +18,7 @@ const PREF_ACTIONS = {
     changePassword: () => window.changePassword(),
     toggleChangePassword: () => window.openChangePassword(),
     closeChangePassword: () => window.closeChangePassword(),
+    switchToForgotPassword: () => { location.href = 'index.html?forgot_password=1'; },
     logoutPreferences: () => window.logoutPreferences(),
 };
 
@@ -271,21 +272,26 @@ window.changePassword = async function() {
 
     const currentInput = document.getElementById('pref-current-password');
     const nextInput = document.getElementById('pref-new-password');
+    const confirmInput = document.getElementById('pref-confirm-password');
     const current = currentInput ? currentInput.value : '';
     const next = nextInput ? nextInput.value : '';
+    const confirmation = confirmInput ? confirmInput.value : '';
 
     if (!current || !next) { showToast(t('msg_password_req'), 'error'); return; }
+    if (!confirmation) { showToast(t('msg_password_confirm_req'), 'error'); return; }
     if (next.length < 6) { showToast(t('ph_new_password'), 'error'); return; }
+    if (next !== confirmation) { showToast(t('msg_password_mismatch'), 'error'); return; }
     if (next === current) { showToast(t('msg_password_same'), 'error'); return; }
 
     const btn = document.getElementById('btn-change-password');
     if (btn) { btn.textContent = t('msg_saving'); btn.disabled = true; }
 
     try {
-        const { error } = await supabaseClient.auth.changePassword(current, next);
+        const { error } = await supabaseClient.auth.changePassword(current, next, confirmation);
         if (error) throw error;
         if (currentInput) currentInput.value = '';
         if (nextInput) nextInput.value = '';
+        if (confirmInput) confirmInput.value = '';
         showToast(t('msg_password_changed'), 'success');
         window.closeChangePassword();
     } catch (e) {
@@ -309,6 +315,8 @@ window.closeChangePassword = function() {
     if (modal) modal.setAttribute('hidden', '');
     const cur = document.getElementById('pref-current-password');
     const nxt = document.getElementById('pref-new-password');
+    const confirm = document.getElementById('pref-confirm-password');
     if (cur) cur.value = '';
     if (nxt) nxt.value = '';
+    if (confirm) confirm.value = '';
 };

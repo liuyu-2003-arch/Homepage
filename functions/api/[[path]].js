@@ -6,12 +6,14 @@
 //   SESSION_SECRET      (reserved, currently unused - sessions are opaque random tokens)
 //   GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
 //   GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET
+//   RESEND_API_KEY / RESEND_FROM (optional password-reset email delivery)
 
 const COOKIE_SESSION = 'hp_session';
 const COOKIE_STATE = 'hp_oauth_state';
 const SESSION_DAYS = 30;
 const PBKDF2_ITER = 10000; // free-plan CPU budget is 10ms/request; keep this modest
 const MIN_PASSWORD = 6;
+const RESET_TTL_MINUTES = 30;
 
 /* ------------------------------------------------------------------ utils */
 
@@ -276,10 +278,15 @@ async function handleChangePassword(request, env, row) {
   const body = await request.json().catch(() => ({}));
   const current = String(body.current_password || '');
   const next = String(body.new_password || '');
+  const confirmation = String(body.confirm_password || '');
 
   if (!current) return json({ error: 'missing_current', message: 'Current password is required' }, 400);
+  if (!confirmation) return json({ error: 'missing_confirmation', message: 'Password confirmation is required' }, 400);
   if (next.length < MIN_PASSWORD) {
     return json({ error: 'weak_password', message: `Password must be at least ${MIN_PASSWORD} characters` }, 400);
+  }
+  if (next !== confirmation) {
+    return json({ error: 'password_mismatch', message: 'Password confirmation does not match' }, 400);
   }
   if (next === current) return json({ error: 'same_password', message: 'New password must differ from the current one' }, 400);
 
@@ -298,6 +305,135 @@ async function handleChangePassword(request, env, row) {
   ).bind(row.id, row.token_hash).run();
 
   return json({ ok: true, updated_at: now });
+}
+
+/* -------------------------------------------------------- password reset */
+
+async function handleForgotPassword(request, env) {
+  const body = await request.json().catch(() => ({}));
+  const email = String(body.email || '').trim().toLowerCase();
+  if (!email || !email.includes('@')) {
+    return json({ error: 'invalid_email', message: 'Invalid email address' }, 400);
+  }
+
+  const rateKey = `password_reset:${email}`;
+  if (await throttled(env, rateKey)) {
+    return json({ error: 'too_many_requests', message: 'Too many reset requests, try again later' }, 429);
+  }
+
+  const resendApiKey = env.RESEND_API_KEY;
+  const resendFrom = env.RESEND_FROM;
+  if (!resendApiKey || !resendFrom) {
+    return json({ error: 'mail_not_configured', message: 'Password reset email is not configured' }, 503);
+  }
+
+  await recordFailure(env, rateKey);
+  const user = await env.DB.prepare('SELECT id FROM users WHERE email = ?').bind(email).first();
+  if (!user) return json({ ok: true });
+
+  const token = randomToken(32);
+  const tokenHash = await sha256hex(token);
+  const now = new Date();
+  const expires = new Date(now.getTime() + RESET_TTL_MINUTES * 60000);
+  await env.DB.prepare(
+    'DELETE FROM password_resets WHERE user_id = ? AND (expires_at <= ? OR used_at IS NOT NULL)',
+  ).bind(user.id, now.toISOString()).run();
+  await env.DB.prepare(
+    'INSERT INTO password_resets (token_hash, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)',
+  ).bind(tokenHash, user.id, now.toISOString(), expires.toISOString()).run();
+
+  const resetUrl = `${new URL(request.url).origin}/index.html?reset_password=${encodeURIComponent(token)}`;
+  let mailResponse;
+  try {
+    mailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${resendApiKey}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: resendFrom,
+        to: [email],
+        subject: 'Reset your My Homepage password',
+        text: [
+          'A password reset was requested for your My Homepage account.',
+          '',
+          `Reset your password within ${RESET_TTL_MINUTES} minutes:`,
+          resetUrl,
+          '',
+          'If you did not request this, you can ignore this email. The link can only be used once.',
+        ].join('\n'),
+      }),
+    });
+  } catch {
+    mailResponse = null;
+  }
+
+  if (!mailResponse || !mailResponse.ok) {
+    await env.DB.prepare('DELETE FROM password_resets WHERE token_hash = ?').bind(tokenHash).run();
+    return json({ error: 'mail_send_failed', message: 'Could not send the password reset email' }, 502);
+  }
+
+  return json({ ok: true });
+}
+
+async function restoreResetToken(env, tokenHash) {
+  await env.DB.prepare('UPDATE password_resets SET used_at = NULL WHERE token_hash = ?')
+    .bind(tokenHash).run();
+}
+
+async function handleResetPassword(request, env) {
+  const body = await request.json().catch(() => ({}));
+  const token = String(body.token || '').trim();
+  const next = String(body.new_password || '');
+  const confirmation = String(body.confirm_password || '');
+
+  if (!token) return json({ error: 'invalid_token', message: 'Invalid reset token' }, 400);
+  if (!confirmation) return json({ error: 'missing_confirmation', message: 'Password confirmation is required' }, 400);
+  if (next.length < MIN_PASSWORD) {
+    return json({ error: 'weak_password', message: `Password must be at least ${MIN_PASSWORD} characters` }, 400);
+  }
+  if (next !== confirmation) {
+    return json({ error: 'password_mismatch', message: 'Password confirmation does not match' }, 400);
+  }
+
+  const tokenHash = await sha256hex(token);
+  const row = await env.DB.prepare(
+    'SELECT token_hash, user_id, expires_at, used_at FROM password_resets WHERE token_hash = ?',
+  ).bind(tokenHash).first();
+  if (!row) return json({ error: 'invalid_token', message: 'Invalid reset token' }, 400);
+  if (row.used_at) return json({ error: 'token_used', message: 'Reset link has already been used' }, 400);
+  if (new Date(row.expires_at) <= new Date()) {
+    return json({ error: 'expired_token', message: 'Reset link has expired' }, 400);
+  }
+
+  const claimedAt = new Date().toISOString();
+  const claim = await env.DB.prepare(
+    'UPDATE password_resets SET used_at = ? WHERE token_hash = ? AND used_at IS NULL AND expires_at > ?',
+  ).bind(claimedAt, tokenHash, claimedAt).run();
+  if (!claim?.meta?.changes) {
+    const current = await env.DB.prepare(
+      'SELECT expires_at, used_at FROM password_resets WHERE token_hash = ?',
+    ).bind(tokenHash).first();
+    if (!current) return json({ error: 'invalid_token', message: 'Invalid reset token' }, 400);
+    if (current.used_at) return json({ error: 'token_used', message: 'Reset link has already been used' }, 400);
+    return json({ error: 'expired_token', message: 'Reset link has expired' }, 400);
+  }
+
+  try {
+    const passwordHash = await hashPassword(next);
+    const updated = await env.DB.prepare(
+      'UPDATE users SET password_hash = ?, updated_at = ? WHERE id = ?',
+    ).bind(passwordHash, claimedAt, row.user_id).run();
+    if (!updated?.meta?.changes) throw new Error('User no longer exists');
+  } catch (error) {
+    await restoreResetToken(env, tokenHash);
+    throw error;
+  }
+
+  await env.DB.prepare('DELETE FROM sessions WHERE user_id = ?').bind(row.user_id).run();
+  await env.DB.prepare('DELETE FROM password_resets WHERE user_id = ?').bind(row.user_id).run();
+  return json({ ok: true }, 200, { 'set-cookie': sessionCookie('', 0) });
 }
 
 /* ------------------------------------------------------------------ oauth */
@@ -539,6 +675,12 @@ async function handleApiRequest(context) {
       const row = await getSessionRow(env, request);
       if (!row) return json({ error: 'not_authenticated' }, 401);
       return await handleChangePassword(request, env, row);
+    }
+    if (path === '/auth/password/forgot' && method === 'POST') {
+      return await handleForgotPassword(request, env);
+    }
+    if (path === '/auth/password/reset' && method === 'POST') {
+      return await handleResetPassword(request, env);
     }
     if (path === '/auth/providers' && method === 'GET') {
       return json({

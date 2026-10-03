@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; base-uri 'none'">
     <title>隐私政策 · Privacy Policy · My Homepage</title>
     <meta name="description" content="My Homepage 隐私政策：我们收集哪些数据、如何使用、保存多久、与谁共享，以及如何访问或删除你的数据。">
-    <link rel="icon" type="image/svg+xml" href="assets/branding/icon.svg?v=2.9.72">
+    <link rel="icon" type="image/svg+xml" href="assets/branding/icon.svg?v=2.9.73">
     <style>
         :root { color-scheme: light; }
         * { box-sizing: border-box; }
@@ -59,7 +59,7 @@
             <tr><td>你保存的内容</td><td>书签页面配置（页面标题与书签的网址、名称、图标地址、备注）与收藏记录</td><td>在你登录的设备之间同步你的配置</td></tr>
             <tr><td>会话数据</td><td>随机会话令牌、创建/过期时间、浏览器 User-Agent</td><td>保持登录状态、会话安全（30 天过期）</td></tr>
             <tr><td>第三方登录数据</td><td>当你选择使用 Google 或 GitHub 登录时，由该平台返回的用户 ID、邮箱、昵称、头像地址</td><td>识别你的账户并与既有账户关联</td></tr>
-            <tr><td>安全日志</td><td>登录失败的次数与时间窗口（按邮箱聚合，15 分钟内最多 10 次）</td><td>防止暴力破解与滥用</td></tr>
+            <tr><td>安全日志</td><td>登录失败与密码重置请求的次数和时间窗口（按邮箱聚合，15 分钟内最多 10 次）</td><td>防止暴力破解与滥用</td></tr>
         </tbody>
     </table>
     <p>我们不收集：精确地理位置、通讯录、短信、相册、设备唯一标识、广告标识符，也不使用分析/追踪类 Cookie。</p>
@@ -81,6 +81,7 @@
     <ul>
         <li>账户与内容数据存储在 <strong>Cloudflare D1</strong> 数据库，应用逻辑运行于 <strong>Cloudflare Pages Functions</strong>；全部流量通过 HTTPS/TLS 传输。</li>
         <li>密码使用 PBKDF2-SHA256（WebCrypto）加盐哈希存储；会话使用 32 字节随机令牌，仅以 SHA-256 哈希形式落库，并通过 <code>HttpOnly</code> + <code>Secure</code> + <code>SameSite=Lax</code> 的 Cookie 传递，防止脚本读取。</li>
+        <li>密码重置链接由已配置的邮件服务发送；令牌仅以 SHA-256 哈希存入 D1，30 分钟过期且只能使用一次，完成后会撤销该账户的全部会话。</li>
         <li>Cloudflare 的数据中心分布于全球，因此你的数据可能被传输并存储在你所在国家/地区以外的服务器（当前数据库区域为欧洲西部）。</li>
     </ul>
 
@@ -122,7 +123,7 @@
 
     <div class="en">
         <h2>Privacy Policy — English</h2>
-        <p><strong>Effective 2026-10-02.</strong> My Homepage (https://324893.xyz/) collects only what is needed to sync your bookmarks: your email address; a salted PBKDF2-SHA256 hash of your password (never the plaintext); the bookmark configuration and favourites you save; a random session token (stored hashed server-side and delivered in an HttpOnly, Secure, SameSite=Lax cookie, expiring after 30 days); and, if you choose to sign in with Google or GitHub, the user ID, email, name and avatar URL returned by that provider. Login failures are counted per email for 15 minutes for brute-force protection.</p>
+        <p><strong>Effective 2026-10-02.</strong> My Homepage (https://324893.xyz/) collects only what is needed to sync your bookmarks: your email address; a salted PBKDF2-SHA256 hash of your password (never the plaintext); the bookmark configuration and favourites you save; a random session token (stored hashed server-side and delivered in an HttpOnly, Secure, SameSite=Lax cookie, expiring after 30 days); and, if you choose to sign in with Google or GitHub, the user ID, email, name and avatar URL returned by that provider. Login failures and password-reset requests are counted per email for 15 minutes for abuse prevention. When password-reset email is configured, we store only a SHA-256 hash of each token; it expires after 30 minutes, is single-use, and completing a reset revokes all sessions for that account.</p>
         <p>Data is stored on Cloudflare (D1 database, Pages Functions) and transmitted over HTTPS. We show no ads, run no analytics or tracking cookies, create no user profiles, and never sell or rent your data. We do not store Google or GitHub access tokens — they are used only during the sign-in request itself.</p>
         <p><strong>Our use of information received from Google APIs will adhere to the Google API Services User Data Policy, including the Limited Use requirements.</strong> Google user data is never used for advertising, profiling, credit/lending assessment, sold or transferred to third parties, used to train or improve AI/ML models, or used to generate AI content of any kind, including AI-generated non-consensual intimate imagery (NCII).</p>
         <p>You can request access, correction, export or deletion of your data at any time by emailing privacy@324893.xyz or opening a GitHub issue; we delete accounts and all associated data within 30 days. Sessions expire after 30 days. The service is not directed at children under 13. Material changes to this policy will be posted on this page with an updated date.</p>
