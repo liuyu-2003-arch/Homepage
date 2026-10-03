@@ -304,6 +304,9 @@ body.dark-mode #user-icon-svg {
     width: 100%; height: 100vh; height: 100dvh;
     display: flex; flex-direction: column; justify-content: flex-start;
     padding-top: 6vh; padding-bottom: 84px; box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 
 /* App description: collapsed by default behind the round "!" button in the

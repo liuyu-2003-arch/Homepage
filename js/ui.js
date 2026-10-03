@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.69';
-import { saveData } from './api.js?v=2.9.69';
-import { CONFIG } from './config.js?v=2.9.69';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.69';
+import { state, isDefaultAccount } from './state.js?v=2.9.70';
+import { saveData } from './api.js?v=2.9.70';
+import { CONFIG } from './config.js?v=2.9.70';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.70';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -210,6 +210,11 @@ function triggerLongPressHaptic() {
     }
 }
 
+function clearNativeTextSelection() {
+    const selection = window.getSelection?.();
+    if (selection && !selection.isCollapsed) selection.removeAllRanges();
+}
+
 function clearLongPressGesture() {
     if (longPressTimer) clearTimeout(longPressTimer);
     if (longPressFeedbackTimer) clearTimeout(longPressFeedbackTimer);
@@ -270,6 +275,7 @@ function activateLongPress() {
 
     document.body.classList.remove('long-press-theme-armed');
     document.body.classList.add('long-press-theme-active');
+    clearNativeTextSelection();
     openThemeControls({ source: 'longPress' });
 }
 
@@ -344,9 +350,12 @@ function initLongPressGestures() {
     document.addEventListener('pointercancel', endLongPressGesture, { passive: true });
     document.addEventListener('click', suppressLongPressClick, true);
     document.addEventListener('contextmenu', (e) => {
-        const isLongPressArea = e.target.closest('#bookmark-swiper, #bookmark-dock');
+        const isLongPressArea = e.target.closest?.('#bookmark-swiper, #bookmark-dock');
         const hasActiveLongPress = longPressPointerId !== null || Date.now() < suppressClickUntil;
-        if (isLongPressArea && hasActiveLongPress) e.preventDefault();
+        if (isLongPressArea && hasActiveLongPress) {
+            e.preventDefault();
+            clearNativeTextSelection();
+        }
     });
     window.addEventListener('blur', clearLongPressGesture);
     window.addEventListener('scroll', clearLongPressGesture, true);
