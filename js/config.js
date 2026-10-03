@@ -1,6 +1,6 @@
 export const CONFIG = {
     // App version — bump on release
-    APP_VERSION: '2.9.70',
+    APP_VERSION: '2.9.71',
 
     // Auth + data are served by this site's own Pages Functions (/api/*), which
     // talk to the D1 database binding. No third-party backend keys live here.

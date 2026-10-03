@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.70';
-import { saveData } from './api.js?v=2.9.70';
-import { CONFIG } from './config.js?v=2.9.70';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.70';
+import { state, isDefaultAccount } from './state.js?v=2.9.71';
+import { saveData } from './api.js?v=2.9.71';
+import { CONFIG } from './config.js?v=2.9.71';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.71';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -226,8 +226,8 @@ function clearLongPressGesture() {
     }
     document.body.classList.remove(
         'long-press-bookmark-active',
-        'long-press-theme-armed',
-        'long-press-theme-active',
+        'long-press-edit-armed',
+        'long-press-edit-active',
         'long-press-dock-armed',
         'long-press-dock-active'
     );
@@ -273,10 +273,10 @@ function activateLongPress() {
         return;
     }
 
-    document.body.classList.remove('long-press-theme-armed');
-    document.body.classList.add('long-press-theme-active');
+    document.body.classList.remove('long-press-edit-armed');
+    document.body.classList.add('long-press-edit-active');
     clearNativeTextSelection();
-    openThemeControls({ source: 'longPress' });
+    toggleEditMode(true);
 }
 
 function startLongPressGesture(e) {
@@ -295,7 +295,7 @@ function startLongPressGesture(e) {
     } else if (dock) {
         context = { type: 'dock', element: dock };
     } else if (target.closest('.container')) {
-        context = { type: 'theme', element: target.closest('.bookmark-page-content') || target };
+        context = { type: 'edit', element: target.closest('.bookmark-page-content') || target };
     }
 
     if (!context) return;
@@ -313,7 +313,7 @@ function startLongPressGesture(e) {
             longPressContext.element.classList.add('long-press-armed');
             document.body.classList.add('long-press-dock-armed');
         } else {
-            document.body.classList.add('long-press-theme-armed');
+            document.body.classList.add('long-press-edit-armed');
         }
     }, LONG_PRESS_FEEDBACK_DELAY);
 

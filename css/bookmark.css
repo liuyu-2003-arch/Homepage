@@ -80,23 +80,23 @@ body.long-press-bookmark-active .bookmark-item:not(.long-press-active) {
     transform: scale(0.97);
 }
 
-body.long-press-theme-armed .bookmark-page-content {
+body.long-press-edit-armed .bookmark-page-content {
     opacity: 0.9;
     transform: scale(0.992);
 }
 
-body.long-press-theme-active .bookmark-page-content {
+body.long-press-edit-active .bookmark-page-content {
     opacity: 0.48;
     filter: blur(1.4px) saturate(0.82);
     transform: scale(0.972);
 }
 
-body.long-press-theme-armed .bookmark-dock,
-body.long-press-theme-active .bookmark-dock {
+body.long-press-edit-armed .bookmark-dock,
+body.long-press-edit-active .bookmark-dock {
     filter: blur(0.5px) saturate(0.84);
 }
 
-body.long-press-theme-active .bookmark-dock {
+body.long-press-edit-active .bookmark-dock {
     opacity: 0.5;
     filter: blur(1.2px) saturate(0.76);
 }
@@ -476,8 +476,8 @@ body.dark-mode .dock-edit-toggle.remove { background: rgba(255, 69, 58, 0.18); c
     .dock-item,
     .dock-item .dock-icon { transition: none; }
     body.long-press-bookmark-active .bookmark-item:not(.long-press-active),
-    body.long-press-theme-active .bookmark-page-content,
-    body.long-press-theme-active .bookmark-dock { filter: none; }
+    body.long-press-edit-active .bookmark-page-content,
+    body.long-press-edit-active .bookmark-dock { filter: none; }
     .toast, .toast.visible { transition: none; animation: none; }
     .user-pill, .user-pill.shrunk { transition: none; }
     .bookmark-dock, .dock-item, .dock-edit-toggle { transition: none; }
