@@ -1,4 +1,4 @@
-import { safeUrl } from './utils.js?v=2.9.65';
+import { safeUrl } from './utils.js?v=2.9.66';
 
 const MAX_TITLE_LENGTH = 160;
 const BOOKMARK_FILE_MARKER = /NETSCAPE-Bookmark-file-1/i;

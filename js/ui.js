@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.65';
-import { saveData } from './api.js?v=2.9.65';
-import { CONFIG } from './config.js?v=2.9.65';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.65';
+import { state, isDefaultAccount } from './state.js?v=2.9.66';
+import { saveData } from './api.js?v=2.9.66';
+import { CONFIG } from './config.js?v=2.9.66';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.66';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -1627,8 +1627,21 @@ function initPageNav() {
     const refresh = () => {
         prev.hidden = !canPrev();
         next.hidden = !canNext();
-        prev.classList.remove('visible');
-        next.classList.remove('visible');
+        if (isTouch) {
+            prev.classList.remove('visible');
+            next.classList.remove('visible');
+            return;
+        }
+
+        // Keep the hovered arrow visible after navigation; mousemove may not
+        // fire again until the pointer actually moves.
+        if (currentZone && ((currentZone === 'prev' && !canPrev()) ||
+            (currentZone === 'next' && !canNext()))) {
+            applyZone(null);
+            return;
+        }
+        prev.classList.toggle('visible', currentZone === 'prev');
+        next.classList.toggle('visible', currentZone === 'next');
     };
     syncPageNav = refresh;
 
