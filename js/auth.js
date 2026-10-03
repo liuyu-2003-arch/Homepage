@@ -1,38 +1,44 @@
-import { getSupabase, loadData } from './api.js?v=2.9.67';
-import { state } from './state.js?v=2.9.67';
-import { showToast, t, startPillAnimation } from './utils.js?v=2.9.67';
-import { CONFIG } from './config.js?v=2.9.67';
-import { logger } from './logger.js?v=2.9.67';
+import { getSupabase, loadData } from './api.js?v=2.9.69';
+import { state } from './state.js?v=2.9.69';
+import { showToast, t, startPillAnimation } from './utils.js?v=2.9.69';
+import { CONFIG } from './config.js?v=2.9.69';
+import { logger } from './logger.js?v=2.9.69';
 
 export async function initAuth() {
     const sb = getSupabase();
     if (!sb) return;
     try {
         const { data: { session } } = await sb.auth.getSession();
-        updateUserStatus(session?.user);
+        // Initial hydration is awaited by the boot sequence so the first render
+        // cannot race the cloud/local bookmark load.
+        updateUserStatus(session?.user, true, false);
     } catch (e) {
         logger.error('getSession failed', e);
     }
 
     // 【修改点 1】监听 Auth 状态变化时，增加智能判断
     sb.auth.onAuthStateChange((event, session) => {
+        // The boot sequence already hydrated the current session via getSession().
+        if (event === 'INITIAL_SESSION') return;
+
         const currentUser = state.currentUser;
         const newUser = session?.user;
 
         let shouldAnimate = true;
+        let reloadData = true;
 
         // 如果是“已登录”或“刷新Token”事件，且用户ID一致，说明是 Tab 切换或后台刷新
         // 此时将 shouldAnimate 设为 false，防止图标重新弹出
         if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && currentUser && newUser && currentUser.id === newUser.id) {
             shouldAnimate = false;
+            if (event === 'TOKEN_REFRESHED') reloadData = false;
         }
 
-        updateUserStatus(newUser, shouldAnimate);
+        updateUserStatus(newUser, shouldAnimate, reloadData);
     });
 }
 
-// 【修改点 2】增加 animate 参数，默认值为 true (保持原有行为)
-export function updateUserStatus(user, animate = true) {
+export function updateUserStatus(user, animate = true, reloadData = true) {
     state.currentUser = user;
 
     const userPill = document.getElementById('user-pill');
@@ -95,7 +101,7 @@ export function updateUserStatus(user, animate = true) {
         const currentEmailEl = document.getElementById('current-email');
         if(currentEmailEl) currentEmailEl.innerText = user.email;
 
-        loadData();
+        if (reloadData) return loadData();
     } else {
         userPill.classList.remove('logged-in');
 
@@ -138,7 +144,7 @@ export async function handleLogin() {
     else {
         showToast(t("msg_login_success"), "success");
         document.getElementById('auth-modal').classList.add('hidden');
-        if (data && data.user) updateUserStatus(data.user);
+        if (data && data.user) updateUserStatus(data.user, true, false);
     }
 }
 
@@ -164,7 +170,7 @@ export async function handleRegister() {
         else {
             showToast(t("msg_reg_success"), "success");
             document.getElementById('auth-modal').classList.add('hidden');
-            if (data && data.user && data.session) updateUserStatus(data.user);
+            if (data && data.user && data.session) updateUserStatus(data.user, true, false);
         }
     } catch(e) { showToast(e.message, "error"); }
 }
@@ -178,7 +184,7 @@ export async function handleLogout() {
     if (window.location.hash) history.replaceState(null, '', window.location.pathname);
     updateUserStatus(null);
     state.pages = [];
-    loadData();
+    await loadData();
 }
 
 export async function handleOAuthLogin(provider) {

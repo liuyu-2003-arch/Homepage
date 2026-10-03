@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.67';
-import { saveData } from './api.js?v=2.9.67';
-import { CONFIG } from './config.js?v=2.9.67';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.67';
+import { state, isDefaultAccount } from './state.js?v=2.9.69';
+import { saveData } from './api.js?v=2.9.69';
+import { CONFIG } from './config.js?v=2.9.69';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.69';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -31,6 +31,10 @@ let suppressClickUntil = 0;
 let dockMagnificationBound = false;
 let dockMagnificationFrame = null;
 let dockMagnificationPointerX = null;
+let bookmarkEventListenersBound = false;
+let paginationDotsListenerBound = false;
+let paginationDotsSignature = null;
+let bookmarkDockSignature = null;
 
 function ensureBookmarkTooltipListeners() {
     if (tooltipListenersBound) return;
@@ -417,7 +421,7 @@ function initDockMagnification() {
     window.addEventListener('resize', resetDockMagnification);
 }
 
-function createBookmarkIcon(item, extraClass = '') {
+function createBookmarkIcon(item, extraClass = '', options = {}) {
     const firstChar = item.title ? item.title.charAt(0).toUpperCase() : 'A';
     const iconBox = document.createElement('div');
     iconBox.className = `icon-box ${extraClass}`.trim();
@@ -425,7 +429,8 @@ function createBookmarkIcon(item, extraClass = '') {
     if (item.icon && item.icon.trim() !== '') {
         const img = document.createElement('img');
         img.referrerPolicy = 'no-referrer';
-        img.loading = 'lazy';
+        img.loading = options.eager ? 'eager' : 'lazy';
+        img.decoding = 'async';
         img.src = item.icon;
 
         const textIcon = document.createElement('div');
@@ -474,7 +479,7 @@ function createDockItem(bookmark) {
     button.title = bookmark.title || bookmark.url;
     button.setAttribute('aria-label', bookmark.title || bookmark.url);
 
-    const icon = createBookmarkIcon(bookmark, 'dock-icon');
+    const icon = createBookmarkIcon(bookmark, 'dock-icon', { eager: true });
     const label = document.createElement('span');
     label.className = 'dock-item-label';
     label.textContent = bookmark.title || bookmark.url;
@@ -494,11 +499,11 @@ function renderBookmarkDock() {
     const divider = document.getElementById('dock-divider');
     if (!dock || !commonContainer || !recentContainer || !commonGroup || !recentGroup || !divider) return;
 
-    commonContainer.innerHTML = '';
-    recentContainer.innerHTML = '';
-
     const bookmarks = getAllBookmarks();
     if (bookmarks.length === 0) {
+        bookmarkDockSignature = null;
+        commonContainer.innerHTML = '';
+        recentContainer.innerHTML = '';
         dock.classList.add('hidden');
         return;
     }
@@ -539,13 +544,31 @@ function renderBookmarkDock() {
     recentGroup.classList.toggle('hidden', recentEntries.length === 0);
     divider.classList.toggle('hidden', commonBookmarks.length === 0 || recentEntries.length === 0);
 
-    commonBookmarks.forEach((bookmark) => {
-        commonContainer.appendChild(createDockItem(bookmark));
-    });
+    const getItemSignature = (bookmark) => JSON.stringify([
+        getBookmarkKey(bookmark),
+        bookmark.title || '',
+        bookmark.url || '',
+        bookmark.icon || '',
+        bookmark.style || ''
+    ]);
+    const nextSignature = JSON.stringify([
+        commonBookmarks.map(getItemSignature),
+        recentEntries.map(({ bookmark }) => getItemSignature(bookmark))
+    ]);
 
-    recentEntries.forEach(({ bookmark }) => {
-        recentContainer.appendChild(createDockItem(bookmark));
-    });
+    if (nextSignature !== bookmarkDockSignature) {
+        bookmarkDockSignature = nextSignature;
+        commonContainer.innerHTML = '';
+        recentContainer.innerHTML = '';
+
+        commonBookmarks.forEach((bookmark) => {
+            commonContainer.appendChild(createDockItem(bookmark));
+        });
+
+        recentEntries.forEach(({ bookmark }) => {
+            recentContainer.appendChild(createDockItem(bookmark));
+        });
+    }
 
     dock.classList.remove('hidden');
 }
@@ -817,6 +840,72 @@ export function showConfirm(message, title) {
     });
 }
 
+function ensureBookmarkEventListeners(wrapper) {
+    if (bookmarkEventListenersBound) return;
+    bookmarkEventListenersBound = true;
+
+    wrapper.addEventListener('click', (event) => {
+        const bookmarkItem = event.target.closest('.bookmark-item');
+        if (!bookmarkItem) return;
+
+        if (Date.now() < suppressClickUntil) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+
+        const deleteButton = event.target.closest('.delete-btn');
+        if (deleteButton) {
+            event.preventDefault();
+            event.stopPropagation();
+            deleteBookmark(event, bookmarkItem.dataset.id);
+            return;
+        }
+
+        const bookmark = findBookmarkById(bookmarkItem.dataset.id);
+        if (!bookmark) return;
+
+        if (state.isEditing) {
+            const location = findBookmarkLocation(bookmark.id);
+            if (location) openModal(location.pageIndex, location.bookmarkIndex);
+        } else if (!state.hasDragged) {
+            openBookmark(bookmark);
+        }
+    });
+
+    wrapper.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        if (event.target.closest('button')) return;
+        const bookmarkItem = event.target.closest('.bookmark-item');
+        if (!bookmarkItem) return;
+        event.preventDefault();
+        bookmarkItem.click();
+    });
+
+    wrapper.addEventListener('mouseover', (event) => {
+        const bookmarkItem = event.target.closest('.bookmark-item');
+        if (!bookmarkItem || bookmarkItem.contains(event.relatedTarget)) return;
+        if (bookmarkItem.dataset.note) scheduleBookmarkTooltip(bookmarkItem, bookmarkItem.dataset.note);
+    });
+
+    wrapper.addEventListener('mouseout', (event) => {
+        const bookmarkItem = event.target.closest('.bookmark-item');
+        if (!bookmarkItem || bookmarkItem.contains(event.relatedTarget)) return;
+        hideBookmarkTooltip(bookmarkItem);
+    });
+
+    wrapper.addEventListener('focusin', (event) => {
+        const bookmarkItem = event.target.closest('.bookmark-item');
+        if (bookmarkItem?.dataset.note) showBookmarkTooltip(bookmarkItem, bookmarkItem.dataset.note);
+    });
+
+    wrapper.addEventListener('focusout', (event) => {
+        const bookmarkItem = event.target.closest('.bookmark-item');
+        if (!bookmarkItem || bookmarkItem.contains(event.relatedTarget)) return;
+        hideBookmarkTooltip(bookmarkItem);
+    });
+}
+
 // --- 渲染核心 (Render) ---
 export function render(options = {}) {
     hideBookmarkTooltip();
@@ -828,6 +917,7 @@ export function render(options = {}) {
 
     const swiperWrapper = document.getElementById('bookmark-swiper-wrapper');
     if (!swiperWrapper) return;
+    ensureBookmarkEventListeners(swiperWrapper);
     createVisualPages(measurePageCapacity(swiperWrapper));
     swiperWrapper.innerHTML = '';
 
@@ -850,8 +940,6 @@ export function render(options = {}) {
         content.appendChild(title);
 
         vPage.bookmarks.forEach((item) => {
-            const originalPageIndex = vPage.originalPageIndex;
-            const originalBookmarkIndex = state.pages[originalPageIndex].bookmarks.findIndex(b => b.id === item.id);
             const div = document.createElement('div');
             let styleClass = '';
             if (item.style === 'white') styleClass = 'style-white';
@@ -863,36 +951,14 @@ export function render(options = {}) {
             div.tabIndex = 0;
             const note = typeof item.note === 'string' ? item.note.trim() : '';
             div.setAttribute('aria-label', note ? `${item.title || item.url}. ${note}` : (item.title || item.url));
-            if (note) {
-                div.dataset.note = note;
-                div.addEventListener('mouseenter', () => scheduleBookmarkTooltip(div, note));
-                div.addEventListener('mouseleave', () => hideBookmarkTooltip(div));
-                div.addEventListener('focus', () => showBookmarkTooltip(div, note));
-                div.addEventListener('blur', () => hideBookmarkTooltip(div));
-            }
-
-            // 使用事件监听器而非 onclick 字符串
-            div.addEventListener('click', (e) => {
-                if (Date.now() < suppressClickUntil) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return;
-                }
-                if (state.isEditing) {
-                    if (!e.target.classList.contains('delete-btn')) openModal(originalPageIndex, originalBookmarkIndex);
-                } else {
-                    if (!state.hasDragged) openBookmark(item);
-                }
-            });
-            div.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); div.click(); }
-            });
+            if (note) div.dataset.note = note;
 
             // 构建 DOM 结构而非 innerHTML，防止 XSS
-            const deleteBtn = document.createElement('div');
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
             deleteBtn.className = 'delete-btn';
             deleteBtn.textContent = '×';
-            deleteBtn.addEventListener('click', (e) => deleteBookmark(e, item.id));
+            deleteBtn.setAttribute('aria-label', `Delete ${item.title || item.url}`);
 
             const iconBox = createBookmarkIcon(item);
 
@@ -1355,10 +1421,12 @@ export function changeTheme(color, element, pattern) {
         document.body.classList.toggle('dark-mode', color === '#1a1a1a');
         const meta = document.querySelector('meta[name="theme-color"]');
         if (meta) meta.setAttribute('content', color);
-        if (element) {
-            document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-            element.classList.add('active');
-        }
+        const normalizedColor = color.toLowerCase();
+        document.querySelectorAll('.swatch').forEach(swatch => {
+            const isActive = (swatch.dataset.arg || '').toLowerCase() === normalizedColor;
+            swatch.classList.toggle('active', isActive);
+            swatch.setAttribute('aria-pressed', String(isActive));
+        });
     }
     if (pattern) {
         localStorage.setItem('themePattern', pattern);
@@ -1367,7 +1435,9 @@ export function changeTheme(color, element, pattern) {
             bg.classList.add(pattern);
         }
         document.querySelectorAll('.pattern-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.pattern === pattern);
+            const isActive = btn.dataset.pattern === pattern;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-pressed', String(isActive));
         });
     }
 }// --- Swiper 逻辑 (Swiper) ---
@@ -1392,6 +1462,7 @@ export function initSwiper() {
         }
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
         if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
+        if (e.target.closest('button')) return;
 
         const swiper = document.getElementById('bookmark-swiper');
         const swiperWidth = swiper ? swiper.clientWidth : window.innerWidth;
@@ -1695,18 +1766,43 @@ function initPageNav() {
 function renderPaginationDots() {
     const dotsContainer = document.getElementById('pagination-dots');
     if(!dotsContainer) return;
-    dotsContainer.innerHTML = '';
-    for (let i = 0; i < state.visualPages.length; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'dot';
-        if (i === state.currentPage) dot.classList.add('active');
-
-        // 配合 CSS 显示标题
-        dot.setAttribute('data-title', state.visualPages[i].title || `Page ${i + 1}`);
-
-        dot.addEventListener('click', (e) => { e.stopPropagation(); state.currentPage = i; updateSwiperPosition(true); renderPaginationDots(); });
-        dotsContainer.appendChild(dot);
+    if (!paginationDotsListenerBound) {
+        paginationDotsListenerBound = true;
+        dotsContainer.addEventListener('click', (event) => {
+            const dot = event.target.closest('.dot');
+            if (!dot) return;
+            const pageIndex = Number.parseInt(dot.dataset.pageIndex, 10);
+            if (!Number.isInteger(pageIndex) || pageIndex < 0 || pageIndex >= state.visualPages.length) return;
+            event.stopPropagation();
+            state.currentPage = pageIndex;
+            updateSwiperPosition(true);
+            renderPaginationDots();
+        });
     }
+
+    const pageTitles = state.visualPages.map((page, index) => page.title || `Page ${index + 1}`);
+    const signature = JSON.stringify(pageTitles);
+    if (signature !== paginationDotsSignature || dotsContainer.childElementCount !== pageTitles.length) {
+        paginationDotsSignature = signature;
+        dotsContainer.innerHTML = '';
+        pageTitles.forEach((pageTitle, index) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'dot';
+            dot.dataset.pageIndex = String(index);
+            dot.dataset.title = pageTitle;
+            dot.setAttribute('aria-label', pageTitle);
+            dotsContainer.appendChild(dot);
+        });
+    }
+
+    Array.from(dotsContainer.children).forEach((dot, index) => {
+        const isActive = index === state.currentPage;
+        dot.classList.toggle('active', isActive);
+        if (isActive) dot.setAttribute('aria-current', 'page');
+        else dot.removeAttribute('aria-current');
+    });
+
     dotsContainer.classList.add('visible');
     if(state.dotsTimer) clearTimeout(state.dotsTimer);
     state.dotsTimer = setTimeout(() => dotsContainer.classList.remove('visible'), 2000);

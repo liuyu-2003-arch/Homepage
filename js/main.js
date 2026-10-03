@@ -1,20 +1,20 @@
 import {
     initSupabase, loadData, exportConfig, importConfig,
     exportBrowserBookmarks, importBrowserBookmarks, handleImport
-} from './api.js?v=2.9.67';
-import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.67';
-import { i18n } from './i18n.js?v=2.9.67';
-import { logger } from './logger.js?v=2.9.67';
+} from './api.js?v=2.9.69';
+import { initAuth, handleLogin, handleRegister, handleLogout, handleOAuthLogin } from './auth.js?v=2.9.69';
+import { i18n } from './i18n.js?v=2.9.69';
+import { logger } from './logger.js?v=2.9.69';
 import {
     render, toggleEditMode, initSwiper, saveBookmark, deleteBookmark, openModal, closeModal,
     addPage, deletePage, openPageEditModal, closePageEditModal, renderPageList, handleViewportResize,
     openDockEditModal, closeDockEditModal, saveDockEditConfig,
     initTheme, changeTheme, quickChangeTheme, openThemeControls, closeThemeControls,
     autoFillInfo, updatePreview, selectStyle, selectPage, debouncedSaveData
-} from './ui.js?v=2.9.67';
-import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.67';
-import { state, onDataReloaded } from './state.js?v=2.9.67';
-import { CONFIG } from './config.js?v=2.9.67';
+} from './ui.js?v=2.9.69';
+import { t, showToast, startPillAnimation, openExternal, openDialog } from './utils.js?v=2.9.69';
+import { state, onDataReloaded } from './state.js?v=2.9.69';
+import { CONFIG } from './config.js?v=2.9.69';
 
 async function loadTemplates() {
     const templates = [
@@ -45,9 +45,13 @@ async function loadTemplates() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. 初始化基础配置
-    await loadTemplates();
     document.body.style.visibility = 'hidden';
-    await i18n.loadTranslations(i18n.currentLang);
+    const templatesPromise = loadTemplates();
+    const translationsPromise = i18n.loadTranslations(i18n.currentLang);
+    await Promise.all([templatesPromise, translationsPromise]);
+    // Templates and translations load together, so apply translations once
+    // every deferred template has entered the document.
+    i18n.updateTexts();
     initTheme();
     initSwiper();
 
@@ -115,10 +119,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch (authErr) {
                 logger.error('Auth init failed, falling back to local data', authErr);
             }
-            if (!state.currentUser) await loadData();
-        } else {
-            await loadData();
         }
+        await loadData();
     } catch (bootErr) {
         logger.error('Boot failed, loading local fallback', bootErr);
         await loadData();
@@ -374,6 +376,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Register Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=2.9.67').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=2.9.69').catch(() => {});
     });
 }

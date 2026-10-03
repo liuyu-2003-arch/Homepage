@@ -1,9 +1,9 @@
-import { CONFIG } from './config.js?v=2.9.67';
-import { state, emit, isDefaultAccount } from './state.js?v=2.9.67';
-import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.67';
-import { logger } from './logger.js?v=2.9.67';
-import { createCloudClient } from './cloud.js?v=2.9.67';
-import { parseBrowserBookmarksHtml, mergeBookmarkPages, serializeBrowserBookmarks } from './bookmarks.js?v=2.9.67';
+import { CONFIG } from './config.js?v=2.9.69';
+import { state, emit, isDefaultAccount } from './state.js?v=2.9.69';
+import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.69';
+import { logger } from './logger.js?v=2.9.69';
+import { createCloudClient } from './cloud.js?v=2.9.69';
+import { parseBrowserBookmarksHtml, mergeBookmarkPages, serializeBrowserBookmarks } from './bookmarks.js?v=2.9.69';
 
 let cloudClient = null;
 let saveQueue = Promise.resolve();

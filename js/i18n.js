@@ -1,8 +1,10 @@
-import { logger } from './logger.js?v=2.9.67';
-import { CONFIG } from './config.js?v=2.9.67';
+import { logger } from './logger.js?v=2.9.69';
+import { CONFIG } from './config.js?v=2.9.69';
 
 let enTranslations = {};
 let currentTranslations = {};
+const translationPromises = new Map();
+let translationRequestId = 0;
 
 async function fetchLanguageFile(lang) {
     try {
@@ -20,22 +22,38 @@ async function fetchLanguageFile(lang) {
     }
 }
 
+function getCachedLanguage(lang) {
+    if (!translationPromises.has(lang)) {
+        const promise = fetchLanguageFile(lang);
+        translationPromises.set(lang, promise);
+        promise.then((translations) => {
+            if ((!translations || Object.keys(translations).length === 0) &&
+                translationPromises.get(lang) === promise) {
+                translationPromises.delete(lang);
+            }
+        });
+    }
+    return translationPromises.get(lang);
+}
+
 export const i18n = {
     currentLang: localStorage.getItem('appLang') || 'en',
 
     async loadTranslations(lang) {
-        if (Object.keys(enTranslations).length === 0) {
-            enTranslations = await fetchLanguageFile('en');
-        }
+        const selectedLang = lang || 'en';
+        const requestId = ++translationRequestId;
+        const englishPromise = getCachedLanguage('en');
+        const selectedPromise = selectedLang === 'en'
+            ? englishPromise
+            : getCachedLanguage(selectedLang);
+        const [english, selected] = await Promise.all([englishPromise, selectedPromise]);
 
-        if (lang === 'en') {
-            currentTranslations = enTranslations;
-        } else {
-            currentTranslations = await fetchLanguageFile(lang);
-        }
+        if (requestId !== translationRequestId) return;
 
-        this.currentLang = lang;
-        localStorage.setItem('appLang', lang);
+        enTranslations = english;
+        currentTranslations = selectedLang === 'en' ? english : selected;
+        this.currentLang = selectedLang;
+        localStorage.setItem('appLang', selectedLang);
         this.updateTexts();
     },
 

@@ -17,17 +17,17 @@
     <meta property="og:url" content="https://324893.xyz/">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="icon" type="image/svg+xml" href="assets/branding/icon.svg?v=2.9.67">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/branding/favicon-32.png?v=2.9.67">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/branding/favicon-16.png?v=2.9.67">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/branding/apple-touch-icon.png?v=2.9.67">
+    <link rel="icon" type="image/svg+xml" href="assets/branding/icon.svg?v=2.9.69">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/branding/favicon-32.png?v=2.9.69">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/branding/favicon-16.png?v=2.9.69">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/branding/apple-touch-icon.png?v=2.9.69">
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e4d0e5">
     <meta name="apple-mobile-web-app-title" content="My Homepage">
-    <meta name="app-version" content="2.9.67">
+    <meta name="app-version" content="2.9.69">
 
     <!-- Static application metadata for crawlers and OAuth provider reviews -->
     <script type="application/ld+json">
@@ -55,12 +55,12 @@
     <link rel="dns-prefetch" href="//img.logo.dev">
     <link rel="dns-prefetch" href="//cdn.brandfetch.io">
 
-    <link rel="stylesheet" href="css/base.css?v=2.9.67">
-    <link rel="stylesheet" href="css/bookmark.css?v=2.9.67">
-    <link rel="stylesheet" href="css/modal.css?v=2.9.67">
-    <link rel="stylesheet" href="css/controls.css?v=2.9.67">
-    <link rel="stylesheet" href="css/user.css?v=2.9.67">
-    <link rel="stylesheet" href="css/responsive.css?v=2.9.67">
+    <link rel="stylesheet" href="css/base.css?v=2.9.69">
+    <link rel="stylesheet" href="css/bookmark.css?v=2.9.69">
+    <link rel="stylesheet" href="css/modal.css?v=2.9.69">
+    <link rel="stylesheet" href="css/controls.css?v=2.9.69">
+    <link rel="stylesheet" href="css/user.css?v=2.9.69">
+    <link rel="stylesheet" href="css/responsive.css?v=2.9.69">
 
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"
             integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM"
@@ -121,17 +121,17 @@
             <div id="bookmark-swiper-wrapper" class="bookmark-swiper-wrapper">
             </div>
         </div>
-        <div class="page-nav page-nav-prev" aria-hidden="true">
+        <button type="button" class="page-nav page-nav-prev" aria-label="Previous page" title="Previous page">
             <svg viewBox="0 0 24 48" aria-hidden="true">
                 <polyline points="17,6 7,24 17,42"></polyline>
             </svg>
-        </div>
-        <div class="page-nav page-nav-next" aria-hidden="true">
+        </button>
+        <button type="button" class="page-nav page-nav-next" aria-label="Next page" title="Next page">
             <svg viewBox="0 0 24 48" aria-hidden="true">
                 <polyline points="7,6 17,24 7,42"></polyline>
             </svg>
-        </div>
-        <div id="pagination-dots" class="pagination-dots"></div>
+        </button>
+        <nav id="pagination-dots" class="pagination-dots" aria-label="Bookmark pages"></nav>
     </div>
 
     <nav id="bookmark-dock" class="bookmark-dock hidden" aria-label="Bookmark dock">
@@ -183,21 +183,21 @@
 
     <div id="theme-controls" class="edit-controls hidden" style="z-index: 1001;">
         <div class="theme-swatches">
-            <div class="swatch" style="background: #e4d0e5" data-action="changeTheme" data-arg="#e4d0e5" data-self></div>
-            <div class="swatch" style="background: #f5dbe3" data-action="changeTheme" data-arg="#f5dbe3" data-self></div>
-            <div class="swatch" style="background: #f9e8ee" data-action="changeTheme" data-arg="#f9e8ee" data-self></div>
-            <div class="swatch" style="background: #dbe4f5" data-action="changeTheme" data-arg="#dbe4f5" data-self></div>
-            <div class="swatch" style="background: #f0f0f2" data-action="changeTheme" data-arg="#f0f0f2" data-self></div>
-            <div class="swatch" style="background: #1a1a1a; border: 1px solid #555;" data-action="changeTheme" data-arg="#1a1a1a" data-self></div>
+            <button type="button" class="swatch" style="background: #e4d0e5" data-action="changeTheme" data-arg="#e4d0e5" aria-label="Lavender background" aria-pressed="false"></button>
+            <button type="button" class="swatch" style="background: #f5dbe3" data-action="changeTheme" data-arg="#f5dbe3" aria-label="Rose background" aria-pressed="false"></button>
+            <button type="button" class="swatch" style="background: #f9e8ee" data-action="changeTheme" data-arg="#f9e8ee" aria-label="Blush background" aria-pressed="false"></button>
+            <button type="button" class="swatch" style="background: #dbe4f5" data-action="changeTheme" data-arg="#dbe4f5" aria-label="Blue background" aria-pressed="false"></button>
+            <button type="button" class="swatch" style="background: #f0f0f2" data-action="changeTheme" data-arg="#f0f0f2" aria-label="Gray background" aria-pressed="false"></button>
+            <button type="button" class="swatch" style="background: #1a1a1a" data-action="changeTheme" data-arg="#1a1a1a" aria-label="Dark background" aria-pressed="false"></button>
         </div>
 
         <div class="control-divider"></div>
 
         <div class="theme-patterns">
-            <button class="pattern-btn" data-pattern="none" data-action="quickChangeTheme" data-arg="none" data-i18n="theme_default">Wave</button>
-            <button class="pattern-btn" data-pattern="bg-pattern-aurora" data-action="quickChangeTheme" data-arg="bg-pattern-aurora" data-i18n="theme_aurora">Aurora</button>
-            <button class="pattern-btn" data-pattern="bg-pattern-flow" data-action="quickChangeTheme" data-arg="bg-pattern-flow" data-i18n="theme_flow">Flow</button>
-            <button class="pattern-btn" data-pattern="bg-pattern-lines-d" data-action="quickChangeTheme" data-arg="bg-pattern-lines-d" data-i18n="theme_lines_d">Lines</button>
+            <button type="button" class="pattern-btn" data-pattern="none" data-action="quickChangeTheme" data-arg="none" data-i18n="theme_default" aria-pressed="false">Wave</button>
+            <button type="button" class="pattern-btn" data-pattern="bg-pattern-aurora" data-action="quickChangeTheme" data-arg="bg-pattern-aurora" data-i18n="theme_aurora" aria-pressed="false">Aurora</button>
+            <button type="button" class="pattern-btn" data-pattern="bg-pattern-flow" data-action="quickChangeTheme" data-arg="bg-pattern-flow" data-i18n="theme_flow" aria-pressed="false">Flow</button>
+            <button type="button" class="pattern-btn" data-pattern="bg-pattern-lines-d" data-action="quickChangeTheme" data-arg="bg-pattern-lines-d" data-i18n="theme_lines_d" aria-pressed="false">Lines</button>
         </div>
 
         <div class="control-divider"></div>
@@ -216,6 +216,6 @@
 
     <input type="file" id="import-file-input" style="display: none;" accept=".json" data-import-mode="config">
 
-    <script type="module" src="js/main.js?v=2.9.67"></script>
+    <script type="module" src="js/main.js?v=2.9.69"></script>
 </body>
 </html>
