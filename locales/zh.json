@@ -40,7 +40,7 @@
   "label_title": "网页标题",
   "label_note": "备注",
   "label_logo": "图标地址",
-  "label_page": "所在页面",
+  "label_page": "所在页面（可多选）",
   "label_email": "邮箱",
   "label_password": "密码",
   "label_display_name": "显示名称",

@@ -39,7 +39,7 @@
   "label_title": "網頁標題",
   "label_note": "備註",
   "label_logo": "圖示位址",
-  "label_page": "所在頁面",
+  "label_page": "所在頁面（可多選）",
   "label_email": "電子郵件",
   "label_password": "密碼",
   "label_display_name": "顯示名稱",

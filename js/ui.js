@@ -1,7 +1,7 @@
-import { state, isDefaultAccount } from './state.js?v=2.9.71';
-import { saveData } from './api.js?v=2.9.71';
-import { CONFIG } from './config.js?v=2.9.71';
-import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.71';
+import { state, isDefaultAccount } from './state.js?v=2.9.72';
+import { saveData } from './api.js?v=2.9.72';
+import { CONFIG } from './config.js?v=2.9.72';
+import { debounce, t, showToast, generateUniqueId, updateSyncStatus, startPillAnimation, safeUrl, openExternal, openDialog, closeDialog } from './utils.js?v=2.9.72';
 
 export const debouncedSaveData = debounce(() => saveData(), 1000, { maxWait: 3000 });
 let autoFillTimer = null;
@@ -186,19 +186,24 @@ function getAllBookmarks() {
 function findBookmarkById(id) {
     if (!id) return null;
     for (const page of state.pages) {
-        const bookmark = page.bookmarks?.find(item => item.id === id);
+        const bookmark = page.bookmarks?.find(item => getBookmarkKey(item) === id);
         if (bookmark) return bookmark;
     }
     return null;
 }
 
-function findBookmarkLocation(key) {
-    if (!key) return null;
+function findBookmarkLocations(key) {
+    if (!key) return [];
+    const locations = [];
     for (let pageIndex = 0; pageIndex < state.pages.length; pageIndex++) {
         const bookmarkIndex = state.pages[pageIndex].bookmarks?.findIndex(bookmark => getBookmarkKey(bookmark) === key) ?? -1;
-        if (bookmarkIndex >= 0) return { pageIndex, bookmarkIndex };
+        if (bookmarkIndex >= 0) locations.push({ pageIndex, bookmarkIndex });
     }
-    return null;
+    return locations;
+}
+
+function findBookmarkLocation(key) {
+    return findBookmarkLocations(key)[0] || null;
 }
 
 function triggerLongPressHaptic() {
@@ -1041,7 +1046,7 @@ export function openModal(pageIndex = -1, bookmarkIndex = -1) {
     const controls = document.getElementById('edit-controls');
     if (controls) controls.classList.add('hidden');
 
-    state.currentEditInfo = { pageIndex, bookmarkIndex };
+    state.currentEditInfo = { pageIndex, bookmarkIndex, bookmarkKey: null };
     openDialog('modal');
     const titleInput = document.getElementById('input-title');
     const urlInput = document.getElementById('input-url');
@@ -1050,15 +1055,20 @@ export function openModal(pageIndex = -1, bookmarkIndex = -1) {
 
     let currentStyle = 'full';
     let targetPageIndex = 0;
+    let selectedPageIndexes = [];
 
     if (pageIndex >= 0 && bookmarkIndex >= 0) {
         const item = state.pages[pageIndex].bookmarks[bookmarkIndex];
+        const bookmarkKey = getBookmarkKey(item);
         titleInput.value = item.title;
         urlInput.value = item.url;
         noteInput.value = item.note || '';
         iconInput.value = item.icon || "";
         currentStyle = item.style || 'full';
         targetPageIndex = pageIndex;
+        selectedPageIndexes = findBookmarkLocations(bookmarkKey).map(location => location.pageIndex);
+        if (selectedPageIndexes.length === 0) selectedPageIndexes = [targetPageIndex];
+        state.currentEditInfo.bookmarkKey = bookmarkKey;
         autoFillInfo();
     } else {
         const currentVisualPage = state.visualPages[state.currentPage];
@@ -1067,6 +1077,7 @@ export function openModal(pageIndex = -1, bookmarkIndex = -1) {
         noteInput.value = '';
         iconInput.value = '';
         targetPageIndex = currentVisualPage ? currentVisualPage.originalPageIndex : 0;
+        selectedPageIndexes = [targetPageIndex];
         document.getElementById('icon-candidates').innerHTML = '';
         renderRandomButtons(document.getElementById('icon-candidates'));
     }
@@ -1075,7 +1086,7 @@ export function openModal(pageIndex = -1, bookmarkIndex = -1) {
         opt.classList.toggle('active', opt.dataset.style === currentStyle);
     });
 
-    renderPageOptions(targetPageIndex);
+    renderPageOptions(selectedPageIndexes);
     updatePreview();
 }
 
@@ -1091,8 +1102,12 @@ export function saveBookmark() {
     const styleEl = document.querySelector('.style-option.active');
     const style = styleEl ? styleEl.dataset.style : 'full';
 
-    const pageEl = document.querySelector('.page-option.active');
-    const newPageIndex = pageEl ? parseInt(pageEl.dataset.index) : 0;
+    const selectedPageIndexes = [...document.querySelectorAll('.page-option.active')]
+        .map(pageEl => Number.parseInt(pageEl.dataset.index, 10))
+        .filter(pageIndex => Number.isInteger(pageIndex) && state.pages[pageIndex])
+        .sort((a, b) => a - b);
+
+    if (selectedPageIndexes.length === 0) selectedPageIndexes.push(0);
 
     if (!title || !url) return showToast(t('msg_title_url_req'), "error");
     const safeHref = safeUrl(url);
@@ -1100,23 +1115,43 @@ export function saveBookmark() {
     url = safeHref;
     const safeIcon = safeUrl(icon);
 
-    const { pageIndex, bookmarkIndex } = state.currentEditInfo;
+    const { bookmarkKey } = state.currentEditInfo;
 
-    if (pageIndex >= 0 && bookmarkIndex >= 0) {
-        const itemToUpdate = state.pages[pageIndex].bookmarks[bookmarkIndex];
-        const newItem = { ...itemToUpdate, title, url, note, icon: safeIcon, style };
+    if (bookmarkKey) {
+        const itemToUpdate = findBookmarkById(bookmarkKey);
+        if (!itemToUpdate) return;
 
-        if (pageIndex !== newPageIndex) {
-            state.pages[pageIndex].bookmarks.splice(bookmarkIndex, 1);
-            state.pages[newPageIndex].bookmarks.push(newItem);
-        } else {
-            state.pages[pageIndex].bookmarks[bookmarkIndex] = newItem;
-        }
+        const updatedItem = { ...itemToUpdate, title, url, note, icon: safeIcon, style };
+        const selectedPages = new Set(selectedPageIndexes);
+
+        state.pages.forEach((page, pageIndex) => {
+            if (!Array.isArray(page.bookmarks)) page.bookmarks = [];
+
+            let updatedExisting = false;
+            for (let bookmarkIndex = page.bookmarks.length - 1; bookmarkIndex >= 0; bookmarkIndex--) {
+                if (getBookmarkKey(page.bookmarks[bookmarkIndex]) !== bookmarkKey) continue;
+
+                if (!selectedPages.has(pageIndex)) {
+                    page.bookmarks.splice(bookmarkIndex, 1);
+                } else if (!updatedExisting) {
+                    page.bookmarks[bookmarkIndex] = { ...updatedItem };
+                    updatedExisting = true;
+                } else {
+                    page.bookmarks.splice(bookmarkIndex, 1);
+                }
+            }
+
+            if (selectedPages.has(pageIndex) && !updatedExisting) {
+                page.bookmarks.push({ ...updatedItem });
+            }
+        });
     } else {
         const newItem = { id: generateUniqueId(), title, url, note, icon: safeIcon, style };
-        if (!state.pages[newPageIndex]) state.pages[newPageIndex] = { title: t("untitled_page") || "New Page", bookmarks: [] };
-        state.pages[newPageIndex].bookmarks.push(newItem);
-        state.currentPage = newPageIndex;
+        selectedPageIndexes.forEach((pageIndex) => {
+            if (!state.pages[pageIndex]) state.pages[pageIndex] = { title: t("untitled_page") || "New Page", bookmarks: [] };
+            state.pages[pageIndex].bookmarks.push({ ...newItem });
+        });
+        state.currentPage = selectedPageIndexes[0];
     }
     saveData();
     closeModal();
@@ -1130,8 +1165,11 @@ export async function deleteBookmark(e, bookmarkId) {
 
     let found = false;
     for (const page of state.pages) {
-        const index = page.bookmarks.findIndex(b => b.id === bookmarkId);
-        if (index !== -1) { page.bookmarks.splice(index, 1); found = true; break; }
+        const nextBookmarks = page.bookmarks.filter(bookmark => getBookmarkKey(bookmark) !== bookmarkId);
+        if (nextBookmarks.length !== page.bookmarks.length) {
+            page.bookmarks = nextBookmarks;
+            found = true;
+        }
     }
     if (found) { saveData(); render(); }
 }
@@ -1295,21 +1333,37 @@ export function selectStyle(element) {
 }
 
 export function selectPage(element) {
-    document.querySelectorAll('.page-option').forEach(opt => opt.classList.remove('active'));
-    element.classList.add('active');
+    const options = [...document.querySelectorAll('.page-option')];
+    const activeCount = options.filter(option => option.classList.contains('active')).length;
+    if (element.classList.contains('active') && activeCount === 1) return;
+
+    const isActive = element.classList.toggle('active');
+    element.setAttribute('aria-checked', String(isActive));
 }
 
-export function renderPageOptions(selectedPageIndex) {
+export function renderPageOptions(selectedPageIndexes) {
     const container = document.getElementById('page-options-container');
     if(!container) return;
+    const selectedPages = new Set(
+        Array.isArray(selectedPageIndexes) ? selectedPageIndexes : [selectedPageIndexes]
+    );
     container.innerHTML = '';
     state.pages.forEach((page, index) => {
         const option = document.createElement('div');
         option.className = 'page-option';
         option.textContent = page.title || `Page ${index + 1}`;
         option.dataset.index = index;
+        option.setAttribute('role', 'checkbox');
+        option.tabIndex = 0;
         option.onclick = () => selectPage(option);
-        if (index === selectedPageIndex) option.classList.add('active');
+        option.onkeydown = (event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
+            selectPage(option);
+        };
+        const isSelected = selectedPages.has(index);
+        option.classList.toggle('active', isSelected);
+        option.setAttribute('aria-checked', String(isSelected));
         container.appendChild(option);
     });
 }
@@ -1853,7 +1907,10 @@ function initSortable() {
                     const originalPageIndex = parseInt(pageEl.dataset.originalPageIndex); const bookmarkElements = pageEl.querySelectorAll('.bookmark-item');
                     bookmarkElements.forEach(itemEl => {
                         const bookmarkId = itemEl.dataset.id; const bookmark = bookmarkMap.get(bookmarkId);
-                        if (bookmark && newPages[originalPageIndex]) newPages[originalPageIndex].bookmarks.push(bookmark);
+                        const targetBookmarks = newPages[originalPageIndex]?.bookmarks;
+                        if (!bookmark || !targetBookmarks) return;
+                        if (targetBookmarks.some(item => getBookmarkKey(item) === bookmarkId)) return;
+                        targetBookmarks.push(bookmark);
                     });
                 });
                 state.pages = newPages.filter(p => p && Array.isArray(p.bookmarks));
