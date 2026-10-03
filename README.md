@@ -4,7 +4,25 @@
 
 纯静态 HTML/CSS/JS 实现：前端是静态文件，登录与云同步由仓库自带的 **Cloudflare Pages Functions + D1** 提供，不依赖第三方后端，push 到 `main` 即自动上线。
 
-![Project Preview](preview.jpg)
+![Project Preview](assets/preview.jpg)
+
+## 📁 项目结构
+
+```text
+assets/       品牌图标与预览图
+css/          页面样式
+data/         默认书签配置
+functions/    Cloudflare Pages API（目录位置由平台约定）
+icons/        按内容哈希命名的自托管书签图标
+js/           前端模块
+locales/      多语言文件
+migrations/   D1 数据库迁移
+pages/        附加页面
+templates/    前端 HTML 模板
+workers/      www 域名跳转 Worker
+```
+
+`index.html`、`preferences.html`、`privacy.html`、`terms.html` 和 `subtitle-generator.html` 是站点入口；`sw.js`、`manifest.webmanifest`、`_headers`、`_redirects` 与 `wrangler.toml` 是部署配置。
 
 ## ✨ 主要功能 (Features)
 
@@ -27,7 +45,7 @@
     *   **实时预览**：修改过程中可实时看到图标和标题效果。
 
 *   **💾 数据管理**
-    *   支持从 `homepage_config.json` 或旧版 `bookmarks.json` 导入配置，方便迁移。
+    *   支持从 `data/homepage_config.json` 或旧版 `bookmarks.json` 导入配置，方便迁移。
     *   支持将当前配置导出为 `homepage_config.json`，随时备份。
     *   支持导入 Chrome、Firefox、Safari 等浏览器导出的 HTML 书签，并按文件夹合并为书签页面。
     *   支持将当前书签导出为浏览器可识别的 HTML 文件，方便迁移或备份。

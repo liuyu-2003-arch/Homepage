@@ -1,9 +1,9 @@
-import { CONFIG } from './config.js?v=2.9.66';
-import { state, emit, isDefaultAccount } from './state.js?v=2.9.66';
-import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.66';
-import { logger } from './logger.js?v=2.9.66';
-import { createCloudClient } from './cloud.js?v=2.9.66';
-import { parseBrowserBookmarksHtml, mergeBookmarkPages, serializeBrowserBookmarks } from './bookmarks.js?v=2.9.66';
+import { CONFIG } from './config.js?v=2.9.67';
+import { state, emit, isDefaultAccount } from './state.js?v=2.9.67';
+import { generateUniqueId, updateSyncStatus, showToast, t, safeUrl } from './utils.js?v=2.9.67';
+import { logger } from './logger.js?v=2.9.67';
+import { createCloudClient } from './cloud.js?v=2.9.67';
+import { parseBrowserBookmarksHtml, mergeBookmarkPages, serializeBrowserBookmarks } from './bookmarks.js?v=2.9.67';
 
 let cloudClient = null;
 let saveQueue = Promise.resolve();
@@ -39,7 +39,7 @@ function writeCachedPages(key, pages) {
 
 function loadDefaultBookmarkNotes() {
     if (!defaultBookmarkNotesPromise) {
-        defaultBookmarkNotesPromise = fetch('homepage_config.json')
+        defaultBookmarkNotesPromise = fetch('data/homepage_config.json')
             .then((response) => response.ok ? response.json() : [])
             .then((pages) => {
                 const notes = new Map();
@@ -104,7 +104,7 @@ export async function loadData() {
         emit('dataReloaded');
     } else {
         try {
-            const response = await fetch('homepage_config.json');
+            const response = await fetch('data/homepage_config.json');
             if (response.ok) {
                 const data = await response.json();
                 state.pages = await preparePages(data);

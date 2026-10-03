@@ -29,10 +29,16 @@
 /homepage_config.json
   Cache-Control: no-cache, must-revalidate
 
+/data/homepage_config.json
+  Cache-Control: no-cache, must-revalidate
+
 /manifest.webmanifest
   Cache-Control: no-cache, must-revalidate
 
 # Assets referenced with ?v=APP_VERSION can be cached for a week
+/assets/*
+  Cache-Control: public, max-age=604800, must-revalidate
+
 /css/*
   Cache-Control: public, max-age=604800, must-revalidate
 

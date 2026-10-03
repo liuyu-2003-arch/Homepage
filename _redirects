@@ -1,0 +1,9 @@
+# Keep old asset and data URLs working after source files were grouped by type.
+/homepage_config.json /data/homepage_config.json 200
+/icon.svg /assets/branding/icon.svg 200
+/icon.png /assets/branding/icon.png 200
+/favicon-16.png /assets/branding/favicon-16.png 200
+/favicon-32.png /assets/branding/favicon-32.png 200
+/favicon-192.png /assets/branding/favicon-192.png 200
+/apple-touch-icon.png /assets/branding/apple-touch-icon.png 200
+/preview.jpg /assets/preview.jpg 200

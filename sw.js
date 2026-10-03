@@ -1,4 +1,4 @@
-const APP_VERSION = '2.9.66';
+const APP_VERSION = '2.9.67';
 const CACHE_NAME = `homepage-v${APP_VERSION}`;
 const APP_SCOPE = self.registration.scope;
 const STATIC_ASSETS = [
@@ -11,8 +11,10 @@ const STATIC_ASSETS = [
     `js/bookmarks.js?v=${APP_VERSION}`,
     'templates/user_dropdown.html', 'templates/bookmark_modal.html', 'templates/page_edit_modal.html', 'templates/dock_edit_modal.html',
     'templates/auth_modal.html', 'templates/help_modal.html', 'templates/confirm_modal.html',
-    'homepage_config.json', 'manifest.webmanifest', 'icon.svg', 'icon.png',
-    'favicon-16.png', 'favicon-32.png', 'favicon-192.png', 'apple-touch-icon.png',
+    'data/homepage_config.json', 'manifest.webmanifest',
+    'assets/branding/icon.svg', 'assets/branding/icon.png',
+    'assets/branding/favicon-16.png', 'assets/branding/favicon-32.png',
+    'assets/branding/favicon-192.png', 'assets/branding/apple-touch-icon.png',
     'locales/en.json', 'locales/zh.json', 'locales/zh-TW.json', 'locales/ja.json',
     'locales/ko.json', 'locales/fr.json', 'locales/es.json', 'locales/de.json',
     'locales/pt.json', 'locales/ru.json', 'locales/it.json', 'locales/ar.json'
